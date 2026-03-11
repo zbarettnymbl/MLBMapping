@@ -4,6 +4,10 @@ import { eq, sql } from 'drizzle-orm';
 import { db } from '../db/connection';
 import { referenceTables, referenceTableRows, referenceTableVersions } from '../db/schema';
 import { authMiddleware, requireRole } from '../middleware/auth';
+import multer from 'multer';
+import { parseCsvBuffer } from '../services/csv-import';
+
+const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 10 * 1024 * 1024 } });
 
 const router = Router();
 router.use(authMiddleware);
@@ -82,6 +86,33 @@ router.delete('/:id/rows/:rowId', requireRole('admin'), async (req: Request, res
     .set({ rowCount: sql`(select count(*)::int from reference_table_rows where reference_table_id = ${id})` })
     .where(eq(referenceTables.id, id));
   res.status(204).send();
+});
+
+// POST /api/v1/reference-tables/:id/import-csv
+router.post('/:id/import-csv', requireRole('admin'), upload.single('file'), async (req: Request, res: Response) => {
+  const { id } = req.params;
+  if (!req.file) { res.status(400).json({ error: 'No file uploaded' }); return; }
+
+  // Snapshot for versioning
+  const currentRows = await db.select().from(referenceTableRows).where(eq(referenceTableRows.referenceTableId, id));
+  const [table] = await db.select().from(referenceTables).where(eq(referenceTables.id, id));
+  if (table) {
+    const [maxVersion] = await db.select({ max: sql<number>`coalesce(max(${referenceTableVersions.version}), 0)::int` })
+      .from(referenceTableVersions).where(eq(referenceTableVersions.referenceTableId, id));
+    await db.insert(referenceTableVersions).values({
+      referenceTableId: id, version: (maxVersion?.max ?? 0) + 1,
+      snapshot: { columns: table.columns, rows: currentRows }, createdBy: req.user!.id,
+    });
+  }
+
+  const { columns, rows } = parseCsvBuffer(req.file.buffer);
+  await db.delete(referenceTableRows).where(eq(referenceTableRows.referenceTableId, id));
+  for (const row of rows) {
+    await db.insert(referenceTableRows).values({ referenceTableId: id, data: row.data, ordinal: row.ordinal });
+  }
+  await db.update(referenceTables).set({ columns, rowCount: rows.length, lastRefreshedAt: new Date(), updatedAt: new Date() })
+    .where(eq(referenceTables.id, id));
+  res.json({ imported: rows.length, columns });
 });
 
 // GET /api/v1/reference-tables/:id/values
