@@ -94,21 +94,57 @@ ThemeProvider
 
 Current `@theme` block with hardcoded hex values becomes:
 
-1. Define CSS custom properties for both modes at `:root` (light) and `.dark` (dark)
-2. Reference those custom properties in the `@theme` block
-3. Scrollbar, selection, and base layer styles also switch via the custom properties
+1. Define CSS custom properties at `:root` with light values as default
+2. Override those variables under `.dark` selector with dark values
+3. Reference the custom properties in the `@theme` block via `var(--forge-950)` etc.
+4. Scrollbar, selection, and base layer styles also switch via the custom properties
+5. Glow/shadow custom properties also switch per mode
+
+Example structure:
+```css
+:root {
+  --forge-950: #FFFFFF;
+  --forge-900: #F9FAFB;
+  /* ... light values ... */
+}
+.dark {
+  --forge-950: #08090D;
+  --forge-900: #0F1117;
+  /* ... dark values ... */
+}
+@theme {
+  --color-forge-950: var(--forge-950);
+  --color-forge-900: var(--forge-900);
+  /* ... */
+}
+```
+
+### FOUC Prevention
+
+Add an inline script in `index.html` `<head>` (before any CSS loads) to set the `.dark` class immediately based on localStorage or system preference. This prevents a flash of the wrong theme:
+
+```html
+<script>
+  (function() {
+    var theme = localStorage.getItem('mapforge-theme');
+    var dark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    if (dark) document.documentElement.classList.add('dark');
+  })();
+</script>
+```
 
 ### 4. AG Grid Theming
 
-- Apply `ag-theme-alpine` (light) or `ag-theme-alpine-dark` (dark) based on resolvedTheme
+- The project uses `ag-theme-quartz-dark-blue` (see EnrichmentGrid.tsx)
+- Switch to `ag-theme-quartz` (light) or `ag-theme-quartz-dark-blue` (dark) based on resolvedTheme
 - Override AG Grid CSS variables to match forge palette in both modes
 - Update `grid.css` to use CSS custom properties instead of hardcoded forge colors
 
 ### 5. React Flow Theming
 
-- React Flow supports `colorMode` prop ('light' | 'dark')
-- Pass `resolvedTheme` to React Flow's `colorMode`
-- Custom node components already use forge tokens, so they switch automatically
+- @xyflow/react supports `colorMode` prop ('light' | 'dark') on the `<ReactFlow>` component
+- Pass `resolvedTheme` from ThemeContext to React Flow's `colorMode` prop
+- Custom node components already use forge-* tokens, so they switch automatically via CSS variables
 
 ### 6. Component Updates
 
@@ -119,8 +155,21 @@ Most components use `forge-*` classes which will switch automatically. Component
 - **Card**: Glow effects need light-mode shadow variants
 - **Button**: Focus ring offset color needs to reference forge bg
 - **Badge**: Semi-transparent backgrounds may need opacity adjustments
-- **Grid components**: AG Grid theme class swap
-- **Pipeline canvas**: React Flow colorMode prop
+- **Sidebar**: Hardcoded `bg-forge-900` and `border-forge-700` will switch via CSS vars; nav active state colors (amber-500/10) may need light mode variants
+- **Grid components**: AG Grid theme class swap (`ag-theme-quartz` / `ag-theme-quartz-dark-blue`)
+- **Pipeline canvas**: React Flow `colorMode` prop
+
+## Provider Nesting Order
+
+```
+QueryClientProvider > BrowserRouter > AuthProvider > ThemeProvider > Routes
+```
+
+ThemeProvider wraps Routes so all page components can access theme context. It sits inside AuthProvider since theme is independent of auth state.
+
+## localStorage Key
+
+Use `mapforge-theme` as the localStorage key. Values: `'light'` | `'dark'` | absent (system default).
 
 ## Testing
 
@@ -144,5 +193,7 @@ Most components use `forge-*` classes which will switch automatically. Component
 - `client/src/components/layout/TopBar.tsx` -- Add ThemeToggle
 - `client/src/components/layout/AppLayout.tsx` -- Wrap with ThemeProvider
 - `client/src/components/grid/grid.css` -- Use CSS custom properties
-- `client/src/main.tsx` -- Add ThemeProvider to app root
-- Pipeline canvas component -- Pass colorMode to React Flow
+- `client/src/main.tsx` -- Add ThemeProvider to app root (inside AuthProvider, wrapping Routes)
+- `client/index.html` -- Add inline FOUC prevention script in `<head>`
+- Pipeline canvas component -- Pass `colorMode` to `<ReactFlow>`
+- `client/src/components/layout/Sidebar.tsx` -- Verify nav active states in light mode
