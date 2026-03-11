@@ -6,3 +6,4 @@ export * from './admin';
 export * from './api';
 export * from './credentials';
 export * from './bigquery';
+export * from './sync';
