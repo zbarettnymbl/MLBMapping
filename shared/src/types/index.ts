@@ -7,3 +7,4 @@ export * from './api';
 export * from './credentials';
 export * from './bigquery';
 export * from './sync';
+export * from './reference-table';
