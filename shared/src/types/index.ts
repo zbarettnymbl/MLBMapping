@@ -5,3 +5,4 @@ export * from './classification';
 export * from './admin';
 export * from './api';
 export * from './credentials';
+export * from './bigquery';
