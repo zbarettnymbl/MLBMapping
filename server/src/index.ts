@@ -6,6 +6,7 @@ import { referenceTableRoutes } from './routes/reference-tables';
 import { adminRouter } from './routes/admin';
 import { credentialsRouter } from './routes/credentials';
 import { bigqueryRouter } from './routes/bigquery';
+import { pipelineRouter } from './routes/pipelines';
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use('/api/v1/reference-tables', referenceTableRoutes);
 app.use('/api/v1/admin', adminRouter);
 app.use('/api/v1/credentials', credentialsRouter);
 app.use('/api/v1/bigquery', bigqueryRouter);
+app.use('/api/v1/pipelines', pipelineRouter);
 
 app.listen(PORT, () => {
   console.log(`MapForge server running on port ${PORT}`);
