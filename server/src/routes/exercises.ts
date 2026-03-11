@@ -2,7 +2,7 @@ import { Router } from 'express';
 import type { Request, Response } from 'express';
 import { eq, sql, and, asc, desc } from 'drizzle-orm';
 import { db } from '../db/connection';
-import { enrichmentExercises, exerciseColumns, userExerciseAssignments, enrichmentRecords, classificationHistory, bigquerySources } from '../db/schema';
+import { enrichmentExercises, exerciseColumns, userExerciseAssignments, enrichmentRecords, classificationHistory, bigquerySources, users } from '../db/schema';
 import { authMiddleware, requireRole } from '../middleware/auth';
 import type { ExerciseListItem, ColumnStat, CellError } from '@mapforge/shared';
 
@@ -555,6 +555,231 @@ router.post('/:id/refresh', requireRole('admin'), async (req: Request, res: Resp
     const message = error instanceof Error ? error.message : 'Sync failed';
     console.error('Sync error:', error);
     res.status(500).json({ error: message });
+  }
+});
+
+// POST /api/v1/exercises -- create a new exercise
+router.post('/', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { name, description, viewMode, uniqueKeyColumns } = req.body;
+    if (!name) { res.status(400).json({ error: 'Name is required' }); return; }
+    const [exercise] = await db.insert(enrichmentExercises).values({
+      name,
+      description: description || null,
+      viewMode: viewMode || 'flat',
+      uniqueKeyColumns: uniqueKeyColumns || [],
+      createdBy: req.user!.id,
+    }).returning();
+    res.status(201).json({ id: exercise.id, name: exercise.name, status: exercise.status });
+  } catch (error) {
+    console.error('Create exercise error:', error);
+    res.status(500).json({ error: 'Failed to create exercise' });
+  }
+});
+
+// PUT /api/v1/exercises/:id -- update exercise metadata
+router.put('/:id', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const updates: Record<string, unknown> = {};
+    if (req.body.name !== undefined) updates.name = req.body.name;
+    if (req.body.description !== undefined) updates.description = req.body.description;
+    if (req.body.viewMode !== undefined) updates.viewMode = req.body.viewMode;
+    if (req.body.uniqueKeyColumns !== undefined) updates.uniqueKeyColumns = req.body.uniqueKeyColumns;
+    if (req.body.deadline !== undefined) updates.deadline = req.body.deadline;
+    updates.updatedAt = new Date();
+    await db.update(enrichmentExercises).set(updates).where(eq(enrichmentExercises.id, id));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Update exercise error:', error);
+    res.status(500).json({ error: 'Failed to update exercise' });
+  }
+});
+
+// POST /api/v1/exercises/:id/publish -- transition draft to active
+router.post('/:id/publish', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const [exercise] = await db.select().from(enrichmentExercises).where(eq(enrichmentExercises.id, id));
+    if (!exercise) { res.status(404).json({ error: 'Exercise not found' }); return; }
+    if (exercise.status !== 'draft') { res.status(400).json({ error: `Cannot publish exercise in ${exercise.status} status` }); return; }
+
+    await db.update(enrichmentExercises).set({ status: 'active', updatedAt: new Date() }).where(eq(enrichmentExercises.id, id));
+
+    let syncResult = null;
+    try {
+      const { syncExerciseData } = await import('../services/source-sync');
+      syncResult = await syncExerciseData(id);
+    } catch (syncError) { console.error('Initial sync failed:', syncError); }
+
+    try {
+      const [source] = await db.select().from(bigquerySources).where(eq(bigquerySources.exerciseId, id));
+      if (source?.refreshSchedule) {
+        const { scheduleSync } = await import('../services/sync-scheduler');
+        scheduleSync(id, source.refreshSchedule);
+      }
+    } catch (scheduleError) { console.error('Failed to register sync schedule:', scheduleError); }
+
+    res.json({ status: 'active', syncResult });
+  } catch (error) {
+    console.error('Publish error:', error);
+    res.status(500).json({ error: 'Failed to publish exercise' });
+  }
+});
+
+// POST /api/v1/exercises/:id/columns -- bulk add/replace columns
+router.post('/:id/columns', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { columns } = req.body as { columns: Array<Record<string, unknown>> };
+    if (!Array.isArray(columns)) { res.status(400).json({ error: 'columns array is required' }); return; }
+
+    // Delete existing columns for this exercise
+    await db.delete(exerciseColumns).where(eq(exerciseColumns.exerciseId, id));
+
+    // Insert new columns
+    const inserted = [];
+    for (let i = 0; i < columns.length; i++) {
+      const col = columns[i];
+      const [row] = await db.insert(exerciseColumns).values({
+        exerciseId: id,
+        key: col.key as string,
+        label: col.label as string,
+        description: (col.description as string) || null,
+        dataType: col.dataType as string,
+        ordinal: (col.ordinal as number) ?? i,
+        columnRole: col.columnRole as string,
+        required: (col.required as boolean) ?? false,
+        defaultValue: (col.defaultValue as string) || null,
+        config: col.config ?? {},
+        validationRules: col.validationRules ?? [],
+        referenceLink: col.referenceLink ?? null,
+        dependentConfig: col.dependentConfig ?? null,
+        visible: (col.visible as boolean) ?? true,
+      }).returning();
+      inserted.push(row);
+    }
+
+    res.json({ columns: inserted });
+  } catch (error) {
+    console.error('Save columns error:', error);
+    res.status(500).json({ error: 'Failed to save columns' });
+  }
+});
+
+// PUT /api/v1/exercises/:id/columns/:colId -- update a single column
+router.put('/:id/columns/:colId', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { colId } = req.params;
+    const updates: Record<string, unknown> = {};
+    const fields = ['key', 'label', 'description', 'dataType', 'ordinal', 'columnRole', 'required', 'defaultValue', 'config', 'validationRules', 'referenceLink', 'dependentConfig', 'visible'];
+    for (const field of fields) {
+      if (req.body[field] !== undefined) updates[field] = req.body[field];
+    }
+    await db.update(exerciseColumns).set(updates).where(eq(exerciseColumns.id, colId));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Update column error:', error);
+    res.status(500).json({ error: 'Failed to update column' });
+  }
+});
+
+// DELETE /api/v1/exercises/:id/columns/:colId -- delete a column
+router.delete('/:id/columns/:colId', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { colId } = req.params;
+    await db.delete(exerciseColumns).where(eq(exerciseColumns.id, colId));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Delete column error:', error);
+    res.status(500).json({ error: 'Failed to delete column' });
+  }
+});
+
+// GET /api/v1/exercises/:id/assignments -- list assignments with user info
+router.get('/:id/assignments', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const assignments = await db
+      .select({
+        id: userExerciseAssignments.id,
+        userId: userExerciseAssignments.userId,
+        role: userExerciseAssignments.role,
+        assignedAt: userExerciseAssignments.assignedAt,
+        userName: users.name,
+        userEmail: users.email,
+      })
+      .from(userExerciseAssignments)
+      .innerJoin(users, eq(userExerciseAssignments.userId, users.id))
+      .where(eq(userExerciseAssignments.exerciseId, id));
+    res.json({ assignments });
+  } catch (error) {
+    console.error('Fetch assignments error:', error);
+    res.status(500).json({ error: 'Failed to fetch assignments' });
+  }
+});
+
+// POST /api/v1/exercises/:id/assignments -- add user assignment
+router.post('/:id/assignments', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { userId, role } = req.body;
+    if (!userId) { res.status(400).json({ error: 'userId is required' }); return; }
+    const [assignment] = await db.insert(userExerciseAssignments).values({
+      userId,
+      exerciseId: id,
+      role: role || 'editor',
+      assignedBy: req.user!.id,
+    }).returning();
+    res.status(201).json(assignment);
+  } catch (error) {
+    console.error('Add assignment error:', error);
+    res.status(500).json({ error: 'Failed to add assignment' });
+  }
+});
+
+// DELETE /api/v1/exercises/:id/assignments/:assignmentId -- remove assignment
+router.delete('/:id/assignments/:assignmentId', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { assignmentId } = req.params;
+    await db.delete(userExerciseAssignments).where(eq(userExerciseAssignments.id, assignmentId));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Remove assignment error:', error);
+    res.status(500).json({ error: 'Failed to remove assignment' });
+  }
+});
+
+// POST /api/v1/exercises/:id/source-config -- save BigQuery source config (upsert)
+router.post('/:id/source-config', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { gcpProject, dataset, tableOrQuery, queryType, credentialId, refreshSchedule } = req.body;
+    if (!gcpProject || !dataset || !tableOrQuery || !queryType) {
+      res.status(400).json({ error: 'gcpProject, dataset, tableOrQuery, and queryType are required' });
+      return;
+    }
+
+    // Check if source config already exists
+    const [existing] = await db.select().from(bigquerySources).where(eq(bigquerySources.exerciseId, id));
+    if (existing) {
+      await db.update(bigquerySources).set({
+        gcpProject, dataset, tableOrQuery, queryType,
+        credentialId: credentialId || null,
+        refreshSchedule: refreshSchedule || null,
+        updatedAt: new Date(),
+      }).where(eq(bigquerySources.id, existing.id));
+    } else {
+      await db.insert(bigquerySources).values({
+        exerciseId: id, gcpProject, dataset, tableOrQuery, queryType,
+        credentialId: credentialId || null,
+        refreshSchedule: refreshSchedule || null,
+      });
+    }
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Save source config error:', error);
+    res.status(500).json({ error: 'Failed to save source config' });
   }
 });
 
