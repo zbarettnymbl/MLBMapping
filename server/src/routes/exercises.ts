@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { eq, sql, and } from 'drizzle-orm';
+import { eq, sql, and, asc, desc } from 'drizzle-orm';
 import { db } from '../db/connection';
-import { enrichmentExercises, exerciseColumns, userExerciseAssignments, enrichmentRecords } from '../db/schema';
+import { enrichmentExercises, exerciseColumns, userExerciseAssignments, enrichmentRecords, classificationHistory, bigquerySources } from '../db/schema';
 import { authMiddleware, requireRole } from '../middleware/auth';
-import type { ExerciseListItem, ColumnStat } from '@mapforge/shared';
+import type { ExerciseListItem, ColumnStat, CellError } from '@mapforge/shared';
 
 const router = Router();
 
@@ -129,205 +129,390 @@ router.get('/', requireRole('user'), async (req: Request, res: Response) => {
 // GET /api/v1/exercises/:id
 // Returns ExerciseDetail with sourceColumns and classificationColumns
 router.get('/:id', async (req: Request, res: Response) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-  // TODO: Replace with real DB query using Drizzle ORM
-  // For now, return a mock exercise detail
-  res.json({
-    id,
-    name: 'Development Programming 2026',
-    description: 'Classify development programming records',
-    status: 'active',
-    sourceColumns: [
-      {
-        id: 'sc1', key: 'siteId', label: 'Site ID', description: null,
-        dataType: 'text', columnRole: 'source', required: false,
-        defaultValue: null, config: {}, validationRules: [],
-        referenceLink: null, dependentConfig: null, visible: true, ordinal: 0,
-      },
-      {
-        id: 'sc2', key: 'programId', label: 'Program ID', description: null,
-        dataType: 'text', columnRole: 'source', required: false,
-        defaultValue: null, config: {}, validationRules: [],
-        referenceLink: null, dependentConfig: null, visible: true, ordinal: 1,
-      },
-      {
-        id: 'sc3', key: 'programName', label: 'Program Name', description: null,
-        dataType: 'text', columnRole: 'source', required: false,
-        defaultValue: null, config: {}, validationRules: [],
-        referenceLink: null, dependentConfig: null, visible: true, ordinal: 2,
-      },
-    ],
-    classificationColumns: [
-      {
-        id: 'cc1', key: 'sportCategory', label: 'Sport Category',
-        description: 'Primary sport classification', dataType: 'picklist',
-        columnRole: 'classification', required: true, defaultValue: null,
-        config: { picklistValues: ['Girls Baseball', 'Girls Softball', 'Boys Baseball', 'T-Ball', 'Coach Pitch'] },
-        validationRules: [], referenceLink: null, dependentConfig: null,
-        visible: true, ordinal: 0,
-      },
-      {
-        id: 'cc2', key: 'categorization', label: 'Categorization',
-        description: 'Dependent on Sport Category', dataType: 'picklist',
-        columnRole: 'classification', required: false, defaultValue: null,
-        config: {},
-        validationRules: [], referenceLink: null,
-        dependentConfig: {
-          parentColumnKey: 'sportCategory',
-          referenceTableId: 'ref-table-1',
-          parentReferenceColumn: 'sport',
-          childReferenceColumn: 'category',
-        },
-        visible: true, ordinal: 1,
-      },
-    ],
-    deadline: null,
-    lastRefreshedAt: new Date().toISOString(),
-  });
+    const [exercise] = await db.select().from(enrichmentExercises).where(eq(enrichmentExercises.id, id));
+    if (!exercise) {
+      res.status(404).json({ error: { message: 'Exercise not found', code: 'NOT_FOUND' } });
+      return;
+    }
+
+    const columns = await db.select().from(exerciseColumns)
+      .where(eq(exerciseColumns.exerciseId, id))
+      .orderBy(asc(exerciseColumns.ordinal));
+
+    const mapColumn = (col: typeof columns[number]) => ({
+      id: col.id,
+      key: col.key,
+      label: col.label,
+      description: col.description ?? null,
+      dataType: col.dataType,
+      columnRole: col.columnRole,
+      required: col.required ?? false,
+      defaultValue: col.defaultValue ?? null,
+      config: col.config ?? {},
+      validationRules: col.validationRules ?? [],
+      referenceLink: col.referenceLink ?? null,
+      dependentConfig: col.dependentConfig ?? null,
+      visible: col.visible ?? true,
+      ordinal: col.ordinal,
+    });
+
+    const sourceColumns = columns.filter(c => c.columnRole === 'source').map(mapColumn);
+    const classificationColumns = columns.filter(c => c.columnRole === 'classification').map(mapColumn);
+
+    // Get last refreshed time from bigquery source if available
+    const [source] = await db.select({ lastRefreshedAt: bigquerySources.lastRefreshedAt })
+      .from(bigquerySources).where(eq(bigquerySources.exerciseId, id));
+
+    res.json({
+      id: exercise.id,
+      name: exercise.name,
+      description: exercise.description ?? '',
+      status: exercise.status,
+      sourceColumns,
+      classificationColumns,
+      deadline: exercise.deadline ? String(exercise.deadline) : null,
+      lastRefreshedAt: source?.lastRefreshedAt?.toISOString() ?? exercise.updatedAt?.toISOString() ?? new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error('Failed to fetch exercise detail:', error);
+    res.status(500).json({ error: { message: 'Internal server error', code: 'INTERNAL_ERROR' } });
+  }
 });
 
 // GET /api/v1/exercises/:id/records
 // Query params: page, pageSize, filter, search, sortColumn, sortDirection
 // Returns PaginatedRecords
 router.get('/:id/records', async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const page = parseInt(req.query.page as string) || 1;
-  const pageSize = parseInt(req.query.pageSize as string) || 50;
-  const filter = (req.query.filter as string) || 'all';
-  const search = (req.query.search as string) || '';
+  try {
+    const { id } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    const pageSize = Math.min(parseInt(req.query.pageSize as string) || 50, 200);
+    const filter = (req.query.filter as string) || 'all';
+    const search = (req.query.search as string) || '';
+    const sortColumn = (req.query.sortColumn as string) || '';
+    const sortDirection = (req.query.sortDirection as string) === 'desc' ? 'desc' : 'asc';
+    const offset = (page - 1) * pageSize;
 
-  // TODO: Replace with real DB query
-  // Mock records
-  const allRecords = Array.from({ length: 10 }, (_, i) => ({
-    id: `r${i + 1}`,
-    uniqueKey: { siteId: `SITE-${100 + i}`, programId: `PRG-${200 + i}` },
-    sourceData: {
-      siteId: `SITE-${100 + i}`,
-      programId: `PRG-${200 + i}`,
-      programName: `Program ${i + 1}`,
-    },
-    classifications: i < 2
-      ? { sportCategory: 'Girls Baseball', categorization: 'Travel' }
-      : { sportCategory: null, categorization: null },
-    recordState: i < 3 ? 'new' as const : 'existing' as const,
-    validationErrors: i === 9
-      ? [{ columnKey: 'sportCategory', severity: 'error' as const, message: 'Sport Category is required', ruleType: 'required' }]
-      : [],
-    isFullyClassified: i < 2,
-  }));
+    // Build filter conditions
+    const conditions = [eq(enrichmentRecords.exerciseId, id)];
+    if (filter === 'unclassified') conditions.push(eq(enrichmentRecords.isFullyClassified, false));
+    else if (filter === 'classified') conditions.push(eq(enrichmentRecords.isFullyClassified, true));
+    else if (filter === 'errors') conditions.push(sql`jsonb_array_length(${enrichmentRecords.validationErrors}) > 0`);
+    else if (filter === 'new') conditions.push(eq(enrichmentRecords.recordState, 'new'));
 
-  // Apply filter
-  let filtered = allRecords;
-  if (filter === 'unclassified') {
-    filtered = allRecords.filter(r => !r.isFullyClassified);
-  } else if (filter === 'classified') {
-    filtered = allRecords.filter(r => r.isFullyClassified);
-  } else if (filter === 'errors') {
-    filtered = allRecords.filter(r => r.validationErrors.length > 0);
-  } else if (filter === 'new') {
-    filtered = allRecords.filter(r => r.recordState === 'new');
+    // Search across source_data JSONB text representation
+    if (search) {
+      conditions.push(sql`${enrichmentRecords.sourceData}::text ILIKE ${'%' + search + '%'}`);
+    }
+
+    const whereClause = and(...conditions);
+
+    // Get filtered records with pagination
+    let query = db.select().from(enrichmentRecords).where(whereClause!);
+
+    // Apply sorting
+    if (sortColumn) {
+      const sortFn = sortDirection === 'desc' ? desc : asc;
+      if (sortColumn === 'recordState') {
+        query = query.orderBy(sortFn(enrichmentRecords.recordState)) as typeof query;
+      } else if (sortColumn === 'isFullyClassified') {
+        query = query.orderBy(sortFn(enrichmentRecords.isFullyClassified)) as typeof query;
+      } else {
+        // Sort by a source_data or classifications key
+        query = query.orderBy(sql`${enrichmentRecords.sourceData}->>${sql.raw(`'${sortColumn}'`)} ${sql.raw(sortDirection)}`) as typeof query;
+      }
+    } else {
+      query = query.orderBy(asc(enrichmentRecords.createdAt)) as typeof query;
+    }
+
+    const records = await query.limit(pageSize).offset(offset);
+
+    // Get total count for filtered results
+    const [countResult] = await db.select({ count: sql<number>`count(*)::int` })
+      .from(enrichmentRecords).where(whereClause!);
+    const total = countResult?.count ?? 0;
+
+    // Get overall stats (unfiltered for this exercise)
+    const [stats] = await db.select({
+      totalRecords: sql<number>`count(*)::int`,
+      classifiedRecords: sql<number>`count(*) filter (where ${enrichmentRecords.isFullyClassified} = true)::int`,
+      errorCount: sql<number>`count(*) filter (where jsonb_array_length(${enrichmentRecords.validationErrors}) > 0)::int`,
+      warningCount: sql<number>`0::int`,
+      newRecordCount: sql<number>`count(*) filter (where ${enrichmentRecords.recordState} = 'new')::int`,
+    }).from(enrichmentRecords).where(eq(enrichmentRecords.exerciseId, id));
+
+    const totalRecords = stats?.totalRecords ?? 0;
+    const classifiedRecords = stats?.classifiedRecords ?? 0;
+
+    // Get classification column stats
+    const classificationCols = await db.select().from(exerciseColumns)
+      .where(and(eq(exerciseColumns.exerciseId, id), eq(exerciseColumns.columnRole, 'classification')));
+
+    const columnStats: ColumnStat[] = [];
+    for (const col of classificationCols) {
+      const [colStat] = await db.select({
+        totalCount: sql<number>`count(*)::int`,
+        filledCount: sql<number>`count(*) filter (where (${enrichmentRecords.classifications}->>${sql.raw(`'${col.key}'`)}) is not null and (${enrichmentRecords.classifications}->>${sql.raw(`'${col.key}'`)}) != '')::int`,
+      }).from(enrichmentRecords).where(eq(enrichmentRecords.exerciseId, id));
+
+      const colTotal = colStat?.totalCount ?? 0;
+      const filled = colStat?.filledCount ?? 0;
+      columnStats.push({
+        columnKey: col.key, label: col.label, filledCount: filled, totalCount: colTotal,
+        percentage: colTotal > 0 ? Math.round((filled / colTotal) * 100) : 0,
+      });
+    }
+
+    const mappedRecords = records.map(r => ({
+      id: r.id,
+      uniqueKey: r.uniqueKey as Record<string, string>,
+      sourceData: r.sourceData as Record<string, unknown>,
+      classifications: r.classifications as Record<string, string | null>,
+      recordState: r.recordState as 'new' | 'existing' | 'changed' | 'removed',
+      validationErrors: r.validationErrors as CellError[],
+      isFullyClassified: r.isFullyClassified,
+    }));
+
+    res.json({
+      records: mappedRecords,
+      total,
+      page,
+      pageSize,
+      stats: {
+        totalRecords,
+        classifiedRecords,
+        unclassifiedRecords: totalRecords - classifiedRecords,
+        errorCount: stats?.errorCount ?? 0,
+        warningCount: 0,
+        newRecordCount: stats?.newRecordCount ?? 0,
+        completionPercentage: totalRecords > 0 ? Math.round((classifiedRecords / totalRecords) * 100) : 0,
+        columnStats,
+      },
+    });
+  } catch (error) {
+    console.error('Failed to fetch records:', error);
+    res.status(500).json({ error: { message: 'Internal server error', code: 'INTERNAL_ERROR' } });
   }
-
-  // Apply search
-  if (search) {
-    const lower = search.toLowerCase();
-    filtered = filtered.filter(r =>
-      Object.values(r.sourceData).some(v =>
-        String(v).toLowerCase().includes(lower)
-      )
-    );
-  }
-
-  const total = filtered.length;
-  const start = (page - 1) * pageSize;
-  const records = filtered.slice(start, start + pageSize);
-
-  const classifiedCount = allRecords.filter(r => r.isFullyClassified).length;
-
-  res.json({
-    records,
-    total,
-    page,
-    pageSize,
-    stats: {
-      totalRecords: allRecords.length,
-      classifiedRecords: classifiedCount,
-      unclassifiedRecords: allRecords.length - classifiedCount,
-      errorCount: allRecords.filter(r => r.validationErrors.length > 0).length,
-      warningCount: 0,
-      newRecordCount: allRecords.filter(r => r.recordState === 'new').length,
-      completionPercentage: Math.round((classifiedCount / allRecords.length) * 100),
-      columnStats: [
-        { columnKey: 'sportCategory', label: 'Sport Category', filledCount: classifiedCount, totalCount: allRecords.length, percentage: Math.round((classifiedCount / allRecords.length) * 100) },
-        { columnKey: 'categorization', label: 'Categorization', filledCount: classifiedCount, totalCount: allRecords.length, percentage: Math.round((classifiedCount / allRecords.length) * 100) },
-      ],
-    },
-  });
 });
 
 // PUT /api/v1/exercises/:id/records/:recordId/classify
 // Body: ClassificationPayload
 // Returns ClassificationResult
 router.put('/:id/records/:recordId/classify', async (req: Request, res: Response) => {
-  const { recordId } = req.params;
-  const { values } = req.body;
+  try {
+    const { id, recordId } = req.params;
+    const { values } = req.body as { values: Array<{ columnKey: string; value: string | null }> };
+    const userId = req.user!.id;
 
-  // TODO: Replace with real DB upsert
-  // Mock: validate and return result
-  const validationErrors: Array<{ columnKey: string; severity: string; message: string; ruleType: string }> = [];
-
-  // Check required fields
-  for (const v of values) {
-    if (v.columnKey === 'sportCategory' && (!v.value || v.value === '')) {
-      validationErrors.push({
-        columnKey: 'sportCategory',
-        severity: 'error',
-        message: 'Sport Category is required',
-        ruleType: 'required',
-      });
+    // Fetch the record
+    const [record] = await db.select().from(enrichmentRecords)
+      .where(and(eq(enrichmentRecords.id, recordId), eq(enrichmentRecords.exerciseId, id)));
+    if (!record) {
+      res.status(404).json({ error: { message: 'Record not found', code: 'NOT_FOUND' } });
+      return;
     }
+
+    // Fetch classification columns with their validation rules
+    const classificationCols = await db.select().from(exerciseColumns)
+      .where(and(eq(exerciseColumns.exerciseId, id), eq(exerciseColumns.columnRole, 'classification')));
+
+    const colByKey = new Map(classificationCols.map(c => [c.key, c]));
+
+    // Build updated classifications
+    const currentClassifications = (record.classifications ?? {}) as Record<string, string | null>;
+    const updatedClassifications = { ...currentClassifications };
+    for (const v of values) {
+      updatedClassifications[v.columnKey] = v.value;
+    }
+
+    // Validate required fields
+    const validationErrors: CellError[] = [];
+    for (const col of classificationCols) {
+      if (col.required) {
+        const val = updatedClassifications[col.key];
+        if (!val || val === '') {
+          validationErrors.push({
+            columnKey: col.key,
+            severity: 'error',
+            message: `${col.label} is required`,
+            ruleType: 'required',
+          });
+        }
+      }
+    }
+
+    // Check if all required classification columns are filled
+    const isFullyClassified = classificationCols.every(col => {
+      const val = updatedClassifications[col.key];
+      if (col.required) return val != null && val !== '';
+      return true;
+    }) && validationErrors.length === 0;
+
+    // Update the record
+    await db.update(enrichmentRecords).set({
+      classifications: updatedClassifications,
+      validationErrors,
+      isFullyClassified,
+      updatedAt: new Date(),
+    }).where(eq(enrichmentRecords.id, recordId));
+
+    // Insert classification history entries
+    for (const v of values) {
+      const col = colByKey.get(v.columnKey);
+      if (col) {
+        await db.insert(classificationHistory).values({
+          recordId: record.id,
+          columnId: col.id,
+          oldValue: currentClassifications[v.columnKey] ?? null,
+          newValue: v.value,
+          changedBy: userId,
+        });
+      }
+    }
+
+    // Fetch updated stats
+    const [stats] = await db.select({
+      totalRecords: sql<number>`count(*)::int`,
+      classifiedRecords: sql<number>`count(*) filter (where ${enrichmentRecords.isFullyClassified} = true)::int`,
+      errorCount: sql<number>`count(*) filter (where jsonb_array_length(${enrichmentRecords.validationErrors}) > 0)::int`,
+      newRecordCount: sql<number>`count(*) filter (where ${enrichmentRecords.recordState} = 'new')::int`,
+    }).from(enrichmentRecords).where(eq(enrichmentRecords.exerciseId, id));
+
+    const totalRecords = stats?.totalRecords ?? 0;
+    const classifiedRecords = stats?.classifiedRecords ?? 0;
+
+    res.json({
+      validationErrors,
+      isFullyClassified,
+      updatedStats: {
+        totalRecords,
+        classifiedRecords,
+        unclassifiedRecords: totalRecords - classifiedRecords,
+        errorCount: stats?.errorCount ?? 0,
+        warningCount: 0,
+        newRecordCount: stats?.newRecordCount ?? 0,
+        completionPercentage: totalRecords > 0 ? Math.round((classifiedRecords / totalRecords) * 100) : 0,
+        columnStats: [],
+      },
+    });
+  } catch (error) {
+    console.error('Failed to classify record:', error);
+    res.status(500).json({ error: { message: 'Internal server error', code: 'INTERNAL_ERROR' } });
   }
-
-  const isFullyClassified = values.length > 0 && validationErrors.length === 0;
-
-  res.json({
-    validationErrors,
-    isFullyClassified,
-    updatedStats: {
-      totalRecords: 10,
-      classifiedRecords: 3,
-      unclassifiedRecords: 7,
-      errorCount: validationErrors.length > 0 ? 1 : 0,
-      warningCount: 0,
-      newRecordCount: 3,
-      completionPercentage: 30,
-      columnStats: [],
-    },
-  });
 });
 
 // POST /api/v1/exercises/:id/records/bulk-classify
 // Body: BulkClassificationPayload
 // Returns BulkClassificationResult
 router.post('/:id/records/bulk-classify', async (req: Request, res: Response) => {
-  const { recordIds, values } = req.body;
+  try {
+    const { id } = req.params;
+    const { recordIds, values } = req.body as {
+      recordIds: string[];
+      values: Array<{ columnKey: string; value: string | null }>;
+    };
+    const userId = req.user!.id;
 
-  // TODO: Replace with real DB batch operation
-  res.json({
-    updatedCount: recordIds.length,
-    errors: [],
-    updatedStats: {
-      totalRecords: 10,
-      classifiedRecords: recordIds.length + 2,
-      unclassifiedRecords: 10 - recordIds.length - 2,
-      errorCount: 0,
-      warningCount: 0,
-      newRecordCount: 3,
-      completionPercentage: Math.round(((recordIds.length + 2) / 10) * 100),
-      columnStats: [],
-    },
-  });
+    // Fetch classification columns for validation
+    const classificationCols = await db.select().from(exerciseColumns)
+      .where(and(eq(exerciseColumns.exerciseId, id), eq(exerciseColumns.columnRole, 'classification')));
+    const colByKey = new Map(classificationCols.map(c => [c.key, c]));
+
+    const bulkOperationId = crypto.randomUUID();
+    let updatedCount = 0;
+    const errors: Array<{ recordId: string; errors: CellError[] }> = [];
+
+    for (const recordId of recordIds) {
+      const [record] = await db.select().from(enrichmentRecords)
+        .where(and(eq(enrichmentRecords.id, recordId), eq(enrichmentRecords.exerciseId, id)));
+      if (!record) {
+        errors.push({ recordId, errors: [{ columnKey: '', severity: 'error', message: 'Record not found', ruleType: 'system' }] });
+        continue;
+      }
+
+      const currentClassifications = (record.classifications ?? {}) as Record<string, string | null>;
+      const updatedClassifications = { ...currentClassifications };
+      for (const v of values) {
+        updatedClassifications[v.columnKey] = v.value;
+      }
+
+      // Validate
+      const recordErrors: CellError[] = [];
+      for (const col of classificationCols) {
+        if (col.required) {
+          const val = updatedClassifications[col.key];
+          if (!val || val === '') {
+            recordErrors.push({ columnKey: col.key, severity: 'error', message: `${col.label} is required`, ruleType: 'required' });
+          }
+        }
+      }
+
+      const isFullyClassified = classificationCols.every(col => {
+        const val = updatedClassifications[col.key];
+        if (col.required) return val != null && val !== '';
+        return true;
+      }) && recordErrors.length === 0;
+
+      await db.update(enrichmentRecords).set({
+        classifications: updatedClassifications,
+        validationErrors: recordErrors,
+        isFullyClassified,
+        updatedAt: new Date(),
+      }).where(eq(enrichmentRecords.id, recordId));
+
+      // Insert history
+      for (const v of values) {
+        const col = colByKey.get(v.columnKey);
+        if (col) {
+          await db.insert(classificationHistory).values({
+            recordId,
+            columnId: col.id,
+            oldValue: currentClassifications[v.columnKey] ?? null,
+            newValue: v.value,
+            changedBy: userId,
+            bulkOperationId,
+          });
+        }
+      }
+
+      if (recordErrors.length > 0) {
+        errors.push({ recordId, errors: recordErrors });
+      }
+      updatedCount++;
+    }
+
+    // Fetch updated stats
+    const [stats] = await db.select({
+      totalRecords: sql<number>`count(*)::int`,
+      classifiedRecords: sql<number>`count(*) filter (where ${enrichmentRecords.isFullyClassified} = true)::int`,
+      errorCount: sql<number>`count(*) filter (where jsonb_array_length(${enrichmentRecords.validationErrors}) > 0)::int`,
+      newRecordCount: sql<number>`count(*) filter (where ${enrichmentRecords.recordState} = 'new')::int`,
+    }).from(enrichmentRecords).where(eq(enrichmentRecords.exerciseId, id));
+
+    const totalRecords = stats?.totalRecords ?? 0;
+    const classifiedRecords = stats?.classifiedRecords ?? 0;
+
+    res.json({
+      updatedCount,
+      errors,
+      updatedStats: {
+        totalRecords,
+        classifiedRecords,
+        unclassifiedRecords: totalRecords - classifiedRecords,
+        errorCount: stats?.errorCount ?? 0,
+        warningCount: 0,
+        newRecordCount: stats?.newRecordCount ?? 0,
+        completionPercentage: totalRecords > 0 ? Math.round((classifiedRecords / totalRecords) * 100) : 0,
+        columnStats: [],
+      },
+    });
+  } catch (error) {
+    console.error('Failed to bulk classify:', error);
+    res.status(500).json({ error: { message: 'Internal server error', code: 'INTERNAL_ERROR' } });
+  }
 });
 
 // GET /api/v1/exercises/:id/records/export
@@ -362,7 +547,7 @@ router.get('/:id/stats', async (req: Request, res: Response) => {
 // POST /api/v1/exercises/:id/refresh -- trigger manual data refresh
 router.post('/:id/refresh', requireRole('admin'), async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { syncExerciseData } = await import('../services/source-sync');
     const result = await syncExerciseData(id);
     res.json(result);

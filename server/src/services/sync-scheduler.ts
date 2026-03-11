@@ -1,10 +1,10 @@
-import cron from 'node-cron';
+import cron, { type ScheduledTask } from 'node-cron';
 import { db } from '../db/connection';
 import { bigquerySources } from '../db/schema';
 import { isNotNull } from 'drizzle-orm';
 import { syncExerciseData } from './source-sync';
 
-const activeJobs = new Map<string, cron.ScheduledTask>();
+const activeJobs = new Map<string, ScheduledTask>();
 
 export function startSyncScheduler(): void {
   loadScheduledSyncs().catch(err => console.error('Failed to load sync schedules:', err));
