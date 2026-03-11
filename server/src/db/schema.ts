@@ -239,3 +239,54 @@ export const referenceTableVersions = pgTable("reference_table_versions", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
   createdBy: uuid("created_by").references(() => users.id),
 });
+
+// ============================================================
+// Pipeline Definitions
+// ============================================================
+export const pipelines = pgTable("pipelines", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  orgId: uuid("org_id").references(() => organizations.id),
+  name: text("name").notNull(),
+  description: text("description"),
+  nodes: jsonb("nodes").notNull().default([]),
+  edges: jsonb("edges").notNull().default([]),
+  triggerType: text("trigger_type").notNull().default("manual"),
+  triggerConfig: jsonb("trigger_config").default({}),
+  status: text("status").notNull().default("draft"),
+  exerciseId: uuid("exercise_id").references(() => enrichmentExercises.id),
+  createdBy: uuid("created_by").references(() => users.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+// ============================================================
+// Pipeline Execution Runs
+// ============================================================
+export const pipelineRuns = pgTable("pipeline_runs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  pipelineId: uuid("pipeline_id").references(() => pipelines.id).notNull(),
+  status: text("status").notNull().default("pending"),
+  triggeredBy: text("triggered_by").notNull(),
+  triggeredByUserId: uuid("triggered_by_user_id").references(() => users.id),
+  startedAt: timestamp("started_at", { withTimezone: true }).defaultNow(),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  summary: jsonb("summary").default({}),
+  errorMessage: text("error_message"),
+});
+
+// ============================================================
+// Per-Node Execution State
+// ============================================================
+export const pipelineNodeRuns = pgTable("pipeline_node_runs", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  runId: uuid("run_id").references(() => pipelineRuns.id).notNull(),
+  nodeId: text("node_id").notNull(),
+  nodeType: text("node_type").notNull(),
+  status: text("status").notNull().default("pending"),
+  startedAt: timestamp("started_at", { withTimezone: true }),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  inputRowCount: integer("input_row_count"),
+  outputRowCount: integer("output_row_count"),
+  errorMessage: text("error_message"),
+  metadata: jsonb("metadata").default({}),
+});
