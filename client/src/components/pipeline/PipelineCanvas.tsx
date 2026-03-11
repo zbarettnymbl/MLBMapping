@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ReactFlow, Background, MiniMap, Controls, addEdge } from '@xyflow/react';
+import { ReactFlow, Background, MiniMap, Controls } from '@xyflow/react';
 import type { Connection, Edge, Node } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { usePipelineStore } from '@/stores/pipelineStore';

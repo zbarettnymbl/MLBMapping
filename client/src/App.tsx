@@ -8,6 +8,8 @@ import { BusinessDashboardPage } from '@/pages/BusinessDashboardPage';
 import { EnrichmentSpreadsheetPage } from '@/pages/EnrichmentSpreadsheetPage';
 import { AdminDashboardPage } from '@/pages/AdminDashboardPage';
 import { ExerciseWizardPage } from '@/pages/ExerciseWizardPage';
+import { PipelineBuilderPage } from '@/pages/PipelineBuilderPage';
+import { PipelineRunsPage } from '@/pages/PipelineRunsPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -62,6 +64,38 @@ export function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <ExerciseWizardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pipelines"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <PipelineRunsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pipelines/new"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <PipelineBuilderPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pipelines/:id"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <PipelineBuilderPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/pipelines/:id/runs"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <PipelineRunsPage />
                 </ProtectedRoute>
               }
             />
