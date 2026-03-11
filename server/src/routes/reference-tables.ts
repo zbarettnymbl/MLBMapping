@@ -140,4 +140,17 @@ router.get('/:id/versions', async (req: Request, res: Response) => {
   res.json({ versions });
 });
 
+// POST /api/v1/reference-tables/:id/refresh-bigquery
+router.post('/:id/refresh-bigquery', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { refreshReferenceTableFromBigQuery } = await import('../services/reference-table-sync');
+    const result = await refreshReferenceTableFromBigQuery(id, req.user!.id);
+    res.json(result);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Refresh failed';
+    res.status(500).json({ error: message });
+  }
+});
+
 export { router as referenceTableRoutes };
