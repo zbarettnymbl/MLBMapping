@@ -9,3 +9,4 @@ export * from './bigquery';
 export * from './sync';
 export * from './reference-table';
 export * from './wizard';
+export * from './pipeline';
