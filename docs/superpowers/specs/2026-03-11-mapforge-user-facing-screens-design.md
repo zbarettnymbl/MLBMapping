@@ -1036,7 +1036,7 @@ export function useAutoSave(exerciseId: string) {
 }
 ```
 
-### 3.6 Dependent Dropdown Resolution
+### 3.7 Dependent Dropdown Resolution
 
 ```typescript
 // hooks/useDependentOptions.ts
@@ -1070,7 +1070,7 @@ export function useDependentOptions(
 }
 ```
 
-### 3.7 SpreadsheetHeader
+### 3.8 SpreadsheetHeader
 
 ```typescript
 // components/grid/SpreadsheetHeader.tsx
@@ -1133,7 +1133,7 @@ interface QuickFilterBarProps {
 // Styling: flex gap-2, each pill: px-3 py-1 rounded-full text-xs font-medium cursor-pointer
 ```
 
-### 3.8 BulkEditPanel
+### 3.9 BulkEditPanel
 
 ```typescript
 // components/grid/BulkEditPanel.tsx
@@ -1162,7 +1162,7 @@ interface BulkEditPanelProps {
 // After apply: close modal, clear selection, show toast "{n} records updated"
 ```
 
-### 3.9 SpreadsheetFooter
+### 3.10 SpreadsheetFooter
 
 ```typescript
 // components/grid/SpreadsheetFooter.tsx
@@ -1180,7 +1180,7 @@ interface SpreadsheetFooterProps {
 // Buttons: Button variant="ghost" size="sm"
 ```
 
-### 3.10 Client-Side Validation
+### 3.11 Client-Side Validation
 
 ```typescript
 // services/validation.ts
@@ -1261,7 +1261,7 @@ export function validateCell(
 }
 ```
 
-### 3.11 API Contracts
+### 3.12 API Contracts
 
 ```
 GET /api/exercises/:id
@@ -1296,7 +1296,7 @@ Response 200: text/csv
 // Includes a "status" column (new/existing/changed/classified/unclassified)
 ```
 
-### 3.12 Loading, Empty, and Error States
+### 3.13 Loading, Empty, and Error States
 
 **Page loading** (exercise detail fetch): Full-page `Spinner` centered below `TopBar`. `TopBar` shows back button but no exercise name until loaded.
 
@@ -1308,7 +1308,7 @@ Response 200: text/csv
 
 **Auto-save error** (single cell save fails): `toast.error('Failed to save. Retrying...')`. The system retries once automatically (built into React Query mutation `retry: 1`). If retry fails, cell shows a subtle amber border indicating unsaved state. The `pendingSaves` map in the store tracks these.
 
-### 3.13 Computed Columns
+### 3.14 Computed Columns
 
 Columns with `columnRole: 'computed'` are rendered as read-only classification columns (same styling as source columns but positioned on the right side with classification columns). They display values computed server-side (e.g., rollup lookups). When a parent classification value changes, the server returns updated computed values in the `ClassificationResult`. Implementation of the computation engine itself is out of scope for this spec -- it is handled server-side.
 
