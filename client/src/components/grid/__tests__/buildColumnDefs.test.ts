@@ -19,7 +19,7 @@ function makeExercise(
 ): ExerciseDetail {
   return {
     id: 'ex1', name: 'Test', description: '', status: 'active',
-    sourceColumns, classificationColumns,
+    viewMode: 'flat', sourceColumns, classificationColumns,
     deadline: null, lastRefreshedAt: '2026-01-01',
   };
 }

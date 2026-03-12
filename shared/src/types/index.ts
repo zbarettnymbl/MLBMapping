@@ -10,3 +10,4 @@ export * from './sync';
 export * from './reference-table';
 export * from './wizard';
 export * from './pipeline';
+export * from './assignment';

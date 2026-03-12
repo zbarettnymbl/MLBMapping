@@ -8,6 +8,7 @@ import { credentialsRouter } from './routes/credentials';
 import { bigqueryRouter } from './routes/bigquery';
 import { pipelineRouter } from './routes/pipelines';
 import { startPipelineScheduler } from './services/pipeline-scheduler';
+import { startReminderScheduler } from './services/reminder-scheduler';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use('/api/v1/pipelines', pipelineRouter);
 app.listen(PORT, () => {
   console.log(`MapForge server running on port ${PORT}`);
   startPipelineScheduler();
+  startReminderScheduler();
 });
 
 export { app };

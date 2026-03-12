@@ -16,6 +16,7 @@ import { PipelineRunsPage } from '@/pages/PipelineRunsPage';
 import { ReferenceTablesPage } from '@/pages/ReferenceTablesPage';
 import { CredentialsPage } from '@/pages/CredentialsPage';
 import { BigQueryExplorerPage } from '@/pages/BigQueryExplorerPage';
+import { ExerciseEditPage } from '@/pages/ExerciseEditPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -75,6 +76,14 @@ export function App() {
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <ExercisesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/exercises/:id/edit"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <ExerciseEditPage />
                 </ProtectedRoute>
               }
             />

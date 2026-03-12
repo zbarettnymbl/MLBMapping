@@ -2,7 +2,7 @@ export interface ExerciseListItem {
   id: string;
   name: string;
   description: string;
-  status: 'draft' | 'active' | 'paused' | 'archived';
+  status: 'draft' | 'active' | 'paused' | 'completed' | 'archived';
   totalRecords: number;
   classifiedRecords: number;
   errorCount: number;
@@ -25,7 +25,8 @@ export interface ExerciseDetail {
   id: string;
   name: string;
   description: string;
-  status: 'draft' | 'active' | 'paused' | 'archived';
+  status: 'draft' | 'active' | 'paused' | 'completed' | 'archived';
+  viewMode: 'flat' | 'matrix';
   sourceColumns: ExerciseColumn[];
   classificationColumns: ExerciseColumn[];
   deadline: string | null;

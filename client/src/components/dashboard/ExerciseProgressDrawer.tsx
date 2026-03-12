@@ -1,4 +1,5 @@
 import { forwardRef, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { X, Download, FileText, Loader2 } from 'lucide-react';
 import { useExerciseProgress, useSendReminder } from '../../hooks/useAdmin';
 import { exportProgressCsv } from '../../api/admin';
@@ -15,6 +16,7 @@ interface ExerciseProgressDrawerProps {
 
 export const ExerciseProgressDrawer = forwardRef<HTMLDivElement, ExerciseProgressDrawerProps>(
   function ExerciseProgressDrawer({ exerciseId, onClose }, ref) {
+    const navigate = useNavigate();
     const query = useExerciseProgress(exerciseId);
     const { data, isLoading, isError, refetch } = query;
     const reminderMutation = useSendReminder();
@@ -64,9 +66,16 @@ export const ExerciseProgressDrawer = forwardRef<HTMLDivElement, ExerciseProgres
       >
         {/* Header */}
         <div className="flex justify-between items-center px-5 py-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground">
-            {exercise?.name ?? 'Loading...'}
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-foreground">
+              {exercise?.name ?? 'Loading...'}
+            </h2>
+            {exercise && (
+              <Button variant="outline" size="sm" onClick={() => navigate(`/exercises/${exerciseId}/edit`)}>
+                Edit Exercise
+              </Button>
+            )}
+          </div>
           <Button variant="ghost" size="sm" onClick={onClose} data-testid="drawer-close">
             <X size={16} />
           </Button>

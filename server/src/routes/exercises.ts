@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import type { Request, Response } from 'express';
-import { eq, sql, and, asc, desc } from 'drizzle-orm';
+import { eq, sql, and, asc, desc, inArray } from 'drizzle-orm';
 import { db } from '../db/connection';
-import { enrichmentExercises, exerciseColumns, userExerciseAssignments, enrichmentRecords, classificationHistory, bigquerySources, users } from '../db/schema';
+import { enrichmentExercises, exerciseColumns, userExerciseAssignments, enrichmentRecords, classificationHistory, bigquerySources, users, assignmentPermissions } from '../db/schema';
 import { authMiddleware, requireRole } from '../middleware/auth';
 import type { ExerciseListItem, ColumnStat, CellError } from '@mapforge/shared';
 
@@ -219,6 +219,45 @@ router.get('/:id/records', async (req: Request, res: Response) => {
       conditions.push(sql`${enrichmentRecords.sourceData}::text ILIKE ${'%' + search + '%'}`);
     }
 
+    const userRole = req.user!.role;
+    let permissionColumnKeys: Set<string> | null = null;
+
+    if (userRole !== 'admin') {
+      const { getUserPermissions, buildRowFilterSql } = await import('../services/permission-filter');
+      const perms = await getUserPermissions(req.user!.id, id);
+
+      if (!perms) {
+        res.status(403).json({ error: { message: 'Not assigned to this exercise', code: 'FORBIDDEN' } });
+        return;
+      }
+
+      // Apply row filter
+      if (perms.rowFilter) {
+        const { validateFilterColumns } = await import('../services/permission-filter');
+        const invalid = await validateFilterColumns(id, perms.rowFilter as any);
+        if (invalid.length === 0) {
+          const filterSql = buildRowFilterSql(perms.rowFilter as any);
+          if (filterSql) conditions.push(filterSql);
+        }
+      }
+
+      // Apply manual overrides
+      if (perms.manualRowOverrides) {
+        const overrides = perms.manualRowOverrides as any;
+        if (overrides.exclude?.length > 0) {
+          conditions.push(sql`${enrichmentRecords.id} != ALL(${overrides.exclude}::uuid[])`);
+        }
+      }
+
+      // Resolve allowed columns
+      if (perms.allowedColumnIds) {
+        const allowedCols = await db.select({ key: exerciseColumns.key })
+          .from(exerciseColumns)
+          .where(inArray(exerciseColumns.id, perms.allowedColumnIds as string[]));
+        permissionColumnKeys = new Set(allowedCols.map(c => c.key));
+      }
+    }
+
     const whereClause = and(...conditions);
 
     // Get filtered records with pagination
@@ -277,15 +316,35 @@ router.get('/:id/records', async (req: Request, res: Response) => {
       });
     }
 
-    const mappedRecords = records.map(r => ({
-      id: r.id,
-      uniqueKey: r.uniqueKey as Record<string, string>,
-      sourceData: r.sourceData as Record<string, unknown>,
-      classifications: r.classifications as Record<string, string | null>,
-      recordState: r.recordState as 'new' | 'existing' | 'changed' | 'removed',
-      validationErrors: r.validationErrors as CellError[],
-      isFullyClassified: r.isFullyClassified,
-    }));
+    const mappedRecords = records.map(r => {
+      let sourceData = r.sourceData as Record<string, unknown>;
+      let classifications = r.classifications as Record<string, string | null>;
+
+      if (permissionColumnKeys) {
+        const { stripDisallowedColumns } = require('../services/permission-filter');
+        const allColumnKeys = new Set([
+          ...Object.keys(sourceData),
+          ...Object.keys(classifications),
+        ]);
+        const stripped = stripDisallowedColumns(
+          { sourceData, classifications },
+          permissionColumnKeys,
+          allColumnKeys
+        );
+        sourceData = stripped.sourceData;
+        classifications = stripped.classifications;
+      }
+
+      return {
+        id: r.id,
+        uniqueKey: r.uniqueKey as Record<string, string>,
+        sourceData,
+        classifications,
+        recordState: r.recordState as 'new' | 'existing' | 'changed' | 'removed',
+        validationErrors: r.validationErrors as CellError[],
+        isFullyClassified: r.isFullyClassified,
+      };
+    });
 
     res.json({
       records: mappedRecords,
@@ -324,6 +383,28 @@ router.put('/:id/records/:recordId/classify', async (req: Request, res: Response
     if (!record) {
       res.status(404).json({ error: { message: 'Record not found', code: 'NOT_FOUND' } });
       return;
+    }
+
+    if (req.user!.role !== 'admin') {
+      const { getUserPermissions } = await import('../services/permission-filter');
+      const perms = await getUserPermissions(req.user!.id, id);
+
+      if (!perms || perms.role !== 'editor') {
+        res.status(403).json({ error: { message: 'Not authorized to classify records', code: 'FORBIDDEN' } });
+        return;
+      }
+
+      if (perms.allowedColumnIds) {
+        const allowedCols = await db.select({ key: exerciseColumns.key })
+          .from(exerciseColumns)
+          .where(inArray(exerciseColumns.id, perms.allowedColumnIds as string[]));
+        const allowedKeys = new Set(allowedCols.map(c => c.key));
+        const disallowed = values.filter((v: any) => !allowedKeys.has(v.columnKey));
+        if (disallowed.length > 0) {
+          res.status(403).json({ error: { message: `Not authorized to edit columns: ${disallowed.map((d: any) => d.columnKey).join(', ')}`, code: 'FORBIDDEN' } });
+          return;
+        }
+      }
     }
 
     // Fetch classification columns with their validation rules
@@ -431,6 +512,28 @@ router.post('/:id/records/bulk-classify', async (req: Request, res: Response) =>
     const classificationCols = await db.select().from(exerciseColumns)
       .where(and(eq(exerciseColumns.exerciseId, id), eq(exerciseColumns.columnRole, 'classification')));
     const colByKey = new Map(classificationCols.map(c => [c.key, c]));
+
+    if (req.user!.role !== 'admin') {
+      const { getUserPermissions } = await import('../services/permission-filter');
+      const perms = await getUserPermissions(req.user!.id, id);
+
+      if (!perms || perms.role !== 'editor') {
+        res.status(403).json({ error: { message: 'Not authorized to classify records', code: 'FORBIDDEN' } });
+        return;
+      }
+
+      if (perms.allowedColumnIds) {
+        const allowedCols = await db.select({ key: exerciseColumns.key })
+          .from(exerciseColumns)
+          .where(inArray(exerciseColumns.id, perms.allowedColumnIds as string[]));
+        const allowedKeys = new Set(allowedCols.map(c => c.key));
+        const disallowed = values.filter((v: any) => !allowedKeys.has(v.columnKey));
+        if (disallowed.length > 0) {
+          res.status(403).json({ error: { message: `Not authorized to edit columns: ${disallowed.map((d: any) => d.columnKey).join(', ')}`, code: 'FORBIDDEN' } });
+          return;
+        }
+      }
+    }
 
     const bulkOperationId = crypto.randomUUID();
     let updatedCount = 0;
@@ -695,12 +798,40 @@ router.put('/:id/columns/:colId', requireRole('admin'), async (req: Request, res
   }
 });
 
-// DELETE /api/v1/exercises/:id/columns/:colId -- delete a column
+// DELETE /api/v1/exercises/:id/columns/:colId -- delete a column with impact count
 router.delete('/:id/columns/:colId', requireRole('admin'), async (req: Request, res: Response) => {
   try {
-    const { colId } = req.params;
+    const { id, colId } = req.params;
+
+    // Get the column key before deleting
+    const [col] = await db.select({ key: exerciseColumns.key }).from(exerciseColumns).where(eq(exerciseColumns.id, colId));
+    if (!col) {
+      res.status(404).json({ error: 'Column not found' });
+      return;
+    }
+
+    // Count affected records (those with non-null value for this column key)
+    const [impact] = await db.select({
+      affectedRecords: sql<number>`count(*) filter (where (${enrichmentRecords.classifications}->>${col.key}) is not null and (${enrichmentRecords.classifications}->>${col.key}) != '')::int`,
+    }).from(enrichmentRecords).where(eq(enrichmentRecords.exerciseId, id));
+
+    // Delete the column
     await db.delete(exerciseColumns).where(eq(exerciseColumns.id, colId));
-    res.json({ success: true });
+
+    // Async cleanup: remove orphaned key from enrichment_records classifications JSONB
+    const columnKey = col.key;
+    setImmediate(async () => {
+      try {
+        await db.execute(
+          sql`UPDATE enrichment_records SET classifications = classifications - ${columnKey} WHERE exercise_id = ${id}::uuid`
+        );
+        console.log(`[Cleanup] Removed classification key "${columnKey}" from exercise ${id}`);
+      } catch (err) {
+        console.error(`[Cleanup] Failed to remove key "${columnKey}":`, err);
+      }
+    });
+
+    res.json({ success: true, affectedRecords: impact?.affectedRecords ?? 0 });
   } catch (error) {
     console.error('Delete column error:', error);
     res.status(500).json({ error: 'Failed to delete column' });
@@ -791,6 +922,260 @@ router.post('/:id/source-config', requireRole('admin'), async (req: Request, res
   } catch (error) {
     console.error('Save source config error:', error);
     res.status(500).json({ error: 'Failed to save source config' });
+  }
+});
+
+// GET /api/v1/exercises/:id/source-config -- fetch BigQuery source config
+router.get('/:id/source-config', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const [source] = await db.select().from(bigquerySources).where(eq(bigquerySources.exerciseId, id));
+    if (!source) {
+      res.json({ sourceConfig: null });
+      return;
+    }
+    res.json({
+      sourceConfig: {
+        gcpProject: source.gcpProject,
+        dataset: source.dataset,
+        tableOrQuery: source.tableOrQuery,
+        queryType: source.queryType,
+        credentialId: source.credentialId,
+        refreshSchedule: source.refreshSchedule,
+      },
+    });
+  } catch (error) {
+    console.error('Fetch source config error:', error);
+    res.status(500).json({ error: 'Failed to fetch source config' });
+  }
+});
+
+// PUT /api/v1/exercises/:id/status -- transition exercise status
+router.put('/:id/status', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { status: newStatus } = req.body;
+
+    const [exercise] = await db.select().from(enrichmentExercises).where(eq(enrichmentExercises.id, id));
+    if (!exercise) {
+      res.status(404).json({ error: 'Exercise not found' });
+      return;
+    }
+
+    const transitions: Record<string, string[]> = {
+      draft: ['active'],
+      active: ['paused', 'completed', 'archived'],
+      paused: ['active'],
+      completed: ['archived'],
+      archived: [],
+    };
+
+    const allowed = transitions[exercise.status] || [];
+    if (!allowed.includes(newStatus)) {
+      res.status(400).json({
+        error: `Cannot transition from "${exercise.status}" to "${newStatus}". Allowed: ${allowed.join(', ') || 'none'}`,
+      });
+      return;
+    }
+
+    await db.update(enrichmentExercises).set({ status: newStatus, updatedAt: new Date() }).where(eq(enrichmentExercises.id, id));
+    res.json({ status: newStatus });
+  } catch (error) {
+    console.error('Status transition error:', error);
+    res.status(500).json({ error: 'Failed to update status' });
+  }
+});
+
+// PUT /api/v1/exercises/:id/assignments/:assignmentId -- update assignment role
+router.put('/:id/assignments/:assignmentId', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { assignmentId } = req.params;
+    const { role } = req.body;
+
+    if (!role || !['editor', 'viewer'].includes(role)) {
+      res.status(400).json({ error: 'role must be "editor" or "viewer"' });
+      return;
+    }
+
+    await db.update(userExerciseAssignments).set({ role }).where(eq(userExerciseAssignments.id, assignmentId));
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Update assignment error:', error);
+    res.status(500).json({ error: 'Failed to update assignment' });
+  }
+});
+
+// POST /api/v1/exercises/:id/assignments/bulk -- bulk assign users
+router.post('/:id/assignments/bulk', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { users: usersToAssign } = req.body as { users: Array<{ userId: string; role: string }> };
+
+    if (!Array.isArray(usersToAssign) || usersToAssign.length === 0) {
+      res.status(400).json({ error: 'users array is required' });
+      return;
+    }
+
+    // Find existing assignments
+    const existing = await db
+      .select({ userId: userExerciseAssignments.userId })
+      .from(userExerciseAssignments)
+      .where(eq(userExerciseAssignments.exerciseId, id));
+    const existingUserIds = new Set(existing.map(a => a.userId));
+
+    const created: Array<Record<string, unknown>> = [];
+    const skipped: Array<{ userId: string; reason: string }> = [];
+
+    for (const user of usersToAssign) {
+      if (existingUserIds.has(user.userId)) {
+        skipped.push({ userId: user.userId, reason: 'already assigned' });
+        continue;
+      }
+
+      const [assignment] = await db.insert(userExerciseAssignments).values({
+        userId: user.userId,
+        exerciseId: id,
+        role: user.role || 'editor',
+        assignedBy: req.user!.id,
+      }).returning();
+
+      created.push(assignment);
+    }
+
+    res.status(201).json({ created, skipped });
+  } catch (error) {
+    console.error('Bulk assign error:', error);
+    res.status(500).json({ error: 'Failed to bulk assign' });
+  }
+});
+
+// GET /api/v1/exercises/:id/assignments/:assignmentId/permissions
+router.get('/:id/assignments/:assignmentId/permissions', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { assignmentId } = req.params;
+    const [perms] = await db
+      .select()
+      .from(assignmentPermissions)
+      .where(eq(assignmentPermissions.assignmentId, assignmentId));
+
+    res.json({ permissions: perms || null });
+  } catch (error) {
+    console.error('Fetch permissions error:', error);
+    res.status(500).json({ error: 'Failed to fetch permissions' });
+  }
+});
+
+// PUT /api/v1/exercises/:id/assignments/:assignmentId/permissions
+router.put('/:id/assignments/:assignmentId/permissions', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id, assignmentId } = req.params;
+    const { allowedColumnIds, rowFilter, manualRowOverrides } = req.body;
+
+    // Validate row filter columns if provided
+    if (rowFilter?.conditions?.length) {
+      const { validateFilterColumns } = await import('../services/permission-filter');
+      const invalid = await validateFilterColumns(id, rowFilter);
+      if (invalid.length > 0) {
+        res.status(400).json({ error: `Invalid filter columns: ${invalid.join(', ')}` });
+        return;
+      }
+    }
+
+    // Validate manual overrides size
+    if (manualRowOverrides) {
+      if ((manualRowOverrides.include?.length || 0) > 1000 || (manualRowOverrides.exclude?.length || 0) > 1000) {
+        res.status(400).json({ error: 'Manual row overrides limited to 1000 entries per array' });
+        return;
+      }
+    }
+
+    // Upsert permissions
+    const [existing] = await db
+      .select()
+      .from(assignmentPermissions)
+      .where(eq(assignmentPermissions.assignmentId, assignmentId));
+
+    if (existing) {
+      await db.update(assignmentPermissions).set({
+        allowedColumnIds: allowedColumnIds ?? null,
+        rowFilter: rowFilter ?? null,
+        manualRowOverrides: manualRowOverrides ?? null,
+        updatedAt: new Date(),
+      }).where(eq(assignmentPermissions.id, existing.id));
+    } else {
+      await db.insert(assignmentPermissions).values({
+        assignmentId,
+        allowedColumnIds: allowedColumnIds ?? null,
+        rowFilter: rowFilter ?? null,
+        manualRowOverrides: manualRowOverrides ?? null,
+      });
+    }
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Update permissions error:', error);
+    res.status(500).json({ error: 'Failed to update permissions' });
+  }
+});
+
+// POST /api/v1/exercises/:id/assignments/:assignmentId/notify
+router.post('/:id/assignments/:assignmentId/notify', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id, assignmentId } = req.params;
+    const { type, message } = req.body as { type: string; message?: string };
+
+    // Fetch assignment + user + exercise
+    const [assignment] = await db
+      .select({
+        userId: userExerciseAssignments.userId,
+        role: userExerciseAssignments.role,
+        userEmail: users.email,
+        userName: users.name,
+      })
+      .from(userExerciseAssignments)
+      .innerJoin(users, eq(users.id, userExerciseAssignments.userId))
+      .where(eq(userExerciseAssignments.id, assignmentId));
+
+    if (!assignment) {
+      res.status(404).json({ error: 'Assignment not found' });
+      return;
+    }
+
+    const [exercise] = await db.select().from(enrichmentExercises).where(eq(enrichmentExercises.id, id));
+    if (!exercise) {
+      res.status(404).json({ error: 'Exercise not found' });
+      return;
+    }
+
+    const { sendEmail, buildAssignmentEmail, buildReminderEmail, buildReassignmentEmail } = await import('../services/email');
+
+    let email;
+    switch (type) {
+      case 'assignment':
+        email = buildAssignmentEmail(exercise.name, assignment.role, exercise.deadline ? String(exercise.deadline) : null);
+        break;
+      case 'reminder':
+        email = buildReminderEmail(exercise.name, exercise.deadline ? String(exercise.deadline) : 'N/A', 0);
+        break;
+      case 'custom':
+        email = {
+          to: '',
+          subject: `Message about ${exercise.name}`,
+          body: message || '',
+        };
+        break;
+      default:
+        res.status(400).json({ error: 'type must be "assignment", "reminder", or "custom"' });
+        return;
+    }
+
+    email.to = assignment.userEmail;
+    await sendEmail(email);
+
+    res.json({ sent: true });
+  } catch (error) {
+    console.error('Notify error:', error);
+    res.status(500).json({ error: 'Failed to send notification' });
   }
 });
 

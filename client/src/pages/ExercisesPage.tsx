@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Pencil } from 'lucide-react';
 import { useAllExercises } from '@/hooks/useAdmin';
 import { AppLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
@@ -123,6 +123,17 @@ export function ExercisesPage() {
                         >
                           {exercise.status}
                         </Badge>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/exercises/${exercise.id}/edit`);
+                          }}
+                          title="Edit exercise"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   ))}

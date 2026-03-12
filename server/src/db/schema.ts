@@ -134,6 +134,20 @@ export const userExerciseAssignments = pgTable("user_exercise_assignments", {
   role: text("role").notNull().default("editor"), // editor, viewer
   assignedBy: uuid("assigned_by").references(() => users.id),
   assignedAt: timestamp("assigned_at", { withTimezone: true }).defaultNow(),
+  lastReminderSentAt: timestamp("last_reminder_sent_at", { withTimezone: true }),
+});
+
+// ============================================================
+// Assignment Permissions
+// ============================================================
+export const assignmentPermissions = pgTable("assignment_permissions", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  assignmentId: uuid("assignment_id").references(() => userExerciseAssignments.id, { onDelete: 'cascade' }).notNull().unique(),
+  allowedColumnIds: uuid("allowed_column_ids").array(),
+  rowFilter: jsonb("row_filter"),
+  manualRowOverrides: jsonb("manual_row_overrides"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 // ============================================================
