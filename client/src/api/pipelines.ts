@@ -25,6 +25,11 @@ export async function deletePipeline(id: string): Promise<void> {
   await apiClient.delete(`/pipelines/${id}`);
 }
 
+export async function updatePipelineStatus(id: string, status: 'draft' | 'active' | 'paused'): Promise<PipelineDetail> {
+  const response = await apiClient.patch<PipelineDetail>(`/pipelines/${id}/status`, { status });
+  return response.data;
+}
+
 export async function triggerPipelineRun(id: string): Promise<{ runId: string }> {
   const response = await apiClient.post<{ runId: string }>(`/pipelines/${id}/run`);
   return response.data;
