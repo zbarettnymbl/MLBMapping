@@ -6,6 +6,8 @@ import type {
   BulkAssignResponse,
   NotifyRequest,
   SourceConfig,
+  BatchPermissionsResponse,
+  AddColumnRequest,
 } from '@mapforge/shared';
 
 // Source config
@@ -69,4 +71,32 @@ export async function deleteColumn(exerciseId: string, colId: string): Promise<{
     `/exercises/${exerciseId}/columns/${colId}`
   );
   return { affectedRecords: response.data.affectedRecords };
+}
+
+// Add single column
+export async function addColumn(exerciseId: string, column: AddColumnRequest): Promise<{ column: Record<string, unknown> }> {
+  const response = await apiClient.post<{ column: Record<string, unknown> }>(`/exercises/${exerciseId}/columns/add`, column);
+  return response.data;
+}
+
+// Update column metadata
+export async function updateColumn(exerciseId: string, colId: string, updates: Record<string, unknown>): Promise<void> {
+  await apiClient.put(`/exercises/${exerciseId}/columns/${colId}`, updates);
+}
+
+// Reorder columns
+export async function reorderColumns(exerciseId: string, columns: Array<{ id: string; ordinal: number }>): Promise<void> {
+  await apiClient.put(`/exercises/${exerciseId}/columns/reorder`, { columns });
+}
+
+// Batch fetch all assignment permissions
+export async function fetchBatchPermissions(exerciseId: string): Promise<BatchPermissionsResponse> {
+  const response = await apiClient.get<BatchPermissionsResponse>(`/exercises/${exerciseId}/assignments/permissions`);
+  return response.data;
+}
+
+// Fetch paginated records (reuse existing endpoint)
+export async function fetchRecords(exerciseId: string, page: number, pageSize: number): Promise<{ records: Record<string, unknown>[]; total: number; page: number; pageSize: number }> {
+  const response = await apiClient.get(`/exercises/${exerciseId}/records`, { params: { page, pageSize } });
+  return response.data;
 }
