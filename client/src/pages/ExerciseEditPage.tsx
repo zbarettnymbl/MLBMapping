@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useParams, useNavigate, useBlocker } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Loader2, ArrowLeft } from 'lucide-react';
 import { useExerciseDetail } from '@/hooks/useExerciseEdit';
 import { AppLayout } from '@/components/layout';
@@ -9,9 +9,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { GeneralTab } from '@/components/exercise-edit/GeneralTab';
 import { DataSourceTab } from '@/components/exercise-edit/DataSourceTab';
-import { ColumnsTab } from '@/components/exercise-edit/ColumnsTab';
-import { AssignmentsTab } from '@/components/exercise-edit/AssignmentsTab';
-import { PermissionsTab } from '@/components/exercise-edit/PermissionsTab';
+import { SchemaEditorGrid } from '@/components/exercise-edit/SchemaEditorGrid';
+import '@/components/grid/grid.css';
 
 export function ExerciseEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,9 +19,6 @@ export function ExerciseEditPage() {
   const [activeTab, setActiveTab] = useState('general');
   const [isDirty, setIsDirty] = useState(false);
   const [pendingTab, setPendingTab] = useState<string | null>(null);
-
-  // Navigation blocker for unsaved changes
-  const blocker = useBlocker(isDirty);
 
   const handleTabChange = (newTab: string) => {
     if (isDirty) {
@@ -96,9 +92,7 @@ export function ExerciseEditPage() {
           <TabsList>
             <TabsTrigger value="general">General</TabsTrigger>
             <TabsTrigger value="datasource">Data Source</TabsTrigger>
-            <TabsTrigger value="columns">Columns</TabsTrigger>
-            <TabsTrigger value="assignments">Assignments</TabsTrigger>
-            <TabsTrigger value="permissions">Permissions</TabsTrigger>
+            <TabsTrigger value="data-assignments">Data & Assignments</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general">
@@ -107,14 +101,8 @@ export function ExerciseEditPage() {
           <TabsContent value="datasource">
             <DataSourceTab exerciseId={id!} onDirtyChange={setIsDirty} />
           </TabsContent>
-          <TabsContent value="columns">
-            <ColumnsTab exerciseId={id!} exercise={exercise} onDirtyChange={setIsDirty} />
-          </TabsContent>
-          <TabsContent value="assignments">
-            <AssignmentsTab exerciseId={id!} />
-          </TabsContent>
-          <TabsContent value="permissions">
-            <PermissionsTab exerciseId={id!} exercise={exercise} />
+          <TabsContent value="data-assignments" className="h-[calc(100vh-220px)]">
+            <SchemaEditorGrid exerciseId={id!} exercise={exercise} />
           </TabsContent>
         </Tabs>
       </div>
@@ -130,16 +118,6 @@ export function ExerciseEditPage() {
         onConfirm={confirmTabSwitch}
       />
 
-      {/* Unsaved changes - navigation */}
-      <ConfirmDialog
-        open={blocker.state === 'blocked'}
-        onOpenChange={() => blocker.state === 'blocked' && blocker.reset()}
-        title="Unsaved changes"
-        description="You have unsaved changes. Leave this page?"
-        confirmLabel="Leave"
-        variant="destructive"
-        onConfirm={() => blocker.state === 'blocked' && blocker.proceed()}
-      />
     </AppLayout>
   );
 }
