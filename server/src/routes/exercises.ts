@@ -1263,4 +1263,36 @@ router.put('/:id/columns/reorder', requireRole('admin'), async (req: Request, re
   }
 });
 
+// GET /api/v1/exercises/:id/assignments/permissions -- batch fetch all assignment permissions
+router.get('/:id/assignments/permissions', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const results = await db
+      .select({
+        assignmentId: userExerciseAssignments.id,
+        userId: userExerciseAssignments.userId,
+        allowedColumnIds: assignmentPermissions.allowedColumnIds,
+        rowFilter: assignmentPermissions.rowFilter,
+        manualRowOverrides: assignmentPermissions.manualRowOverrides,
+      })
+      .from(userExerciseAssignments)
+      .leftJoin(assignmentPermissions, eq(assignmentPermissions.assignmentId, userExerciseAssignments.id))
+      .where(eq(userExerciseAssignments.exerciseId, id));
+
+    res.json({
+      permissions: results.map(r => ({
+        assignmentId: r.assignmentId,
+        userId: r.userId,
+        allowedColumnIds: r.allowedColumnIds ?? null,
+        rowFilter: r.rowFilter ?? null,
+        manualRowOverrides: r.manualRowOverrides ?? null,
+      })),
+    });
+  } catch (error) {
+    console.error('Batch permissions fetch error:', error);
+    res.status(500).json({ error: 'Failed to fetch permissions' });
+  }
+});
+
 export { router as exercisesRouter };
