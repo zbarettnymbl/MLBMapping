@@ -1,5 +1,5 @@
-import { useEffect, useCallback } from 'react';
-import { useParams, useBlocker } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout';
 import { PipelineCanvas } from '@/components/pipeline/PipelineCanvas';
 import { PipelineToolbar } from '@/components/pipeline/PipelineToolbar';
@@ -66,11 +66,7 @@ export function PipelineBuilderPage() {
     return () => clearInterval(interval);
   }, [store.activeRunId]);
 
-  // Unsaved changes warning
-  const blocker = useBlocker(
-    useCallback(() => usePipelineStore.getState().isDirty, [])
-  );
-
+  // Unsaved changes warning (browser tab close/refresh only — useBlocker requires data router)
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
       if (usePipelineStore.getState().isDirty) {
@@ -86,19 +82,6 @@ export function PipelineBuilderPage() {
       <div className="flex flex-col h-full">
         <PipelineToolbar />
         <RunProgressBanner />
-        {blocker.state === 'blocked' && (
-          <div className="px-4 py-2 bg-yellow-500/10 border-b border-yellow-500/30 flex items-center justify-between">
-            <span className="text-sm text-yellow-300">You have unsaved changes.</span>
-            <div className="flex gap-2">
-              <button onClick={() => blocker.proceed?.()} className="text-xs text-yellow-400 hover:text-yellow-300">
-                Leave anyway
-              </button>
-              <button onClick={() => blocker.reset?.()} className="text-xs text-forge-300 hover:text-forge-100">
-                Stay
-              </button>
-            </div>
-          </div>
-        )}
         <div className="flex flex-1 min-h-0 overflow-hidden">
           <NodePalette />
           <div className="flex-1 min-h-0">
