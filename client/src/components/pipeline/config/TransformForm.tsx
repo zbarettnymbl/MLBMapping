@@ -71,7 +71,7 @@ export function TransformForm({ nodeId, config }: Props) {
       {config.transformType === 'map' && (
         <div>
           <label className="block text-xs text-forge-400 mb-1">Column Mapping</label>
-          <p className="text-[10px] text-forge-500 mb-1">Rename columns: source_name -> target_name</p>
+          <p className="text-[10px] text-forge-500 mb-1">Rename columns: source_name {'->'} target_name</p>
           {Object.entries(mapColumns).map(([from, to], i) => (
             <div key={i} className="flex gap-1 mb-1">
               <input
@@ -80,7 +80,7 @@ export function TransformForm({ nodeId, config }: Props) {
                 readOnly
                 className="flex-1 px-2 py-1 bg-forge-800 border border-forge-600 rounded text-xs text-forge-300 font-mono"
               />
-              <span className="text-forge-500 text-xs self-center">-></span>
+              <span className="text-forge-500 text-xs self-center">{'->'}</span>
               <input
                 type="text"
                 value={to}
