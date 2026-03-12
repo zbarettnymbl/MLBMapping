@@ -1,14 +1,14 @@
-import { useState } from 'react';
 import { ChevronRight, ChevronDown, Table2, Database, Loader2 } from 'lucide-react';
 
 interface BigQueryDatasetTreeProps {
   datasets: string[];
   selectedDataset: string | null;
   selectedTable: string | null;
+  expandedDatasets: Set<string>;
   tablesMap: Record<string, string[]>;
   loadingDatasets: Record<string, boolean>;
   errorDatasets: Record<string, string | null>;
-  onExpandDataset: (dataset: string) => void;
+  onToggleDataset: (dataset: string) => void;
   onSelectTable: (dataset: string, table: string) => void;
   onRetryDataset: (dataset: string) => void;
 }
@@ -17,29 +17,14 @@ export function BigQueryDatasetTree({
   datasets,
   selectedDataset,
   selectedTable,
+  expandedDatasets,
   tablesMap,
   loadingDatasets,
   errorDatasets,
-  onExpandDataset,
+  onToggleDataset,
   onSelectTable,
   onRetryDataset,
 }: BigQueryDatasetTreeProps) {
-  const [expandedDatasets, setExpandedDatasets] = useState<Set<string>>(new Set());
-
-  function toggleDataset(dataset: string) {
-    setExpandedDatasets((prev) => {
-      const next = new Set(prev);
-      if (next.has(dataset)) {
-        next.delete(dataset);
-      } else {
-        next.add(dataset);
-        if (!tablesMap[dataset]) {
-          onExpandDataset(dataset);
-        }
-      }
-      return next;
-    });
-  }
 
   if (datasets.length === 0) {
     return <p className="px-3 py-2 text-xs text-forge-500">No datasets found</p>;
@@ -56,7 +41,7 @@ export function BigQueryDatasetTree({
         return (
           <div key={dataset}>
             <button
-              onClick={() => toggleDataset(dataset)}
+              onClick={() => onToggleDataset(dataset)}
               className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-forge-300 hover:bg-forge-800/50 rounded transition-colors"
             >
               {isExpanded ? (

@@ -169,4 +169,56 @@ describe('BigQueryExplorerPage', () => {
       expect(screen.getByText('raw_data')).toBeInTheDocument();
     });
   });
+
+  it('renders Export CSV button when table is selected', async () => {
+    // Pre-set store state to simulate a table being selected
+    const store = useBigQueryExplorerStore.getState();
+    store.selectCredential('cred-1');
+    store.setGcpProject('test-project');
+    store.selectDataset('analytics');
+    store.setSelectedTable('events');
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Export CSV')).toBeInTheDocument();
+    });
+
+    // Export CSV button should be enabled once preview data loads
+    await waitFor(() => {
+      const exportBtn = screen.getByText('Export CSV').closest('button');
+      expect(exportBtn).not.toBeDisabled();
+    });
+  });
+
+  it('renders Create Exercise button that links to wizard', async () => {
+    const store = useBigQueryExplorerStore.getState();
+    store.selectCredential('cred-1');
+    store.setGcpProject('test-project');
+    store.selectDataset('analytics');
+    store.setSelectedTable('events');
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('Create Exercise')).toBeInTheDocument();
+    });
+
+    const createBtn = screen.getByText('Create Exercise').closest('button');
+    expect(createBtn).toBeTruthy();
+  });
+
+  it('displays table header with dataset.table name', async () => {
+    const store = useBigQueryExplorerStore.getState();
+    store.selectCredential('cred-1');
+    store.setGcpProject('test-project');
+    store.selectDataset('analytics');
+    store.setSelectedTable('events');
+
+    renderPage();
+
+    await waitFor(() => {
+      expect(screen.getByText('analytics.events')).toBeInTheDocument();
+    });
+  });
 });

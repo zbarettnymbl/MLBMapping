@@ -1,11 +1,11 @@
-// client/src/components/bigquery/BigQuerySidebar.tsx
+import { useEffect, useCallback } from 'react';
 import { useQuery, useQueries } from '@tanstack/react-query';
 import { PanelLeftClose, PanelLeft, AlertCircle } from 'lucide-react';
 import { fetchCredentials } from '@/api/credentials';
 import { fetchBigQueryDatasets, fetchBigQueryTables } from '@/api/bigquery';
 import { useBigQueryExplorerStore } from '@/stores/bigqueryExplorerStore';
 import { BigQueryDatasetTree } from './BigQueryDatasetTree';
-import { useState, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 
 export function BigQuerySidebar() {
   const {
@@ -20,8 +20,9 @@ export function BigQuerySidebar() {
     toggleSidebar,
   } = useBigQueryExplorerStore();
 
-  // Track which datasets user has expanded (to trigger table fetches)
+  // Single source of truth for expanded datasets -- drives both visual state and table fetches
   const [expandedDatasets, setExpandedDatasets] = useState<string[]>([]);
+  const expandedDatasetsSet = useMemo(() => new Set(expandedDatasets), [expandedDatasets]);
 
   const credentialsQuery = useQuery({
     queryKey: ['credentials'],
@@ -30,13 +31,16 @@ export function BigQuerySidebar() {
 
   const datasetsQuery = useQuery({
     queryKey: ['bigquery', 'datasets', selectedCredentialId],
-    queryFn: async () => {
-      const result = await fetchBigQueryDatasets(selectedCredentialId!);
-      setGcpProject(result.gcpProject);
-      return result;
-    },
+    queryFn: () => fetchBigQueryDatasets(selectedCredentialId!),
     enabled: !!selectedCredentialId,
   });
+
+  // Sync gcpProject from query data into store via useEffect (not inside queryFn)
+  useEffect(() => {
+    if (datasetsQuery.data?.gcpProject) {
+      setGcpProject(datasetsQuery.data.gcpProject);
+    }
+  }, [datasetsQuery.data?.gcpProject, setGcpProject]);
 
   // Fetch tables for each expanded dataset using useQueries
   const tableQueries = useQueries({
@@ -63,10 +67,13 @@ export function BigQuerySidebar() {
     setExpandedDatasets([]);
   }
 
-  const handleExpandDataset = useCallback((dataset: string) => {
-    setExpandedDatasets((prev) =>
-      prev.includes(dataset) ? prev : [...prev, dataset]
-    );
+  const handleToggleDataset = useCallback((dataset: string) => {
+    setExpandedDatasets((prev) => {
+      if (prev.includes(dataset)) {
+        return prev.filter((d) => d !== dataset);
+      }
+      return [...prev, dataset];
+    });
   }, []);
 
   function handleSelectTable(dataset: string, table: string) {
@@ -86,6 +93,7 @@ export function BigQuerySidebar() {
           onClick={toggleSidebar}
           className="p-1.5 text-forge-500 hover:text-forge-300 transition-colors"
           title="Expand sidebar"
+          aria-label="Expand sidebar"
         >
           <PanelLeft className="w-4 h-4" />
         </button>
@@ -102,6 +110,7 @@ export function BigQuerySidebar() {
           onClick={toggleSidebar}
           className="p-1 text-forge-500 hover:text-forge-300 transition-colors"
           title="Collapse sidebar"
+          aria-label="Collapse sidebar"
         >
           <PanelLeftClose className="w-4 h-4" />
         </button>
@@ -166,10 +175,11 @@ export function BigQuerySidebar() {
             datasets={datasetsQuery.data.datasets}
             selectedDataset={selectedDataset}
             selectedTable={selectedTable}
+            expandedDatasets={expandedDatasetsSet}
             tablesMap={tablesMap}
             loadingDatasets={loadingDatasets}
             errorDatasets={errorDatasets}
-            onExpandDataset={handleExpandDataset}
+            onToggleDataset={handleToggleDataset}
             onSelectTable={handleSelectTable}
             onRetryDataset={handleRetryDataset}
           />

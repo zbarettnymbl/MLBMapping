@@ -6,6 +6,7 @@ import {
   Table2,
   GitBranch,
   Database,
+  Search,
   Key,
   LogOut,
   Flame,
@@ -62,7 +63,7 @@ const NAV_SECTIONS: NavSection[] = [
       {
         to: '/bigquery-explorer',
         label: 'BigQuery Explorer',
-        icon: Database,
+        icon: Search,
       },
     ],
   },
