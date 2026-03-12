@@ -139,6 +139,8 @@ Expected `components.json` key settings:
 {
   "$schema": "https://ui.shadcn.com/schema.json",
   "style": "default",
+  "rsc": false,
+  "tsx": true,
   "tailwind": {
     "css": "src/index.css",
     "baseColor": "slate"
@@ -256,13 +258,25 @@ sonner has a different API from react-hot-toast. Key differences:
 | `toast('msg')` | `toast('msg')` (same) |
 | `<Toaster />` from `react-hot-toast` | `<Toaster />` from `sonner` |
 
-The API is largely compatible. Main change is the import path and swapping the `<Toaster>` provider in `App.tsx`. Toast calls in `useAdmin.ts`, `useAutoSave.ts`, and `EnrichmentSpreadsheetPage.tsx` need import path updates. Any toast configuration options (position, duration) use different prop names on sonner's `<Toaster>`.
+The API is largely compatible. Main change is the import path and swapping the `<Toaster>` provider in `App.tsx`.
+
+Files requiring import path updates:
+- `client/src/App.tsx` (Toaster provider)
+- `client/src/hooks/useAdmin.ts`
+- `client/src/hooks/useAutoSave.ts`
+- `client/src/pages/EnrichmentSpreadsheetPage.tsx`
+- `client/src/components/pipeline/PipelineToolbar.tsx`
+- `client/src/hooks/__tests__/useAdmin.test.ts` (mock path)
+- `client/src/hooks/__tests__/useAutoSave.test.ts` (mock path)
+
+Any toast configuration options (position, duration) use different prop names on sonner's `<Toaster>`.
 
 ## Testing Strategy
 
 Client tests exist in `client/src/__tests__/` and `client/src/pages/__tests__/` and `client/src/stores/__tests__/`. Migration impact:
 
 - **Component render tests:** Will break due to changed component structure (different DOM output from shadcn vs custom). Update alongside each page migration step -- when a page is migrated, its tests are updated in the same step.
+- **Dashboard component tests:** Tests under `client/src/components/dashboard/__tests__/` (StatusBadge, ExerciseTable, ExerciseProgressDrawer, UserProgressCard, UserAvatarStack, AdminStatsBar) consume `Badge`, `Button`, `Card`, etc. from `common/`. These are updated as part of the AdminDashboardPage migration (step 7), since the dashboard sub-components are migrated at the same time.
 - **Store tests:** Unaffected. Zustand stores don't render components.
 - **MSW mocks:** Unaffected. API mocking is independent of UI components.
 - **Testing library queries:** May need updates -- `getByRole`, `getByText` queries may find different elements with shadcn's Radix-based DOM structure. Fix as encountered during page migration.
@@ -275,7 +289,7 @@ Client tests exist in `client/src/__tests__/` and `client/src/pages/__tests__/` 
 4. **ExercisesPage** -- Card grid with badges and buttons, validates card/badge components.
 5. **CredentialsPage** -- Simple form + table, validates input/form/table components.
 6. **ReferenceTablesPage** -- Table + modal form, validates dialog component.
-7. **AdminDashboardPage** -- Tabs + tables + badges, validates complex layouts. Update tests.
+7. **AdminDashboardPage + dashboard sub-components** -- Tabs + tables + badges, validates complex layouts. Migrate `components/dashboard/` components and their tests simultaneously.
 8. **BusinessDashboardPage** -- Cards and stats display.
 9. **Exercise Wizard (all steps)** -- Biggest migration, benefits from all components already proven. Searchable combobox built here.
 10. **EnrichmentSpreadsheetPage** -- Toolbar and chrome only (AG Grid untouched).
