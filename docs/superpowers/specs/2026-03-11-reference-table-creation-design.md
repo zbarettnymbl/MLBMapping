@@ -57,7 +57,7 @@ Wide modal (`max-w-4xl`), 2-step flow with step indicator in the header.
 **BigQuery:**
 - Dropdown to select from stored credentials
 - Text input for table name or SQL query
-- "Preview" button calls existing `GET /api/v1/bigquery/preview` (with credentialId and query params) to fetch sample rows and displays them in a preview table
+- "Preview" button calls existing `POST /api/v1/bigquery/preview` (with credentialId and query params) to fetch sample rows and displays them in a preview table
 - On creation: POST to create table with `refreshSource: 'bigquery'` and `refreshConfig: { credentialId, query }`, then call `/:id/refresh-bigquery` to populate rows
 - Create button shows loading spinner and is disabled during the multi-step async flow
 - Server POST handler change: destructure `refreshSource` and `refreshConfig` from `req.body`, use `refreshSource ?? 'manual'` as fallback, persist `refreshConfig` if provided
