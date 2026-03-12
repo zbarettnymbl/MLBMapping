@@ -13,8 +13,13 @@ import {
   sendNotification,
   updateExerciseStatus,
   deleteColumn,
+  addColumn,
+  updateColumn,
+  reorderColumns,
+  fetchBatchPermissions,
+  fetchRecords,
 } from '@/api/exercise-edit';
-import type { ExerciseDetail } from '@mapforge/shared';
+import type { ExerciseDetail, AddColumnRequest } from '@mapforge/shared';
 
 export function useExerciseDetail(exerciseId: string) {
   return useQuery({
@@ -184,5 +189,65 @@ export function useDeleteColumn(exerciseId: string) {
     onError: () => {
       toast.error('Failed to delete column');
     },
+  });
+}
+
+export function useAddColumn(exerciseId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (column: AddColumnRequest) => addColumn(exerciseId, column),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exercise-detail', exerciseId] });
+      toast.success('Column added');
+    },
+    onError: () => {
+      toast.error('Failed to add column');
+    },
+  });
+}
+
+export function useUpdateColumn(exerciseId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ colId, updates }: { colId: string; updates: Record<string, unknown> }) =>
+      updateColumn(exerciseId, colId, updates),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exercise-detail', exerciseId] });
+      toast.success('Column updated');
+    },
+    onError: () => {
+      toast.error('Failed to update column');
+    },
+  });
+}
+
+export function useReorderColumns(exerciseId: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (columns: Array<{ id: string; ordinal: number }>) => reorderColumns(exerciseId, columns),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['exercise-detail', exerciseId] });
+    },
+    onError: () => {
+      toast.error('Failed to reorder columns');
+    },
+  });
+}
+
+export function useBatchPermissions(exerciseId: string) {
+  return useQuery({
+    queryKey: ['batch-permissions', exerciseId],
+    queryFn: () => fetchBatchPermissions(exerciseId),
+    staleTime: 30_000,
+    enabled: !!exerciseId,
+  });
+}
+
+export function useExerciseRecords(exerciseId: string, page: number, pageSize: number) {
+  return useQuery({
+    queryKey: ['exercise-records', exerciseId, page, pageSize],
+    queryFn: () => fetchRecords(exerciseId, page, pageSize),
+    staleTime: 15_000,
+    enabled: !!exerciseId,
   });
 }
