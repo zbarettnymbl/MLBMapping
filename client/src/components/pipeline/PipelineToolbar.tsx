@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import type { PipelineStatus } from '@mapforge/shared';
 import { validatePipeline } from '@/utils/pipelineValidation';
 

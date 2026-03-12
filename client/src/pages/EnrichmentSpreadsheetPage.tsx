@@ -3,7 +3,7 @@ import { useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, AlertTriangle, Database, Loader2 } from 'lucide-react';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { fetchExerciseDetail, bulkClassify } from '../api/exercises';
 import { useExerciseRecords } from '../hooks/useExerciseRecords';
 import { useAutoSave } from '../hooks/useAutoSave';

@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import debounce from 'lodash-es/debounce';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { classifyRecord } from '../api/exercises';
 import { useSpreadsheetStore } from '../stores/spreadsheetStore';
 import type {

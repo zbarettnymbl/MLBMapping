@@ -1,5 +1,5 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { fetchAllExercises, fetchExerciseProgress, sendReminder } from '../api/admin';
 
 export function useAllExercises() {

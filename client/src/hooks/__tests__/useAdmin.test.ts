@@ -12,15 +12,15 @@ vi.mock('../../api/admin', () => ({
   sendReminder: vi.fn(),
 }));
 
-vi.mock('react-hot-toast', () => ({
-  default: {
+vi.mock('sonner', () => ({
+  toast: Object.assign(vi.fn(), {
     success: vi.fn(),
     error: vi.fn(),
-  },
+  }),
 }));
 
 import { fetchAllExercises, fetchExerciseProgress, sendReminder } from '../../api/admin';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 const mockExercises: AdminExerciseListItem[] = [
   {

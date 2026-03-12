@@ -20,8 +20,11 @@ vi.mock('../../api/exercises', () => ({
   classifyRecord: (...args: unknown[]) => mockClassify(...args),
 }));
 
-vi.mock('react-hot-toast', () => ({
-  default: { error: vi.fn() },
+vi.mock('sonner', () => ({
+  toast: Object.assign(vi.fn(), {
+    success: vi.fn(),
+    error: vi.fn(),
+  }),
 }));
 
 function createWrapper() {

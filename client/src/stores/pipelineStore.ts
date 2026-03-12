@@ -4,6 +4,14 @@ import type { NodeChange, EdgeChange } from '@xyflow/react';
 import { applyNodeChanges, applyEdgeChanges } from '@xyflow/react';
 import type { Node, Edge } from '@xyflow/react';
 
+interface NodeRunDetail {
+  inputRowCount: number | null;
+  outputRowCount: number | null;
+  startedAt: string | null;
+  completedAt: string | null;
+  errorMessage: string | null;
+}
+
 interface PipelineState {
   pipelineId: string | null;
   pipelineName: string;
@@ -16,7 +24,7 @@ interface PipelineState {
   status: PipelineStatus;
   activeRunId: string | null;
   nodeRunStatuses: Record<string, NodeRunStatus>;
-  nodeRunDetails: Record<string, { inputRowCount: number | null; outputRowCount: number | null; startedAt: string | null; completedAt: string | null; errorMessage: string | null }>;
+  nodeRunDetails: Record<string, NodeRunDetail>;
   validationErrors: Array<{ nodeId?: string; message: string }>;
 
   setPipelineId: (id: string | null) => void;
@@ -37,7 +45,7 @@ interface PipelineState {
   setStatus: (status: PipelineStatus) => void;
   setActiveRunId: (runId: string | null) => void;
   setNodeRunStatuses: (statuses: Record<string, NodeRunStatus>) => void;
-  setNodeRunDetails: (details: Record<string, { inputRowCount: number | null; outputRowCount: number | null; startedAt: string | null; completedAt: string | null; errorMessage: string | null }>) => void;
+  setNodeRunDetails: (details: Record<string, NodeRunDetail>) => void;
   setValidationErrors: (errors: Array<{ nodeId?: string; message: string }>) => void;
   clearRunStatus: () => void;
   markClean: () => void;
@@ -57,7 +65,7 @@ const initialState = {
   status: 'draft' as PipelineStatus,
   activeRunId: null as string | null,
   nodeRunStatuses: {} as Record<string, NodeRunStatus>,
-  nodeRunDetails: {} as Record<string, { inputRowCount: number | null; outputRowCount: number | null; startedAt: string | null; completedAt: string | null; errorMessage: string | null }>,
+  nodeRunDetails: {} as Record<string, NodeRunDetail>,
   validationErrors: [] as Array<{ nodeId?: string; message: string }>,
 };
 

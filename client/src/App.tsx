@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from '@/components/ui/sonner';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
@@ -38,16 +38,7 @@ export function App() {
       <BrowserRouter>
         <AuthProvider>
           <ThemeProvider>
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              style: {
-                background: 'var(--forge-900)',
-                color: 'var(--forge-100)',
-                border: '1px solid var(--forge-700)',
-              },
-            }}
-          />
+          <Toaster />
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<RootRedirect />} />
