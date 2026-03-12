@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import { usePipelineStore } from '@/stores/pipelineStore';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { cn } from '@/lib/utils';
 import type { PipelineNodeConfig, NodeRunStatus } from '@mapforge/shared';
 import { BigQuerySourceForm } from './config/BigQuerySourceForm';
 import { BigQueryDestinationForm } from './config/BigQueryDestinationForm';
@@ -28,7 +33,7 @@ function NodeConfigForm({ nodeId, nodeType, config }: { nodeId: string; nodeType
           <div className="px-2 py-1.5 bg-yellow-500/10 border border-yellow-500/30 rounded text-xs text-yellow-300">
             No visual editor for node type "{nodeType}".
           </div>
-          <pre className="text-xs text-forge-300 bg-forge-800 p-2 rounded overflow-auto max-h-48 font-mono">
+          <pre className="text-xs text-muted-foreground bg-muted p-2 rounded overflow-auto max-h-48 font-mono">
             {JSON.stringify(config, null, 2)}
           </pre>
         </div>
@@ -36,18 +41,18 @@ function NodeConfigForm({ nodeId, nodeType, config }: { nodeId: string; nodeType
   }
 }
 
-function RunStatusBadge({ status }: { status: NodeRunStatus }) {
-  const styles: Record<NodeRunStatus, string> = {
-    pending: 'bg-forge-600 text-forge-300',
-    running: 'bg-amber-500/20 text-amber-300',
-    success: 'bg-emerald-500/20 text-emerald-300',
-    failed: 'bg-red-500/20 text-red-300',
-    skipped: 'bg-forge-700 text-forge-400',
+function NodeRunStatusBadge({ status }: { status: NodeRunStatus }) {
+  const variantMap: Record<NodeRunStatus, 'secondary' | 'warning' | 'success' | 'destructive'> = {
+    pending: 'secondary',
+    running: 'warning',
+    success: 'success',
+    failed: 'destructive',
+    skipped: 'secondary',
   };
   return (
-    <span className={`px-2 py-0.5 rounded text-xs font-medium ${styles[status]}`}>
+    <Badge variant={variantMap[status]} className="text-xs">
       {status}
-    </span>
+    </Badge>
   );
 }
 
@@ -71,43 +76,47 @@ export function NodeConfigDrawer() {
   };
 
   return (
-    <div className="w-80 bg-forge-900 border-l border-forge-700 overflow-y-auto flex flex-col">
+    <div className="w-80 bg-card border-l border-border overflow-y-auto flex flex-col">
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-forge-700">
+      <div className="px-4 pt-4 pb-3 border-b border-border">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[10px] text-forge-500 uppercase tracking-wider">{selectedNode.type.replace(/_/g, ' ')}</span>
-          <button onClick={() => selectNode(null)} className="text-forge-400 hover:text-forge-200 text-xs">Close</button>
+          <span className="text-[10px] text-muted-foreground uppercase tracking-wider">{selectedNode.type.replace(/_/g, ' ')}</span>
+          <Button variant="ghost" size="sm" onClick={() => selectNode(null)} className="h-6 px-2 text-xs">
+            Close
+          </Button>
         </div>
-        <input
+        <Input
           type="text"
           value={selectedNode.label}
           onChange={(e) => handleLabelChange(e.target.value)}
-          className="w-full px-2 py-1 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100 font-medium"
+          className="h-8 text-sm font-medium"
         />
       </div>
 
       {/* Tabs */}
-      <div className="flex border-b border-forge-700">
+      <div className="flex border-b border-border">
         <button
           onClick={() => setActiveTab('config')}
-          className={`flex-1 px-3 py-2 text-xs font-medium ${
+          className={cn(
+            'flex-1 px-3 py-2 text-xs font-medium transition-colors',
             activeTab === 'config'
-              ? 'text-amber-400 border-b-2 border-amber-400'
-              : 'text-forge-400 hover:text-forge-200'
-          }`}
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
         >
           Config
         </button>
         <button
           onClick={() => setActiveTab('run')}
-          className={`flex-1 px-3 py-2 text-xs font-medium ${
+          className={cn(
+            'flex-1 px-3 py-2 text-xs font-medium transition-colors',
             activeTab === 'run'
-              ? 'text-amber-400 border-b-2 border-amber-400'
-              : 'text-forge-400 hover:text-forge-200'
-          }`}
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
         >
           Last Run
-          {runStatus && <RunStatusBadge status={runStatus} />}
+          {runStatus && <NodeRunStatusBadge status={runStatus} />}
         </button>
       </div>
 
@@ -116,56 +125,58 @@ export function NodeConfigDrawer() {
         {activeTab === 'config' ? (
           <div className="space-y-4">
             {nodeErrors.length > 0 && (
-              <div className="px-2 py-1.5 bg-red-500/10 border border-red-500/30 rounded">
+              <div className="px-2 py-1.5 bg-destructive/10 border border-destructive/30 rounded">
                 {nodeErrors.map((err, i) => (
-                  <p key={i} className="text-xs text-red-300">{err.message}</p>
+                  <p key={i} className="text-xs text-destructive">{err.message}</p>
                 ))}
               </div>
             )}
             <NodeConfigForm nodeId={selectedNode.id} nodeType={selectedNode.type} config={selectedNode.config} />
-            <button
+            <Button
+              variant="destructive"
+              size="sm"
               onClick={() => removeNode(selectedNode.id)}
-              className="w-full px-3 py-1.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded text-sm hover:bg-red-500/30"
+              className="w-full"
             >
               Delete Node
-            </button>
+            </Button>
           </div>
         ) : (
           <div className="space-y-3">
             {runStatus ? (
               <>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-forge-400">Status</span>
-                  <RunStatusBadge status={runStatus} />
+                  <span className="text-xs text-muted-foreground">Status</span>
+                  <NodeRunStatusBadge status={runStatus} />
                 </div>
                 {runDetail && (
                   <>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-forge-400">Input Rows</span>
-                      <span className="text-sm text-forge-200">{runDetail.inputRowCount ?? '-'}</span>
+                      <span className="text-xs text-muted-foreground">Input Rows</span>
+                      <span className="text-sm text-foreground">{runDetail.inputRowCount ?? '-'}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-forge-400">Output Rows</span>
-                      <span className="text-sm text-forge-200">{runDetail.outputRowCount ?? '-'}</span>
+                      <span className="text-xs text-muted-foreground">Output Rows</span>
+                      <span className="text-sm text-foreground">{runDetail.outputRowCount ?? '-'}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-forge-400">Duration</span>
-                      <span className="text-sm text-forge-200">
+                      <span className="text-xs text-muted-foreground">Duration</span>
+                      <span className="text-sm text-foreground">
                         {runDetail.startedAt && runDetail.completedAt
                           ? `${((new Date(runDetail.completedAt).getTime() - new Date(runDetail.startedAt).getTime()) / 1000).toFixed(1)}s`
                           : runDetail.startedAt ? 'Running...' : '-'}
                       </span>
                     </div>
                     {runDetail.errorMessage && (
-                      <div className="px-2 py-1.5 bg-red-500/10 border border-red-500/30 rounded">
-                        <p className="text-xs text-red-300">{runDetail.errorMessage}</p>
+                      <div className="px-2 py-1.5 bg-destructive/10 border border-destructive/30 rounded">
+                        <p className="text-xs text-destructive">{runDetail.errorMessage}</p>
                       </div>
                     )}
                   </>
                 )}
               </>
             ) : (
-              <p className="text-xs text-forge-500">No run data available. Run the pipeline to see execution results.</p>
+              <p className="text-xs text-muted-foreground">No run data available. Run the pipeline to see execution results.</p>
             )}
           </div>
         )}

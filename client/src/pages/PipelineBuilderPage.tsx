@@ -40,7 +40,7 @@ export function PipelineBuilderPage() {
       try {
         const { run, nodeRuns } = await fetchRunDetail(activeRunId);
         const statuses: Record<string, NodeRunStatus> = {};
-        const details: Record<string, { inputRowCount: number | null; outputRowCount: number | null; startedAt: string | null; completedAt: string | null; errorMessage: string | null }> = {};
+        const details: Record<string, { inputRowCount: number | null; outputRowCount: number | null; startedAt: string | null; completedAt: string | null; errorMessage: string | null; }> = {};
         for (const nr of nodeRuns) {
           statuses[nr.nodeId] = nr.status;
           details[nr.nodeId] = {

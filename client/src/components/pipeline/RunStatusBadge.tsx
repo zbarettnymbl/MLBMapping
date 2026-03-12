@@ -1,16 +1,29 @@
-const STATUS_STYLES: Record<string, string> = {
-  pending: 'bg-forge-600 text-forge-300',
-  running: 'bg-amber-500/20 text-amber-400 animate-pulse',
-  success: 'bg-emerald-500/20 text-emerald-400',
-  failed: 'bg-red-500/20 text-red-400',
-  cancelled: 'bg-forge-700 text-forge-500',
-  skipped: 'bg-forge-700 text-forge-500',
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
+const STATUS_VARIANTS: Record<string, {
+  variant: 'secondary' | 'warning' | 'success' | 'destructive';
+  className?: string;
+}> = {
+  pending: { variant: 'secondary' },
+  running: { variant: 'warning', className: 'animate-pulse' },
+  success: { variant: 'success' },
+  failed: { variant: 'destructive' },
+  cancelled: { variant: 'secondary' },
+  skipped: { variant: 'secondary' },
+  draft: { variant: 'secondary' },
+  active: { variant: 'success' },
+  paused: { variant: 'warning' },
 };
 
 export function RunStatusBadge({ status }: { status: string }) {
+  const config = STATUS_VARIANTS[status] || STATUS_VARIANTS.pending;
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${STATUS_STYLES[status] || STATUS_STYLES.pending}`}>
+    <Badge
+      variant={config.variant}
+      className={cn('text-xs', config.className)}
+    >
       {status}
-    </span>
+    </Badge>
   );
 }

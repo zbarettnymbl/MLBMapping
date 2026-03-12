@@ -3,6 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { usePipelineStore } from '@/stores/pipelineStore';
 import { createPipeline, updatePipeline, triggerPipelineRun, deletePipeline, updatePipelineStatus } from '@/api/pipelines';
 import { TriggerConfigPanel } from './TriggerConfigPanel';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import toast from 'react-hot-toast';
 import type { PipelineStatus } from '@mapforge/shared';
 import { validatePipeline } from '@/utils/pipelineValidation';
@@ -95,87 +99,91 @@ export function PipelineToolbar() {
     }
   };
 
-  const statusColors: Record<PipelineStatus, string> = {
-    draft: 'bg-forge-600 text-forge-300',
-    active: 'bg-emerald-500/20 text-emerald-300',
-    paused: 'bg-yellow-500/20 text-yellow-300',
+  const statusVariant: Record<PipelineStatus, 'secondary' | 'success' | 'warning'> = {
+    draft: 'secondary',
+    active: 'success',
+    paused: 'warning',
   };
 
   return (
-    <div className="flex items-center gap-3 px-4 py-3 bg-forge-900 border-b border-forge-700 relative">
-      <input
+    <div className="flex items-center gap-3 px-4 py-3 bg-card border-b border-border relative">
+      <Input
         type="text"
         value={store.pipelineName}
         onChange={(e) => store.setPipelineName(e.target.value)}
-        className="px-3 py-1.5 bg-forge-800 border border-forge-600 rounded text-forge-100 text-sm w-48"
+        className="w-48 h-8"
       />
-      <span className={`px-2 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider ${statusColors[store.status]}`}>
+      <Badge variant={statusVariant[store.status]} className="uppercase tracking-wider text-[10px]">
         {store.status}
-      </span>
+      </Badge>
 
-      <div className="border-l border-forge-700 h-6 mx-1" />
+      <Separator orientation="vertical" className="h-6 mx-1" />
 
       <TriggerConfigPanel />
 
       <div className="flex-1" />
 
       {store.pipelineId && (
-        <button
+        <Button
+          variant="outline"
+          size="sm"
           onClick={handleStatusToggle}
-          className="px-3 py-1.5 bg-forge-800 border border-forge-600 text-forge-200 rounded text-sm hover:bg-forge-700"
         >
           {store.status === 'active' ? 'Pause' : 'Activate'}
-        </button>
+        </Button>
       )}
-      <button
+      <Button
+        size="sm"
         onClick={handleSave}
         disabled={!store.isDirty || saving}
-        className="px-3 py-1.5 bg-amber-500 text-forge-900 rounded text-sm font-medium hover:bg-amber-400 disabled:opacity-50"
+        isLoading={saving}
       >
-        {saving ? 'Saving...' : 'Save'}
-      </button>
-      <button
+        Save
+      </Button>
+      <Button
+        size="sm"
         onClick={() => setShowRunConfirm(true)}
         disabled={!store.pipelineId}
-        className="px-3 py-1.5 bg-emerald-600 text-white rounded text-sm font-medium hover:bg-emerald-500 disabled:opacity-50"
+        className="bg-emerald-600 text-white hover:bg-emerald-500"
       >
         Run
-      </button>
+      </Button>
       {store.pipelineId && (
-        <button
+        <Button
+          variant="destructive"
+          size="sm"
           onClick={() => setShowDeleteConfirm(true)}
-          className="px-3 py-1.5 bg-red-500/20 text-red-400 border border-red-500/30 rounded text-sm hover:bg-red-500/30"
         >
           Delete
-        </button>
+        </Button>
       )}
 
       {/* Run confirmation */}
       {showRunConfirm && (
-        <div className="absolute top-full right-4 mt-1 z-50 bg-forge-800 border border-forge-600 rounded-lg shadow-xl p-4 w-64">
-          <p className="text-sm text-forge-200 mb-3">Run this pipeline now?</p>
+        <div className="absolute top-full right-4 mt-1 z-50 bg-card border border-border rounded-lg shadow-xl p-4 w-64">
+          <p className="text-sm text-foreground mb-3">Run this pipeline now?</p>
           <div className="flex gap-2">
-            <button onClick={handleRun} className="flex-1 px-3 py-1.5 bg-emerald-600 text-white rounded text-sm hover:bg-emerald-500">
+            <Button size="sm" onClick={handleRun} className="flex-1 bg-emerald-600 text-white hover:bg-emerald-500">
               Confirm
-            </button>
-            <button onClick={() => setShowRunConfirm(false)} className="flex-1 px-3 py-1.5 bg-forge-700 text-forge-300 rounded text-sm hover:bg-forge-600">
+            </Button>
+            <Button variant="secondary" size="sm" onClick={() => setShowRunConfirm(false)} className="flex-1">
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       )}
 
       {/* Delete confirmation */}
       {showDeleteConfirm && (
-        <div className="absolute top-full right-4 mt-1 z-50 bg-forge-800 border border-forge-600 rounded-lg shadow-xl p-4 w-64">
-          <p className="text-sm text-forge-200 mb-3">Delete this pipeline? This cannot be undone.</p>
+        <div className="absolute top-full right-4 mt-1 z-50 bg-card border border-border rounded-lg shadow-xl p-4 w-64">
+          <p className="text-sm text-foreground mb-3">Delete this pipeline? This cannot be undone.</p>
           <div className="flex gap-2">
-            <button onClick={handleDelete} className="flex-1 px-3 py-1.5 bg-red-600 text-white rounded text-sm hover:bg-red-500">
+            <Button variant="destructive" size="sm" onClick={handleDelete} className="flex-1">
               Delete
-            </button>
-            <button onClick={() => setShowDeleteConfirm(false)} className="flex-1 px-3 py-1.5 bg-forge-700 text-forge-300 rounded text-sm hover:bg-forge-600">
+            </Button>
+            <Button variant="secondary" size="sm" onClick={() => setShowDeleteConfirm(false)} className="flex-1">
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       )}

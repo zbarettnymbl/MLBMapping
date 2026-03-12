@@ -99,9 +99,9 @@ export function NodePalette() {
   };
 
   return (
-    <div className="w-56 border-r border-forge-800 bg-forge-900/50 overflow-y-auto shrink-0">
+    <div className="w-56 border-r border-border bg-card/50 overflow-y-auto shrink-0">
       <div className="px-3 pt-3 pb-1">
-        <span className="text-[10px] font-semibold text-forge-500 uppercase tracking-widest">
+        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest">
           Node Palette
         </span>
       </div>
@@ -109,7 +109,7 @@ export function NodePalette() {
       {NODE_CATEGORIES.map(({ category, nodes }) => (
         <div key={category} className="px-2 pb-2">
           <div className="px-1 pt-2.5 pb-1.5">
-            <span className="text-[10px] font-medium text-forge-500 uppercase tracking-wider">
+            <span className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
               {category}
             </span>
           </div>
@@ -123,7 +123,7 @@ export function NodePalette() {
                   draggable
                   onDragStart={(e) => onDragStart(e, node)}
                   onClick={() => handleClick(node)}
-                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-md border border-forge-750 bg-forge-850 cursor-grab hover:border-forge-600 hover:bg-forge-800/80 transition-all active:cursor-grabbing group"
+                  className="flex items-center gap-2.5 px-2.5 py-2 rounded-md border border-border bg-card cursor-grab hover:border-border hover:bg-muted/80 transition-all active:cursor-grabbing group"
                 >
                   <div
                     className="flex items-center justify-center w-7 h-7 rounded shrink-0"
@@ -132,10 +132,10 @@ export function NodePalette() {
                     <Icon size={14} style={{ color: node.color }} />
                   </div>
                   <div className="min-w-0">
-                    <div className="text-xs font-medium text-forge-200 truncate group-hover:text-forge-100">
+                    <div className="text-xs font-medium text-foreground truncate group-hover:text-foreground">
                       {node.label}
                     </div>
-                    <div className="text-[10px] text-forge-500 truncate leading-tight">
+                    <div className="text-[10px] text-muted-foreground truncate leading-tight">
                       {node.description}
                     </div>
                   </div>

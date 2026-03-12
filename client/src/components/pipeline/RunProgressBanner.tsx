@@ -1,4 +1,6 @@
 import { usePipelineStore } from '@/stores/pipelineStore';
+import { Button } from '@/components/ui/button';
+import { Loader2 } from 'lucide-react';
 
 export function RunProgressBanner() {
   const { activeRunId, nodeRunStatuses, nodes } = usePipelineStore();
@@ -16,16 +18,18 @@ export function RunProgressBanner() {
 
   if (allDone && hasFailed) {
     return (
-      <div className="px-4 py-2 bg-red-500/10 border-b border-red-500/30 flex items-center justify-between">
-        <span className="text-sm text-red-300">
+      <div className="px-4 py-2 bg-destructive/10 border-b border-destructive/30 flex items-center justify-between">
+        <span className="text-sm text-destructive">
           Pipeline failed{failedNodeName ? ` at "${failedNodeName}"` : ''}
         </span>
-        <button
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => usePipelineStore.getState().clearRunStatus()}
-          className="text-xs text-red-400 hover:text-red-300"
+          className="h-6 px-2 text-xs text-destructive hover:text-destructive"
         >
           Dismiss
-        </button>
+        </Button>
       </div>
     );
   }
@@ -33,21 +37,23 @@ export function RunProgressBanner() {
   if (allDone) {
     return (
       <div className="px-4 py-2 bg-emerald-500/10 border-b border-emerald-500/30 flex items-center justify-between">
-        <span className="text-sm text-emerald-300">Pipeline completed successfully</span>
-        <button
+        <span className="text-sm text-emerald-400 dark:text-emerald-300">Pipeline completed successfully</span>
+        <Button
+          variant="ghost"
+          size="sm"
           onClick={() => usePipelineStore.getState().clearRunStatus()}
-          className="text-xs text-emerald-400 hover:text-emerald-300"
+          className="h-6 px-2 text-xs text-emerald-400 hover:text-emerald-300"
         >
           Dismiss
-        </button>
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="px-4 py-2 bg-amber-500/10 border-b border-amber-500/30 flex items-center gap-2">
-      <div className="w-3 h-3 border-2 border-amber-400 border-t-transparent rounded-full animate-spin" />
-      <span className="text-sm text-amber-300">
+    <div className="px-4 py-2 bg-primary/10 border-b border-primary/30 flex items-center gap-2">
+      <Loader2 className="h-3 w-3 animate-spin text-primary" />
+      <span className="text-sm text-primary">
         Pipeline running... ({completedNodes}/{totalNodes} nodes complete)
       </span>
     </div>
