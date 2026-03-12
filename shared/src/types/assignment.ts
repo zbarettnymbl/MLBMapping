@@ -64,3 +64,27 @@ export interface SourceConfig {
 }
 
 export type ExerciseStatus = 'draft' | 'active' | 'paused' | 'completed' | 'archived';
+
+export interface BatchPermissionsResponse {
+  permissions: Array<{
+    assignmentId: string;
+    userId: string;
+    allowedColumnIds: string[] | null;
+    rowFilter: RowFilter | null;
+    manualRowOverrides: ManualRowOverrides | null;
+  }>;
+}
+
+export interface AddColumnRequest {
+  key: string;
+  label: string;
+  description?: string;
+  dataType: string;
+  columnRole: 'classification';
+  required?: boolean;
+  defaultValue?: string | null;
+  config?: Record<string, unknown>;
+  referenceLink?: Record<string, unknown> | null;
+  dependentConfig?: Record<string, unknown> | null;
+  ordinal?: number;
+}
