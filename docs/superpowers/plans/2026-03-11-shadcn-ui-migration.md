@@ -63,6 +63,14 @@ When migrating pages, use these mappings for old -> new variant names:
 - `client/src/pages/ExercisesPage.tsx` -- use shadcn tabs, badge, button, card
 - `client/src/pages/CredentialsPage.tsx` -- use shadcn form, input, button, card
 - `client/src/pages/ReferenceTablesPage.tsx` -- use shadcn table, dialog, form
+- `client/src/components/reference-tables/CreateReferenceTableModal.tsx` -- replace Modal, Button from common/, swap toast
+- `client/src/components/reference-tables/CsvUploadStep.tsx` -- replace forge-* classes
+- `client/src/components/reference-tables/ManualColumnEditor.tsx` -- replace Button from common/
+- `client/src/components/reference-tables/BigQuerySourceStep.tsx` -- replace Button, Spinner from common/
+- `client/src/components/reference-tables/ReferenceTableGrid.tsx` -- replace Button, Spinner from common/
+- `client/src/components/bigquery/BigQueryDatasetTree.tsx` -- replace forge-* classes
+- `client/src/components/bigquery/BigQuerySchemaPanel.tsx` -- replace forge-* classes
+- `client/src/components/bigquery/BigQuerySidebar.tsx` -- replace forge-* classes
 - `client/src/pages/AdminDashboardPage.tsx` -- use shadcn tabs, table, badge
 - `client/src/pages/BusinessDashboardPage.tsx` -- use shadcn card, button
 - `client/src/pages/ExerciseWizardPage.tsx` -- update step component styling
@@ -750,12 +758,20 @@ git add client/src/pages/CredentialsPage.tsx
 git commit -m "feat: migrate CredentialsPage to shadcn components"
 ```
 
-### Task 9: Migrate ReferenceTablesPage
+### Task 9: Migrate ReferenceTablesPage + sub-components
 
 **Files:**
 - Modify: `client/src/pages/ReferenceTablesPage.tsx`
+- Modify: `client/src/components/reference-tables/CreateReferenceTableModal.tsx`
+- Modify: `client/src/components/reference-tables/CsvUploadStep.tsx`
+- Modify: `client/src/components/reference-tables/ManualColumnEditor.tsx`
+- Modify: `client/src/components/reference-tables/BigQuerySourceStep.tsx`
+- Modify: `client/src/components/reference-tables/ReferenceTableGrid.tsx`
+- Modify: `client/src/components/bigquery/BigQueryDatasetTree.tsx`
+- Modify: `client/src/components/bigquery/BigQuerySchemaPanel.tsx`
+- Modify: `client/src/components/bigquery/BigQuerySidebar.tsx`
 
-- [ ] **Step 1: Read ReferenceTablesPage.tsx to understand current structure**
+- [ ] **Step 1: Read ReferenceTablesPage.tsx and all sub-component files**
 
 ```bash
 # Read the file first to understand what it uses
@@ -770,15 +786,31 @@ Replace:
 - `forge-*` classes -> shadcn semantic classes (`bg-card`, `border-border`, `text-foreground`)
 - Add/edit reference table forms -> use `useForm()` + zod schema + shadcn `Form`/`FormField`/`FormControl`/`FormMessage`
 
-- [ ] **Step 3: Verify page renders**
+- [ ] **Step 3: Migrate reference-tables sub-components**
+
+For each file in `components/reference-tables/`:
+- `CreateReferenceTableModal.tsx`: Replace `Modal` with shadcn `Dialog`. Replace `Button` from common/ with ui/button. Replace forge-* classes. Note: this file also imports `react-hot-toast` -- swap to `sonner` now (do not wait for Task 15).
+- `CsvUploadStep.tsx`: Replace forge-* classes with shadcn semantic classes.
+- `ManualColumnEditor.tsx`: Replace `Button` from common/ with ui/button. Replace forge-* classes.
+- `BigQuerySourceStep.tsx`: Replace `Button`, `Spinner` from common/ with ui equivalents. Replace forge-* classes.
+- `ReferenceTableGrid.tsx`: Replace `Button`, `Spinner` from common/ with ui equivalents. Replace forge-* classes.
+
+- [ ] **Step 4: Migrate bigquery sub-components**
+
+For each file in `components/bigquery/`:
+- `BigQueryDatasetTree.tsx`: Replace forge-* classes with shadcn semantic classes.
+- `BigQuerySchemaPanel.tsx`: Replace forge-* classes with shadcn semantic classes.
+- `BigQuerySidebar.tsx`: Replace forge-* classes with shadcn semantic classes.
+
+- [ ] **Step 5: Verify page renders**
 
 Navigate to http://localhost:5173/reference-tables.
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 6: Commit**
 
 ```bash
-git add client/src/pages/ReferenceTablesPage.tsx
-git commit -m "feat: migrate ReferenceTablesPage to shadcn components"
+git add client/src/pages/ReferenceTablesPage.tsx client/src/components/reference-tables/ client/src/components/bigquery/
+git commit -m "feat: migrate ReferenceTablesPage and sub-components to shadcn"
 ```
 
 ---
@@ -1013,7 +1045,7 @@ Replace Button styling (use variant mapping) and forge-* classes. This is the re
 
 Read the file. Define zod schema for column config fields. Replace form elements with shadcn components in `FormField` wrappers.
 
-- [ ] **Step 14: Verify wizard flow end-to-end**
+- [ ] **Step 15: Verify wizard flow end-to-end**
 
 ```bash
 cd client && npm run dev
@@ -1021,7 +1053,7 @@ cd client && npm run dev
 
 Navigate to http://localhost:5173/exercises/new and step through all 9 steps.
 
-- [ ] **Step 15: Commit**
+- [ ] **Step 16: Commit**
 
 ```bash
 git add client/src/components/wizard/ client/src/pages/ExerciseWizardPage.tsx
@@ -1124,6 +1156,7 @@ git commit -m "feat: migrate Pipeline pages to shadcn components"
 - Modify: `client/src/hooks/useAutoSave.ts`
 - Modify: `client/src/pages/EnrichmentSpreadsheetPage.tsx`
 - Modify: `client/src/components/pipeline/PipelineToolbar.tsx`
+- Modify: `client/src/components/reference-tables/CreateReferenceTableModal.tsx` (if not already swapped in Task 9)
 - Modify: `client/src/hooks/__tests__/useAdmin.test.ts`
 - Modify: `client/src/hooks/__tests__/useAutoSave.test.ts`
 - Modify: `client/package.json`
