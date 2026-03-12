@@ -7,6 +7,7 @@ import type { ColDef } from 'ag-grid-community';
 import { themeQuartz, colorSchemeDarkBlue } from 'ag-grid-community';
 import { previewBigQueryData, fetchBigQuerySchema } from '@/api/bigquery';
 import { useBigQueryExplorerStore } from '@/stores/bigqueryExplorerStore';
+import { useTheme } from '@/contexts/ThemeContext';
 import { BigQuerySchemaPanel } from './BigQuerySchemaPanel';
 import type { BigQueryConnectionConfig } from '@mapforge/shared';
 
@@ -22,7 +23,10 @@ export function BigQueryTableView() {
     setPreviewLimit,
   } = useBigQueryExplorerStore();
 
-  const gridTheme = themeQuartz.withPart(colorSchemeDarkBlue);
+  const { resolvedTheme } = useTheme();
+  const gridTheme = resolvedTheme === 'dark'
+    ? themeQuartz.withPart(colorSchemeDarkBlue)
+    : themeQuartz;
   const hasSelection = !!(selectedCredentialId && gcpProject && selectedDataset && selectedTable);
 
   const connectionConfig: BigQueryConnectionConfig | null = hasSelection

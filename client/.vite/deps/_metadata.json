@@ -1,0 +1,55 @@
+{
+  "hash": "4be7b09c",
+  "configHash": "fe3709e0",
+  "lockfileHash": "ee3912ea",
+  "browserHash": "b08cc309",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "9aa73aac",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "908c221a",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "ae7c5617",
+      "needsInterop": true
+    },
+    "ag-grid-community": {
+      "src": "../../../node_modules/ag-grid-community/dist/package/main.esm.mjs",
+      "file": "ag-grid-community.js",
+      "fileHash": "e10becce",
+      "needsInterop": false
+    },
+    "@tanstack/react-query": {
+      "src": "../../../node_modules/@tanstack/react-query/build/modern/index.js",
+      "file": "@tanstack_react-query.js",
+      "fileHash": "9cdb46f7",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "3fe4ec55",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-WLE5R2BZ": {
+      "file": "chunk-WLE5R2BZ.js"
+    },
+    "chunk-TRXKYCRB": {
+      "file": "chunk-TRXKYCRB.js"
+    },
+    "chunk-3O7X656O": {
+      "file": "chunk-3O7X656O.js"
+    }
+  }
+}

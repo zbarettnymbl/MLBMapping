@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { AppLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,6 +26,8 @@ export function CredentialsPage() {
   const [error, setError] = useState<string | null>(null);
   const [showAdd, setShowAdd] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const form = useForm<CredentialFormValues>({
     resolver: zodResolver(credentialSchema),
@@ -63,12 +66,8 @@ export function CredentialsPage() {
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete credential "${name}"? This cannot be undone.`)) return;
-    try {
-      await deleteCredential(id);
-      setCredentials((prev) => prev.filter((c) => c.id !== id));
-    } catch { /* ignore */ }
+  const handleDelete = (id: string, name: string) => {
+    setDeleteTarget({ id, name });
   };
 
   const handleCancel = () => {
@@ -198,6 +197,26 @@ export function CredentialsPage() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}
+        title="Delete Credential"
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This cannot be undone.`}
+        confirmLabel="Delete"
+        variant="destructive"
+        loading={deleting}
+        onConfirm={async () => {
+          if (!deleteTarget) return;
+          setDeleting(true);
+          try {
+            await deleteCredential(deleteTarget.id);
+            setCredentials((prev) => prev.filter((c) => c.id !== deleteTarget.id));
+            setDeleteTarget(null);
+          } catch { /* ignore */ }
+          finally { setDeleting(false); }
+        }}
+      />
     </AppLayout>
   );
 }

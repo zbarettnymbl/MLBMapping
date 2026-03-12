@@ -364,6 +364,15 @@ async function createTablesIfNeeded(client: postgres.Sql) {
       ordinal INTEGER
     );
 
+    CREATE TABLE IF NOT EXISTS reference_table_versions (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      reference_table_id UUID REFERENCES reference_tables(id) NOT NULL,
+      version INTEGER NOT NULL,
+      snapshot JSONB NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT now(),
+      created_by UUID REFERENCES users(id)
+    );
+
     CREATE TABLE IF NOT EXISTS pipelines (
       id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       org_id UUID REFERENCES organizations(id),

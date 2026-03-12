@@ -6,6 +6,7 @@ import { themeQuartz, colorSchemeDarkBlue } from 'ag-grid-community';
 import type { ColDef, CellValueChangedEvent, GridApi } from 'ag-grid-community';
 import { Plus, Trash2, Upload, RefreshCw, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   fetchReferenceTable,
@@ -29,6 +30,7 @@ export function ReferenceTableGrid({ table }: ReferenceTableGridProps) {
   const gridRef = useRef<GridApi | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [confirmAction, setConfirmAction] = useState<{ type: string; title: string; description: string; onConfirm: () => Promise<void> } | null>(null);
 
   const { data: detail, isLoading } = useQuery({
     queryKey: ['reference-tables', table.id],
@@ -86,60 +88,80 @@ export function ReferenceTableGrid({ table }: ReferenceTableGridProps) {
     }
   };
 
-  const handleDeleteSelected = async () => {
+  const handleDeleteSelected = () => {
     if (!gridRef.current) return;
     const selected = gridRef.current.getSelectedRows();
     if (selected.length === 0) { toast.error('No rows selected'); return; }
-    if (!confirm(`Delete ${selected.length} row(s)?`)) return;
-    setActionLoading('delete');
-    try {
-      for (const row of selected) {
-        await deleteReferenceTableRow(table.id, row.id);
-      }
-      queryClient.invalidateQueries({ queryKey: ['reference-tables', table.id] });
-      queryClient.invalidateQueries({ queryKey: ['reference-tables'] });
-      toast.success(`${selected.length} row(s) deleted`);
-    } catch {
-      toast.error('Failed to delete rows');
-    } finally {
-      setActionLoading(null);
-    }
+    setConfirmAction({
+      type: 'delete',
+      title: 'Delete Rows',
+      description: `Delete ${selected.length} selected row(s)? This cannot be undone.`,
+      onConfirm: async () => {
+        setActionLoading('delete');
+        try {
+          for (const row of selected) {
+            await deleteReferenceTableRow(table.id, row.id);
+          }
+          queryClient.invalidateQueries({ queryKey: ['reference-tables', table.id] });
+          queryClient.invalidateQueries({ queryKey: ['reference-tables'] });
+          toast.success(`${selected.length} row(s) deleted`);
+        } catch {
+          toast.error('Failed to delete rows');
+        } finally {
+          setActionLoading(null);
+        }
+      },
+    });
   };
 
-  const handleImportCsv = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const pendingFileRef = useRef<File | null>(null);
+
+  const handleImportCsv = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (!confirm('Importing will replace all existing rows. Continue?')) {
-      e.target.value = '';
-      return;
-    }
-    setActionLoading('import');
-    try {
-      await importCsv(table.id, file);
-      queryClient.invalidateQueries({ queryKey: ['reference-tables', table.id] });
-      queryClient.invalidateQueries({ queryKey: ['reference-tables'] });
-      toast.success('CSV imported');
-    } catch {
-      toast.error('Failed to import CSV');
-    } finally {
-      setActionLoading(null);
-      e.target.value = '';
-    }
+    pendingFileRef.current = file;
+    e.target.value = '';
+    setConfirmAction({
+      type: 'import',
+      title: 'Import CSV',
+      description: 'Importing will replace all existing rows. Are you sure you want to continue?',
+      onConfirm: async () => {
+        if (!pendingFileRef.current) return;
+        setActionLoading('import');
+        try {
+          await importCsv(table.id, pendingFileRef.current);
+          queryClient.invalidateQueries({ queryKey: ['reference-tables', table.id] });
+          queryClient.invalidateQueries({ queryKey: ['reference-tables'] });
+          toast.success('CSV imported');
+        } catch {
+          toast.error('Failed to import CSV');
+        } finally {
+          setActionLoading(null);
+          pendingFileRef.current = null;
+        }
+      },
+    });
   };
 
-  const handleRefreshBigQuery = async () => {
-    if (!confirm('Refresh will replace all rows from BigQuery. Continue?')) return;
-    setActionLoading('refresh');
-    try {
-      await refreshFromBigQuery(table.id);
-      queryClient.invalidateQueries({ queryKey: ['reference-tables', table.id] });
-      queryClient.invalidateQueries({ queryKey: ['reference-tables'] });
-      toast.success('Refreshed from BigQuery');
-    } catch {
-      toast.error('Failed to refresh from BigQuery');
-    } finally {
-      setActionLoading(null);
-    }
+  const handleRefreshBigQuery = () => {
+    setConfirmAction({
+      type: 'refresh',
+      title: 'Refresh from BigQuery',
+      description: 'Refreshing will replace all existing rows with data from BigQuery. Are you sure?',
+      onConfirm: async () => {
+        setActionLoading('refresh');
+        try {
+          await refreshFromBigQuery(table.id);
+          queryClient.invalidateQueries({ queryKey: ['reference-tables', table.id] });
+          queryClient.invalidateQueries({ queryKey: ['reference-tables'] });
+          toast.success('Refreshed from BigQuery');
+        } catch {
+          toast.error('Failed to refresh from BigQuery');
+        } finally {
+          setActionLoading(null);
+        }
+      },
+    });
   };
 
   if (isLoading) {
@@ -183,6 +205,21 @@ export function ReferenceTableGrid({ table }: ReferenceTableGridProps) {
           domLayout="normal"
         />
       </div>
+
+      <ConfirmDialog
+        open={!!confirmAction}
+        onOpenChange={(open) => { if (!open) setConfirmAction(null); }}
+        title={confirmAction?.title ?? ''}
+        description={confirmAction?.description ?? ''}
+        confirmLabel={confirmAction?.type === 'delete' ? 'Delete' : 'Continue'}
+        variant={confirmAction?.type === 'delete' ? 'destructive' : 'default'}
+        loading={!!actionLoading}
+        onConfirm={async () => {
+          if (!confirmAction) return;
+          await confirmAction.onConfirm();
+          setConfirmAction(null);
+        }}
+      />
     </div>
   );
 }

@@ -47,10 +47,20 @@ router.put('/:id', requireRole('admin'), async (req: Request, res: Response) => 
 // DELETE /api/v1/reference-tables/:id
 router.delete('/:id', requireRole('admin'), async (req: Request, res: Response) => {
   const { id } = req.params;
-  await db.delete(referenceTableRows).where(eq(referenceTableRows.referenceTableId, id));
-  await db.delete(referenceTableVersions).where(eq(referenceTableVersions.referenceTableId, id));
-  await db.delete(referenceTables).where(eq(referenceTables.id, id));
-  res.status(204).send();
+  try {
+    await db.delete(referenceTableRows).where(eq(referenceTableRows.referenceTableId, id));
+    // referenceTableVersions may not exist yet (migration pending)
+    try {
+      await db.delete(referenceTableVersions).where(eq(referenceTableVersions.referenceTableId, id));
+    } catch {
+      // table doesn't exist yet, skip
+    }
+    await db.delete(referenceTables).where(eq(referenceTables.id, id));
+    res.status(204).send();
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Delete failed';
+    res.status(500).json({ error: message });
+  }
 });
 
 // POST /api/v1/reference-tables/:id/rows

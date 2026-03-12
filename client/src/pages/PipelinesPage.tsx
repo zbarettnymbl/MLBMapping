@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { AppLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { RunStatusBadge } from '@/components/pipeline/RunStatusBadge';
 import { fetchPipelines, deletePipeline } from '@/api/pipelines';
 import type { PipelineListItem } from '@mapforge/shared';
@@ -12,6 +13,8 @@ export function PipelinesPage() {
   const [pipelines, setPipelines] = useState<PipelineListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -28,12 +31,8 @@ export function PipelinesPage() {
 
   useEffect(() => { load(); }, []);
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Delete pipeline "${name}"?`)) return;
-    try {
-      await deletePipeline(id);
-      setPipelines((prev) => prev.filter((p) => p.id !== id));
-    } catch { /* ignore */ }
+  const handleDelete = (id: string, name: string) => {
+    setDeleteTarget({ id, name });
   };
 
   return (
@@ -132,6 +131,26 @@ export function PipelinesPage() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}
+        title="Delete Pipeline"
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This cannot be undone.`}
+        confirmLabel="Delete"
+        variant="destructive"
+        loading={deleting}
+        onConfirm={async () => {
+          if (!deleteTarget) return;
+          setDeleting(true);
+          try {
+            await deletePipeline(deleteTarget.id);
+            setPipelines((prev) => prev.filter((p) => p.id !== deleteTarget.id));
+            setDeleteTarget(null);
+          } catch { /* ignore */ }
+          finally { setDeleting(false); }
+        }}
+      />
     </AppLayout>
   );
 }

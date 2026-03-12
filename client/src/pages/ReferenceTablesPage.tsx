@@ -4,6 +4,7 @@ import { Plus, ChevronDown, Loader2 } from 'lucide-react';
 import { AppLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { ReferenceTableGrid } from '@/components/reference-tables/ReferenceTableGrid';
 import { CreateReferenceTableModal } from '@/components/reference-tables/CreateReferenceTableModal';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,6 +17,8 @@ export function ReferenceTablesPage() {
   const queryClient = useQueryClient();
   const [expanded, setExpanded] = useState<string | null>(null);
   const [showCreate, setShowCreate] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const { data: tables = [], isLoading, error, refetch } = useQuery({
     queryKey: ['reference-tables'],
@@ -91,16 +94,9 @@ export function ReferenceTablesPage() {
                       <Button
                         variant="destructive"
                         size="sm"
-                        onClick={async (e) => {
+                        onClick={(e) => {
                           e.stopPropagation();
-                          if (!confirm(`Delete reference table "${table.name}"?`)) return;
-                          try {
-                            await deleteReferenceTable(table.id);
-                            queryClient.invalidateQueries({ queryKey: ['reference-tables'] });
-                            toast.success(`Deleted "${table.name}"`);
-                          } catch {
-                            toast.error('Failed to delete reference table');
-                          }
+                          setDeleteTarget({ id: table.id, name: table.name });
                         }}
                       >
                         Delete
@@ -129,6 +125,30 @@ export function ReferenceTablesPage() {
       </div>
 
       <CreateReferenceTableModal open={showCreate} onClose={() => setShowCreate(false)} />
+
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}
+        title="Delete Reference Table"
+        description={`Are you sure you want to delete "${deleteTarget?.name}"? This will remove all rows and version history. This cannot be undone.`}
+        confirmLabel="Delete"
+        variant="destructive"
+        loading={deleting}
+        onConfirm={async () => {
+          if (!deleteTarget) return;
+          setDeleting(true);
+          try {
+            await deleteReferenceTable(deleteTarget.id);
+            queryClient.invalidateQueries({ queryKey: ['reference-tables'] });
+            toast.success(`Deleted "${deleteTarget.name}"`);
+            setDeleteTarget(null);
+          } catch {
+            toast.error('Failed to delete reference table');
+          } finally {
+            setDeleting(false);
+          }
+        }}
+      />
     </AppLayout>
   );
 }
