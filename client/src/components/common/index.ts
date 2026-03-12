@@ -1,13 +1,5 @@
-export { Button } from './Button';
-export { Card, CardHeader, CardTitle, CardDescription } from './Card';
-export { Badge } from './Badge';
-export { ProgressBar } from './ProgressBar';
-export { Input } from './Input';
-export { Select } from './Select';
-export { Modal } from './Modal';
-export { Tabs } from './Tabs';
-export { Tooltip } from './Tooltip';
 export { Spinner } from './Spinner';
 export { EmptyState } from './EmptyState';
 export { ProtectedRoute } from './ProtectedRoute';
-export { Table } from './Table';
+export { UserAvatar } from './UserAvatar';
+export { NotificationBell } from './NotificationBell';
