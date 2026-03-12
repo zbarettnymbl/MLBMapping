@@ -21,21 +21,21 @@ const TYPE_COLORS: Record<string, string> = {
   DATETIME: 'text-orange-400',
   RECORD: 'text-yellow-400',
   STRUCT: 'text-yellow-400',
-  BYTES: 'text-forge-400',
+  BYTES: 'text-muted-foreground',
   NUMERIC: 'text-blue-400',
   BIGNUMERIC: 'text-blue-400',
   GEOGRAPHY: 'text-teal-400',
-  JSON: 'text-amber-400',
+  JSON: 'text-primary',
 };
 
 export function BigQuerySchemaPanel({ columns, isLoading }: BigQuerySchemaPanelProps) {
   const { schemaCollapsed, toggleSchema } = useBigQueryExplorerStore();
 
   return (
-    <div className="border-b border-forge-700">
+    <div className="border-b border-border">
       <button
         onClick={toggleSchema}
-        className="w-full flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-forge-500 hover:text-forge-300 transition-colors"
+        className="w-full flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
       >
         {schemaCollapsed ? (
           <ChevronRight className="w-3.5 h-3.5" />
@@ -50,13 +50,13 @@ export function BigQuerySchemaPanel({ columns, isLoading }: BigQuerySchemaPanelP
           {isLoading ? (
             <div className="space-y-1.5">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-4 bg-forge-800 rounded animate-pulse" />
+                <div key={i} className="h-4 bg-muted rounded animate-pulse" />
               ))}
             </div>
           ) : (
             <table className="w-full text-xs">
               <thead>
-                <tr className="text-forge-500 border-b border-forge-800">
+                <tr className="text-muted-foreground border-b border-muted">
                   <th className="text-left py-1 pr-4 font-medium">Column</th>
                   <th className="text-left py-1 pr-4 font-medium">Type</th>
                   <th className="text-left py-1 font-medium">Mode</th>
@@ -64,12 +64,12 @@ export function BigQuerySchemaPanel({ columns, isLoading }: BigQuerySchemaPanelP
               </thead>
               <tbody>
                 {columns.map((col) => (
-                  <tr key={col.name} className="border-b border-forge-800/50">
-                    <td className="py-1 pr-4 text-forge-200 font-mono">{col.name}</td>
-                    <td className={`py-1 pr-4 font-mono ${TYPE_COLORS[col.type] ?? 'text-forge-400'}`}>
+                  <tr key={col.name} className="border-b border-muted/50">
+                    <td className="py-1 pr-4 text-foreground font-mono">{col.name}</td>
+                    <td className={`py-1 pr-4 font-mono ${TYPE_COLORS[col.type] ?? 'text-muted-foreground'}`}>
                       {col.type}
                     </td>
-                    <td className="py-1 text-forge-500">{col.mode}</td>
+                    <td className="py-1 text-muted-foreground">{col.mode}</td>
                   </tr>
                 ))}
               </tbody>

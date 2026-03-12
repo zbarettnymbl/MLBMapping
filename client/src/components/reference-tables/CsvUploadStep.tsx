@@ -87,13 +87,13 @@ export function CsvUploadStep({ onParsed }: CsvUploadStepProps) {
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         className={`border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
-          dragOver ? 'border-amber-500 bg-amber-500/5' : 'border-forge-700 hover:border-forge-600'
+          dragOver ? 'border-primary bg-primary/5' : 'border-border hover:border-border/80'
         }`}
       >
-        <Upload className="w-8 h-8 mx-auto text-forge-500 mb-3" />
-        <p className="text-sm text-forge-300 mb-2">Drag and drop a CSV file, or click to browse</p>
+        <Upload className="w-8 h-8 mx-auto text-muted-foreground mb-3" />
+        <p className="text-sm text-muted-foreground mb-2">Drag and drop a CSV file, or click to browse</p>
         <label className="inline-block">
-          <span className="px-4 py-2 text-sm bg-forge-800 hover:bg-forge-750 text-forge-100 border border-forge-700 rounded-md cursor-pointer transition-colors">
+          <span className="px-4 py-2 text-sm bg-muted hover:bg-muted/80 text-foreground border border-border rounded-md cursor-pointer transition-colors">
             Choose File
           </span>
           <input type="file" accept=".csv" onChange={handleInputChange} className="hidden" />
@@ -108,20 +108,20 @@ export function CsvUploadStep({ onParsed }: CsvUploadStepProps) {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <p className="text-sm text-forge-300">
+        <p className="text-sm text-muted-foreground">
           {parsed.rawRows.length} rows parsed. Click a row to set it as the header.
         </p>
-        <label className="flex items-center gap-2 text-xs text-forge-400">
+        <label className="flex items-center gap-2 text-xs text-muted-foreground">
           <input
             type="checkbox"
             checked={noHeaders}
             onChange={toggleNoHeaders}
-            className="rounded border-forge-600"
+            className="rounded border-border"
           />
           No header row
         </label>
       </div>
-      <div className="overflow-x-auto border border-forge-700 rounded-lg">
+      <div className="overflow-x-auto border border-border rounded-lg">
         <table className="w-full text-xs">
           <tbody>
             {previewRows.map((row, rowIdx) => (
@@ -130,15 +130,15 @@ export function CsvUploadStep({ onParsed }: CsvUploadStepProps) {
                 onClick={() => !noHeaders && selectHeaderRow(rowIdx)}
                 className={`cursor-pointer transition-colors ${
                   !noHeaders && rowIdx === effectiveHeaderIndex
-                    ? 'bg-amber-500/15 text-amber-300 font-semibold'
+                    ? 'bg-primary/15 text-primary font-semibold'
                     : rowIdx < effectiveHeaderIndex
-                    ? 'bg-forge-900/50 text-forge-600'
-                    : 'hover:bg-forge-800/50 text-forge-300'
+                    ? 'bg-background/50 text-muted-foreground/50'
+                    : 'hover:bg-muted/50 text-muted-foreground'
                 }`}
               >
-                <td className="px-2 py-1.5 text-forge-600 w-8 text-right">{rowIdx}</td>
+                <td className="px-2 py-1.5 text-muted-foreground/50 w-8 text-right">{rowIdx}</td>
                 {row.map((cell, cellIdx) => (
-                  <td key={cellIdx} className="px-3 py-1.5 border-l border-forge-800 whitespace-nowrap max-w-[200px] truncate">
+                  <td key={cellIdx} className="px-3 py-1.5 border-l border-muted whitespace-nowrap max-w-[200px] truncate">
                     {cell}
                   </td>
                 ))}
@@ -149,7 +149,7 @@ export function CsvUploadStep({ onParsed }: CsvUploadStepProps) {
       </div>
       <button
         onClick={() => { setParsed(null); }}
-        className="text-xs text-forge-500 hover:text-forge-300 transition-colors"
+        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
       >
         Choose a different file
       </button>

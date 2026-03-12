@@ -1,14 +1,16 @@
 import { useState, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Database, FileSpreadsheet, Cloud } from 'lucide-react';
-import { Modal } from '@/components/common/Modal';
-import { Button } from '@/components/common/Button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { ManualColumnEditor } from './ManualColumnEditor';
 import { CsvUploadStep } from './CsvUploadStep';
 import { BigQuerySourceStep } from './BigQuerySourceStep';
 import { createReferenceTable, importCsv, refreshFromBigQuery } from '@/api/reference-tables';
 import type { ReferenceTableColumn } from '@mapforge/shared';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 type SourceType = 'manual' | 'csv' | 'bigquery';
 
@@ -117,83 +119,85 @@ export function CreateReferenceTableModal({ open, onClose }: CreateReferenceTabl
   ];
 
   return (
-    <Modal open={open} onClose={handleClose} title={`Create Reference Table (Step ${step}/2)`} size="xl">
-      {step === 1 && (
-        <div className="space-y-4">
-          <div>
-            <label className="block text-sm text-forge-300 mb-1">Name *</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. Country Codes"
-              className="w-full px-3 py-2 text-sm bg-forge-850 border border-forge-700 rounded-md text-forge-50 focus:ring-1 focus:ring-amber-500/40 focus:border-amber-500/40"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-forge-300 mb-1">Description</label>
-            <input
-              type="text"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Optional description"
-              className="w-full px-3 py-2 text-sm bg-forge-850 border border-forge-700 rounded-md text-forge-50 focus:ring-1 focus:ring-amber-500/40 focus:border-amber-500/40"
-            />
-          </div>
-          <div>
-            <label className="block text-sm text-forge-300 mb-2">Data Source</label>
-            <div className="grid grid-cols-3 gap-3">
-              {sourceOptions.map((opt) => (
-                <button
-                  key={opt.key}
-                  onClick={() => setSource(opt.key)}
-                  className={`p-4 rounded-lg border text-left transition-all ${
-                    source === opt.key
-                      ? 'border-amber-500 bg-amber-500/10 ring-1 ring-amber-500/40'
-                      : 'border-forge-700 bg-forge-800/50 hover:border-forge-600'
-                  }`}
-                >
-                  <div className={`mb-2 ${source === opt.key ? 'text-amber-400' : 'text-forge-400'}`}>{opt.icon}</div>
-                  <p className="text-sm font-medium text-forge-100">{opt.label}</p>
-                  <p className="text-xs text-forge-500 mt-0.5">{opt.desc}</p>
-                </button>
-              ))}
+    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}>
+      <DialogContent className="max-w-4xl">
+        <DialogHeader>
+          <DialogTitle>Create Reference Table (Step {step}/2)</DialogTitle>
+        </DialogHeader>
+
+        {step === 1 && (
+          <div className="space-y-4">
+            <div>
+              <Label className="mb-1">Name *</Label>
+              <Input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Country Codes"
+              />
+            </div>
+            <div>
+              <Label className="mb-1">Description</Label>
+              <Input
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Optional description"
+              />
+            </div>
+            <div>
+              <Label className="mb-2">Data Source</Label>
+              <div className="grid grid-cols-3 gap-3">
+                {sourceOptions.map((opt) => (
+                  <button
+                    key={opt.key}
+                    onClick={() => setSource(opt.key)}
+                    className={`p-4 rounded-lg border text-left transition-all ${
+                      source === opt.key
+                        ? 'border-primary bg-primary/10 ring-1 ring-primary/40'
+                        : 'border-border bg-muted/50 hover:border-border/80'
+                    }`}
+                  >
+                    <div className={`mb-2 ${source === opt.key ? 'text-primary' : 'text-muted-foreground'}`}>{opt.icon}</div>
+                    <p className="text-sm font-medium text-foreground">{opt.label}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{opt.desc}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button onClick={() => setStep(2)} disabled={!canProceedStep1}>
+                Next
+              </Button>
             </div>
           </div>
-          <div className="flex justify-end">
-            <Button onClick={() => setStep(2)} disabled={!canProceedStep1}>
-              Next
-            </Button>
-          </div>
-        </div>
-      )}
+        )}
 
-      {step === 2 && (
-        <div className="space-y-4">
-          {source === 'manual' && (
-            <ManualColumnEditor columns={columns} onChange={setColumns} />
-          )}
-          {source === 'csv' && (
-            <CsvUploadStep
-              onParsed={({ columns: cols, file }) => {
-                setCsvColumns(cols);
-                setCsvFile(file);
-              }}
-            />
-          )}
-          {source === 'bigquery' && (
-            <BigQuerySourceStep onConfigured={setBqConfig} />
-          )}
-          <div className="flex justify-between">
-            <Button variant="ghost" onClick={() => setStep(1)}>
-              Back
-            </Button>
-            <Button onClick={handleCreate} disabled={!canCreate() || creating} isLoading={creating}>
-              Create
-            </Button>
+        {step === 2 && (
+          <div className="space-y-4">
+            {source === 'manual' && (
+              <ManualColumnEditor columns={columns} onChange={setColumns} />
+            )}
+            {source === 'csv' && (
+              <CsvUploadStep
+                onParsed={({ columns: cols, file }) => {
+                  setCsvColumns(cols);
+                  setCsvFile(file);
+                }}
+              />
+            )}
+            {source === 'bigquery' && (
+              <BigQuerySourceStep onConfigured={setBqConfig} />
+            )}
+            <div className="flex justify-between">
+              <Button variant="ghost" onClick={() => setStep(1)}>
+                Back
+              </Button>
+              <Button onClick={handleCreate} disabled={!canCreate() || creating} isLoading={creating}>
+                Create
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
-    </Modal>
+        )}
+      </DialogContent>
+    </Dialog>
   );
 }

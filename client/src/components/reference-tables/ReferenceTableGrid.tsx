@@ -4,9 +4,8 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { AgGridReact } from 'ag-grid-react';
 import { themeQuartz, colorSchemeDarkBlue } from 'ag-grid-community';
 import type { ColDef, CellValueChangedEvent, GridApi } from 'ag-grid-community';
-import { Plus, Trash2, Upload, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/common/Button';
-import { Spinner } from '@/components/common/Spinner';
+import { Plus, Trash2, Upload, RefreshCw, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import {
   fetchReferenceTable,
@@ -17,7 +16,7 @@ import {
   refreshFromBigQuery,
 } from '@/api/reference-tables';
 import type { ReferenceTableListItem } from '@mapforge/shared';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 
 interface ReferenceTableGridProps {
   table: ReferenceTableListItem;
@@ -144,7 +143,11 @@ export function ReferenceTableGrid({ table }: ReferenceTableGridProps) {
   };
 
   if (isLoading) {
-    return <div className="flex justify-center py-6"><Spinner size="md" /></div>;
+    return (
+      <div className="flex justify-center py-6">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
 
   return (

@@ -27,7 +27,7 @@ export function BigQueryDatasetTree({
 }: BigQueryDatasetTreeProps) {
 
   if (datasets.length === 0) {
-    return <p className="px-3 py-2 text-xs text-forge-500">No datasets found</p>;
+    return <p className="px-3 py-2 text-xs text-muted-foreground">No datasets found</p>;
   }
 
   return (
@@ -42,38 +42,38 @@ export function BigQueryDatasetTree({
           <div key={dataset}>
             <button
               onClick={() => onToggleDataset(dataset)}
-              className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-forge-300 hover:bg-forge-800/50 rounded transition-colors"
+              className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted/50 rounded transition-colors"
             >
               {isExpanded ? (
-                <ChevronDown className="w-3.5 h-3.5 text-forge-500 shrink-0" />
+                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
               ) : (
-                <ChevronRight className="w-3.5 h-3.5 text-forge-500 shrink-0" />
+                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
               )}
-              <Database className="w-3.5 h-3.5 text-forge-500 shrink-0" />
+              <Database className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
               <span className="truncate">{dataset}</span>
             </button>
 
             {isExpanded && (
-              <div className="ml-3 pl-3 border-l border-forge-800">
+              <div className="ml-3 pl-3 border-l border-muted">
                 {isLoading && (
-                  <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-forge-500">
+                  <div className="flex items-center gap-2 px-3 py-1.5 text-xs text-muted-foreground">
                     <Loader2 className="w-3 h-3 animate-spin" />
                     Loading tables...
                   </div>
                 )}
                 {error && (
-                  <div className="px-3 py-1.5 text-xs text-red-400">
+                  <div className="px-3 py-1.5 text-xs text-destructive">
                     {error}
                     <button
                       onClick={() => onRetryDataset(dataset)}
-                      className="ml-2 text-amber-400 hover:text-amber-300 underline"
+                      className="ml-2 text-primary hover:text-primary/80 underline"
                     >
                       Retry
                     </button>
                   </div>
                 )}
                 {tables && tables.length === 0 && !isLoading && !error && (
-                  <p className="px-3 py-1.5 text-xs text-forge-600">No tables found</p>
+                  <p className="px-3 py-1.5 text-xs text-muted-foreground/50">No tables found</p>
                 )}
                 {tables?.map((table) => {
                   const isActive = selectedDataset === dataset && selectedTable === table;
@@ -83,8 +83,8 @@ export function BigQueryDatasetTree({
                       onClick={() => onSelectTable(dataset, table)}
                       className={`w-full flex items-center gap-1.5 px-3 py-1 text-xs rounded transition-colors ${
                         isActive
-                          ? 'bg-amber-500/10 text-amber-400'
-                          : 'text-forge-400 hover:bg-forge-800/50 hover:text-forge-200'
+                          ? 'bg-primary/10 text-primary'
+                          : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
                       }`}
                     >
                       <Table2 className="w-3 h-3 shrink-0" />

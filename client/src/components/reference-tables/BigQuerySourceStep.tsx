@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 import { fetchCredentials } from '@/api/credentials';
 import { fetchBigQueryDatasets, fetchBigQueryTables, previewBigQueryData } from '@/api/bigquery';
-import { Button } from '@/components/common/Button';
-import { Spinner } from '@/components/common/Spinner';
+import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import type { ReferenceTableColumn, BigQueryColumnInfo } from '@mapforge/shared';
 
 interface BigQuerySourceStepProps {
@@ -79,18 +81,22 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
   };
 
   if (credentialsLoading) {
-    return <div className="flex justify-center py-8"><Spinner size="md" /></div>;
+    return (
+      <div className="flex justify-center py-8">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
 
   return (
     <div className="space-y-4">
       {/* Credential selector */}
       <div>
-        <label className="block text-sm text-forge-300 mb-1">Credential</label>
+        <Label className="mb-1">Credential</Label>
         <select
           value={credentialId}
           onChange={(e) => { setCredentialId(e.target.value); setDataset(''); setTableOrQuery(''); setPreviewData(null); onConfigured(null); }}
-          className="w-full px-3 py-2 text-sm bg-forge-850 border border-forge-700 rounded-md text-forge-50 focus:ring-1 focus:ring-amber-500/40"
+          className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md text-foreground focus:ring-1 focus:ring-ring"
         >
           <option value="">Select a credential...</option>
           {credentials?.map((c) => (
@@ -102,11 +108,11 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
       {/* Dataset selector */}
       {credentialId && datasetsData && (
         <div>
-          <label className="block text-sm text-forge-300 mb-1">Dataset</label>
+          <Label className="mb-1">Dataset</Label>
           <select
             value={dataset}
             onChange={(e) => { setDataset(e.target.value); setTableOrQuery(''); setPreviewData(null); onConfigured(null); }}
-            className="w-full px-3 py-2 text-sm bg-forge-850 border border-forge-700 rounded-md text-forge-50 focus:ring-1 focus:ring-amber-500/40"
+            className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md text-foreground focus:ring-1 focus:ring-ring"
           >
             <option value="">Select a dataset...</option>
             {datasetsData.datasets.map((d: string) => (
@@ -122,7 +128,7 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
           <button
             onClick={() => { setQueryType('table'); setTableOrQuery(''); setPreviewData(null); onConfigured(null); }}
             className={`px-3 py-1.5 text-xs rounded transition-colors ${
-              queryType === 'table' ? 'bg-amber-600 text-forge-950 font-semibold' : 'bg-forge-800 text-forge-300 hover:bg-forge-750'
+              queryType === 'table' ? 'bg-primary text-primary-foreground font-semibold' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
           >
             Table
@@ -130,7 +136,7 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
           <button
             onClick={() => { setQueryType('query'); setTableOrQuery(''); setPreviewData(null); onConfigured(null); }}
             className={`px-3 py-1.5 text-xs rounded transition-colors ${
-              queryType === 'query' ? 'bg-amber-600 text-forge-950 font-semibold' : 'bg-forge-800 text-forge-300 hover:bg-forge-750'
+              queryType === 'query' ? 'bg-primary text-primary-foreground font-semibold' : 'bg-muted text-muted-foreground hover:bg-muted/80'
             }`}
           >
             Custom Query
@@ -141,11 +147,11 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
       {/* Table selector or query input */}
       {credentialId && dataset && queryType === 'table' && tablesList && (
         <div>
-          <label className="block text-sm text-forge-300 mb-1">Table</label>
+          <Label className="mb-1">Table</Label>
           <select
             value={tableOrQuery}
             onChange={(e) => { setTableOrQuery(e.target.value); setPreviewData(null); onConfigured(null); }}
-            className="w-full px-3 py-2 text-sm bg-forge-850 border border-forge-700 rounded-md text-forge-50 focus:ring-1 focus:ring-amber-500/40"
+            className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md text-foreground focus:ring-1 focus:ring-ring"
           >
             <option value="">Select a table...</option>
             {tablesList.map((t) => (
@@ -157,13 +163,13 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
 
       {credentialId && dataset && queryType === 'query' && (
         <div>
-          <label className="block text-sm text-forge-300 mb-1">SQL Query</label>
-          <textarea
+          <Label className="mb-1">SQL Query</Label>
+          <Textarea
             value={tableOrQuery}
             onChange={(e) => { setTableOrQuery(e.target.value); setPreviewData(null); onConfigured(null); }}
             placeholder="SELECT * FROM `project.dataset.table` LIMIT 100"
             rows={3}
-            className="w-full px-3 py-2 text-sm bg-forge-850 border border-forge-700 rounded-md text-forge-50 focus:ring-1 focus:ring-amber-500/40 font-mono"
+            className="font-mono"
           />
         </div>
       )}
@@ -176,25 +182,25 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
       )}
 
       {previewError && (
-        <p className="text-sm text-red-400">{previewError}</p>
+        <p className="text-sm text-destructive">{previewError}</p>
       )}
 
       {/* Preview table */}
       {previewData && previewData.rows.length > 0 && (
-        <div className="overflow-x-auto border border-forge-700 rounded-lg">
+        <div className="overflow-x-auto border border-border rounded-lg">
           <table className="w-full text-xs">
             <thead>
-              <tr className="bg-forge-800/50">
+              <tr className="bg-muted/50">
                 {previewData.columns.map((col) => (
-                  <th key={col.name} className="px-3 py-2 text-left text-forge-400 font-medium">{col.name}</th>
+                  <th key={col.name} className="px-3 py-2 text-left text-muted-foreground font-medium">{col.name}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {previewData.rows.slice(0, 10).map((row, i) => (
-                <tr key={i} className="border-t border-forge-800/50 hover:bg-forge-800/30">
+                <tr key={i} className="border-t border-muted/50 hover:bg-muted/30">
                   {previewData.columns.map((col) => (
-                    <td key={col.name} className="px-3 py-1.5 text-forge-300 whitespace-nowrap max-w-[200px] truncate">
+                    <td key={col.name} className="px-3 py-1.5 text-muted-foreground whitespace-nowrap max-w-[200px] truncate">
                       {String(row[col.name] ?? '')}
                     </td>
                   ))}
