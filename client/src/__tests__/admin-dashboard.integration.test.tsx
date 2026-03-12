@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach, afterAll, beforeAll } from 'vitest';
 import { render, screen, fireEvent, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createElement } from 'react';
 import type { ReactNode } from 'react';
@@ -7,6 +8,27 @@ import { http, HttpResponse, delay } from 'msw';
 import { setupServer } from 'msw/node';
 import { AdminDashboardPage } from '../pages/AdminDashboardPage';
 import type { AdminExerciseListItem, ExerciseProgressDetail } from '../types';
+
+vi.mock('../contexts/AuthContext', () => ({
+  useAuth: () => ({
+    user: { id: 'u-admin', name: 'Admin', email: 'admin@test.com', role: 'admin' },
+    token: 'mock-admin-token',
+    isLoading: false,
+    login: vi.fn(),
+    logout: vi.fn(),
+  }),
+}));
+
+vi.mock('../contexts/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'dark',
+    setTheme: vi.fn(),
+  }),
+}));
+
+vi.mock('../components/layout/Sidebar', () => ({
+  Sidebar: () => createElement('div', { 'data-testid': 'sidebar' }),
+}));
 
 // -- Mock Data --
 
@@ -233,7 +255,7 @@ describe('Admin Dashboard Integration', () => {
         expect(screen.getByText('At Risk Exercise')).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByText('Completed'));
+      await userEvent.click(screen.getByRole('tab', { name: /Completed/ }));
 
       await waitFor(() => {
         expect(screen.getByText('Completed Exercise')).toBeInTheDocument();
@@ -248,7 +270,7 @@ describe('Admin Dashboard Integration', () => {
         expect(screen.getByText('At Risk Exercise')).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByText('Drafts'));
+      await userEvent.click(screen.getByRole('tab', { name: /Drafts/ }));
 
       await waitFor(() => {
         expect(screen.getByText('Draft Exercise')).toBeInTheDocument();
@@ -262,7 +284,7 @@ describe('Admin Dashboard Integration', () => {
         expect(screen.getByText('At Risk Exercise')).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByText('Archived'));
+      await userEvent.click(screen.getByRole('tab', { name: /Archived/ }));
 
       await waitFor(() => {
         expect(screen.getByText('Archived Exercise')).toBeInTheDocument();

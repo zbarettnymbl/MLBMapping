@@ -1,9 +1,10 @@
 import { forwardRef, useMemo, useState } from 'react';
 import { ArrowUpDown } from 'lucide-react';
 import type { AdminExerciseListItem } from '../../types';
-import { Tabs } from '../common/Tabs';
-import { Badge } from '../common/Badge';
-import { ProgressBar } from '../common/ProgressBar';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
 import { StatusBadge, deriveStatus } from './StatusBadge';
 import { UserAvatarStack } from './UserAvatarStack';
 
@@ -142,7 +143,7 @@ export const ExerciseTable = forwardRef<HTMLDivElement, ExerciseTableProps>(
 
     const SortableHeader = ({ column, children }: { column: SortColumn; children: React.ReactNode }) => (
       <button
-        className="flex items-center gap-1 hover:text-forge-200"
+        className="flex items-center gap-1 hover:text-foreground"
         onClick={() => handleSort(column)}
       >
         {children}
@@ -153,29 +154,42 @@ export const ExerciseTable = forwardRef<HTMLDivElement, ExerciseTableProps>(
     return (
       <div ref={ref} className="flex-1">
         <div className="px-6">
-          <Tabs tabs={tabs} activeTab={activeTab} onChange={onTabChange} />
+          <Tabs value={activeTab} onValueChange={onTabChange}>
+            <TabsList>
+              {tabs.map((tab) => (
+                <TabsTrigger key={tab.key} value={tab.key}>
+                  {tab.label}
+                  {tab.count !== undefined && (
+                    <span className="ml-1.5 px-1.5 py-0.5 rounded text-xs bg-muted">
+                      {tab.count}
+                    </span>
+                  )}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-forge-800">
-                <th className="px-6 py-3 text-left text-xs font-medium text-forge-400 uppercase tracking-wide">
+              <tr className="border-b border-border">
+                <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   <SortableHeader column="name">Name</SortableHeader>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-forge-400 uppercase tracking-wide">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   Assigned
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-forge-400 uppercase tracking-wide">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   <SortableHeader column="progress">Progress</SortableHeader>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-forge-400 uppercase tracking-wide">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   <SortableHeader column="errors">Errors</SortableHeader>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-forge-400 uppercase tracking-wide">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   <SortableHeader column="deadline">Deadline</SortableHeader>
                 </th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-forge-400 uppercase tracking-wide">
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   <SortableHeader column="status">Status</SortableHeader>
                 </th>
               </tr>
@@ -191,47 +205,41 @@ export const ExerciseTable = forwardRef<HTMLDivElement, ExerciseTableProps>(
                   <tr
                     key={exercise.id}
                     data-testid={`exercise-row-${exercise.id}`}
-                    className={[
-                      'border-b border-forge-800/50 transition-colors',
+                    className={cn(
+                      'border-b border-border/50 transition-colors',
                       isSelected
-                        ? 'bg-forge-850 border-l-2 border-amber-500'
-                        : 'hover:bg-forge-850 cursor-pointer',
-                    ].join(' ')}
+                        ? 'bg-muted border-l-2 border-amber-500'
+                        : 'hover:bg-muted cursor-pointer'
+                    )}
                     onClick={() => handleRowClick(exercise)}
                   >
                     <td className="px-6 py-3">
-                      <div className="text-sm font-medium text-forge-100">{exercise.name}</div>
-                      <div className="text-xs text-forge-500">{truncate(exercise.description, 60)}</div>
+                      <div className="text-sm font-medium text-foreground">{exercise.name}</div>
+                      <div className="text-xs text-muted-foreground">{truncate(exercise.description, 60)}</div>
                     </td>
                     <td className="px-4 py-3">
                       {exercise.assignedUsers.length > 0 ? (
                         <UserAvatarStack users={exercise.assignedUsers} />
                       ) : (
-                        <span className="text-forge-500 text-xs">--</span>
+                        <span className="text-muted-foreground text-xs">--</span>
                       )}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2 min-w-[120px]">
                         <div className="flex-1">
-                          <ProgressBar
-                            value={exercise.classifiedRecords}
-                            max={exercise.totalRecords}
-                            variant="amber"
-                            size="sm"
-                            showPercentage={false}
-                          />
+                          <Progress value={pct} className="h-1.5" />
                         </div>
-                        <span className="text-xs text-forge-300 whitespace-nowrap">{pct}%</span>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">{pct}%</span>
                       </div>
                     </td>
                     <td className="px-4 py-3">
                       {exercise.errorCount > 0 ? (
-                        <Badge variant="error">{exercise.errorCount}</Badge>
+                        <Badge variant="destructive">{exercise.errorCount}</Badge>
                       ) : (
-                        <span className="text-forge-500">0</span>
+                        <span className="text-muted-foreground">0</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-forge-300 text-sm">
+                    <td className="px-4 py-3 text-muted-foreground text-sm">
                       {formatDeadline(exercise.deadline)}
                     </td>
                     <td className="px-4 py-3">

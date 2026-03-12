@@ -69,8 +69,9 @@ describe('AdminStatsBar', () => {
     expect(screen.getByText('At Risk')).toBeInTheDocument();
     // ex-4 has deadline within 7 days and < 90% complete
     // ex-6 has an inactive user
-    const atRiskValue = screen.getByText('At Risk').closest('div')?.parentElement;
-    const valueEl = atRiskValue?.querySelector('.text-amber-400');
+    const atRiskLabel = screen.getByText('At Risk');
+    const card = atRiskLabel.closest('div')?.parentElement;
+    const valueEl = card?.querySelector('.text-amber-400');
     expect(valueEl).toBeInTheDocument();
   });
 

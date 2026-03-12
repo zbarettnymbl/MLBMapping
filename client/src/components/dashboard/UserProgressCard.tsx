@@ -1,9 +1,11 @@
 import { forwardRef } from 'react';
 import { Send } from 'lucide-react';
 import type { UserProgress } from '../../types';
-import { Badge } from '../common/Badge';
-import { Button } from '../common/Button';
-import { ProgressBar } from '../common/ProgressBar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 interface UserProgressCardProps {
   progress: UserProgress;
@@ -73,16 +75,18 @@ export const UserProgressCard = forwardRef<HTMLDivElement, UserProgressCardProps
     const behind = isBehind(pct, exerciseAvgCompletion, progress.lastActiveAt);
 
     return (
-      <div ref={ref} className="bg-forge-850 rounded-md p-3 mb-2">
+      <div ref={ref} className="bg-card rounded-md p-3 mb-2">
         {/* Row 1: User info */}
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-forge-700 text-forge-200 text-xs font-medium flex items-center justify-center">
-              {getInitials(progress.user.name)}
-            </div>
+            <Avatar className="h-8 w-8">
+              <AvatarFallback className="text-xs font-medium">
+                {getInitials(progress.user.name)}
+              </AvatarFallback>
+            </Avatar>
             <div>
-              <div className="text-sm font-medium text-forge-100">{progress.user.name}</div>
-              <div className="text-xs text-forge-500">{progress.user.email}</div>
+              <div className="text-sm font-medium text-foreground">{progress.user.name}</div>
+              <div className="text-xs text-muted-foreground">{progress.user.email}</div>
             </div>
           </div>
           <Badge variant="outline">{progress.user.role}</Badge>
@@ -90,18 +94,12 @@ export const UserProgressCard = forwardRef<HTMLDivElement, UserProgressCardProps
 
         {/* Row 2: Progress */}
         <div className="mt-2">
-          <ProgressBar
-            value={progress.classifiedRecords}
-            max={progress.assignedRecords}
-            variant="amber"
-            size="sm"
-            showPercentage={false}
-          />
+          <Progress value={pct} className="h-1.5" />
           <div className="flex justify-between text-xs mt-1">
-            <span className="text-forge-300">
+            <span className="text-muted-foreground">
               {progress.classifiedRecords}/{progress.assignedRecords} ({pct}%)
             </span>
-            <span className={lastActiveWarning ? 'text-amber-400' : 'text-forge-500'}>
+            <span className={lastActiveWarning ? 'text-amber-400' : 'text-muted-foreground'}>
               {lastActiveText}
             </span>
           </div>

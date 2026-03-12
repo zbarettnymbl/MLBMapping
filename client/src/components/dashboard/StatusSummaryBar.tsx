@@ -1,4 +1,5 @@
 import type { ExerciseListItem } from '@mapforge/shared';
+import { cn } from '@/lib/utils';
 
 interface StatusSummaryBarProps {
   exercises: ExerciseListItem[];
@@ -34,17 +35,17 @@ export function StatusSummaryBar({ exercises }: StatusSummaryBarProps) {
   const stats = computeStats(exercises);
 
   return (
-    <div className="flex gap-3 px-6 py-3 bg-forge-950 border-b border-forge-800">
+    <div className="flex gap-3 px-6 py-3 bg-background border-b border-border">
       {stats.map((stat) => (
         <div
           key={stat.label}
-          className={[
-            'px-3 py-1.5 rounded-md bg-forge-850 border',
-            stat.highlight ? 'border-amber-500/30' : 'border-forge-750',
-          ].join(' ')}
+          className={cn(
+            'px-3 py-1.5 rounded-md bg-card border',
+            stat.highlight ? 'border-primary/30' : 'border-border'
+          )}
         >
-          <span className="text-sm font-semibold text-forge-100">{stat.count}</span>
-          <span className="ml-1.5 text-xs font-medium text-forge-300">{stat.label}</span>
+          <span className="text-sm font-semibold text-foreground">{stat.count}</span>
+          <span className="ml-1.5 text-xs font-medium text-muted-foreground">{stat.label}</span>
         </div>
       ))}
     </div>

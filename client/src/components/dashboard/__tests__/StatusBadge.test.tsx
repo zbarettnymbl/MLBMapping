@@ -64,16 +64,18 @@ describe('StatusBadge', () => {
     expect(screen.getByText('Paused')).toBeInTheDocument();
   });
 
-  it('maps Complete to clean variant', () => {
+  it('maps Complete to success variant', () => {
     const exercise = createExercise({ classifiedRecords: 100, totalRecords: 100, errorCount: 0 });
-    const { container } = render(<StatusBadge exercise={exercise} />);
-    expect(container.querySelector('.bg-emerald-600\\/10')).toBeInTheDocument();
+    render(<StatusBadge exercise={exercise} />);
+    const badge = screen.getByText('Complete');
+    expect(badge.className).toContain('bg-green-');
   });
 
-  it('maps Overdue to error variant', () => {
+  it('maps Overdue to destructive variant', () => {
     const pastDeadline = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString();
     const exercise = createExercise({ classifiedRecords: 50, totalRecords: 100, deadline: pastDeadline });
-    const { container } = render(<StatusBadge exercise={exercise} />);
-    expect(container.querySelector('.bg-red-600\\/10')).toBeInTheDocument();
+    render(<StatusBadge exercise={exercise} />);
+    const badge = screen.getByText('Overdue');
+    expect(badge.className).toContain('bg-destructive');
   });
 });

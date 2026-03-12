@@ -1,19 +1,19 @@
 import { forwardRef } from 'react';
 import type { AdminExerciseListItem } from '../../types';
-import { Badge } from '../common/Badge';
+import { Badge } from '@/components/ui/badge';
 
 interface StatusBadgeProps {
   exercise: AdminExerciseListItem;
 }
 
 type DisplayStatus = 'Complete' | 'On Track' | 'At Risk' | 'Overdue' | 'Not Started' | 'Paused';
-type BadgeVariant = 'clean' | 'default' | 'warning' | 'error' | 'outline';
+type BadgeVariant = 'success' | 'default' | 'warning' | 'destructive' | 'outline';
 
 const statusVariantMap: Record<DisplayStatus, BadgeVariant> = {
-  Complete: 'clean',
+  Complete: 'success',
   'On Track': 'default',
   'At Risk': 'warning',
-  Overdue: 'error',
+  Overdue: 'destructive',
   'Not Started': 'outline',
   Paused: 'outline',
 };
@@ -43,7 +43,7 @@ function deriveStatus(exercise: AdminExerciseListItem): DisplayStatus {
 
 export { deriveStatus };
 
-export const StatusBadge = forwardRef<HTMLSpanElement, StatusBadgeProps>(
+export const StatusBadge = forwardRef<HTMLDivElement, StatusBadgeProps>(
   function StatusBadge({ exercise }, ref) {
     const status = deriveStatus(exercise);
     return (

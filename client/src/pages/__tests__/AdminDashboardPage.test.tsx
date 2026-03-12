@@ -20,6 +20,27 @@ vi.mock('../../api/admin', () => ({
   exportProgressCsv: vi.fn().mockResolvedValue(new Blob(['test'], { type: 'text/csv' })),
 }));
 
+vi.mock('../../contexts/AuthContext', () => ({
+  useAuth: () => ({
+    user: { id: 'u-admin', name: 'Admin', email: 'admin@test.com', role: 'admin' },
+    token: 'mock-admin-token',
+    isLoading: false,
+    login: vi.fn(),
+    logout: vi.fn(),
+  }),
+}));
+
+vi.mock('../../contexts/ThemeContext', () => ({
+  useTheme: () => ({
+    theme: 'dark',
+    setTheme: vi.fn(),
+  }),
+}));
+
+vi.mock('../../components/layout/Sidebar', () => ({
+  Sidebar: () => createElement('div', { 'data-testid': 'sidebar' }),
+}));
+
 function createExercise(overrides: Partial<AdminExerciseListItem> = {}): AdminExerciseListItem {
   return {
     id: 'ex-1',

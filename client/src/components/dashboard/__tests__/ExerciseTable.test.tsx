@@ -69,9 +69,9 @@ describe('ExerciseTable', () => {
 
   it('displays correct tab badge counts', () => {
     render(<ExerciseTable {...defaultProps} />);
-    // Active tab should show count 2 (active-1, active-2; completed-1 is filtered out)
-    const activeTab = screen.getByText('Active');
-    expect(activeTab.parentElement?.textContent).toContain('2');
+    // Active tab trigger should contain the count 2
+    const activeTab = screen.getByRole('tab', { name: /Active/i });
+    expect(activeTab.textContent).toContain('2');
   });
 
   it('calls onSelectExercise with exercise id on row click', () => {

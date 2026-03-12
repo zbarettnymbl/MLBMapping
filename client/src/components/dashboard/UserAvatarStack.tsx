@@ -1,6 +1,13 @@
 import { forwardRef } from 'react';
 import type { AssignedUserSummary } from '../../types';
-import { Tooltip } from '../common/Tooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 interface UserAvatarStackProps {
   users: AssignedUserSummary[];
@@ -23,34 +30,37 @@ export const UserAvatarStack = forwardRef<HTMLDivElement, UserAvatarStackProps>(
     const allNames = users.map((u) => u.name).join(', ');
 
     return (
-      <Tooltip content={allNames}>
-        <div ref={ref} className={['flex items-center'].join(' ')}>
-          {visible.map((user, index) => (
-            <div
-              key={user.id}
-              className={[
-                'w-7 h-7 rounded-full border-2 border-forge-900',
-                'bg-forge-700 text-forge-200 text-xs font-medium',
-                'flex items-center justify-center',
-                index > 0 ? '-ml-2' : '',
-              ].join(' ')}
-            >
-              {getInitials(user.name)}
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div ref={ref} className="flex items-center">
+              {visible.map((user, index) => (
+                <Avatar
+                  key={user.id}
+                  className={cn(
+                    'h-7 w-7 border-2 border-background',
+                    index > 0 && '-ml-2'
+                  )}
+                >
+                  <AvatarFallback className="text-xs font-medium">
+                    {getInitials(user.name)}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
+              {overflow > 0 && (
+                <Avatar className="h-7 w-7 border-2 border-background -ml-2">
+                  <AvatarFallback className="text-xs font-medium text-muted-foreground">
+                    +{overflow}
+                  </AvatarFallback>
+                </Avatar>
+              )}
             </div>
-          ))}
-          {overflow > 0 && (
-            <div
-              className={[
-                'w-7 h-7 rounded-full border-2 border-forge-900',
-                'bg-forge-700 text-forge-300 text-xs font-medium',
-                'flex items-center justify-center -ml-2',
-              ].join(' ')}
-            >
-              +{overflow}
-            </div>
-          )}
-        </div>
-      </Tooltip>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{allNames}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   }
 );

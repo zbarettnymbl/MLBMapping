@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import type { AdminExerciseListItem } from '../../types';
-import { Card } from '../common/Card';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 interface AdminStatsBarProps {
   exercises: AdminExerciseListItem[];
@@ -44,23 +45,23 @@ export const AdminStatsBar = forwardRef<HTMLDivElement, AdminStatsBarProps>(
     ];
 
     return (
-      <div ref={ref} className={['grid grid-cols-4 gap-4 px-6 py-4'].join(' ')}>
+      <div ref={ref} className="grid grid-cols-4 gap-4 px-6 py-4">
         {stats.map((stat) => (
           <Card
             key={stat.label}
-            padding="sm"
-            className={[
-              stat.highlight ? 'border-amber-500/30' : '',
-            ].join(' ')}
+            className={cn(
+              'p-4',
+              stat.highlight && 'border-amber-500/30'
+            )}
           >
-            <div className={['text-xs text-forge-400 uppercase tracking-wide'].join(' ')}>
+            <div className="text-xs text-muted-foreground uppercase tracking-wide">
               {stat.label}
             </div>
             <div
-              className={[
+              className={cn(
                 'text-2xl font-semibold',
-                stat.highlight ? 'text-amber-400' : 'text-forge-50',
-              ].join(' ')}
+                stat.highlight ? 'text-amber-400' : 'text-foreground'
+              )}
             >
               {stat.value}
             </div>
