@@ -1236,4 +1236,31 @@ router.post('/:id/columns/add', requireRole('admin'), async (req: Request, res: 
   }
 });
 
+// PUT /api/v1/exercises/:id/columns/reorder -- batch update column ordinals
+router.put('/:id/columns/reorder', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { columns } = req.body as { columns: Array<{ id: string; ordinal: number }> };
+
+    if (!Array.isArray(columns) || columns.length === 0) {
+      res.status(400).json({ error: 'columns array is required' });
+      return;
+    }
+
+    // Update all ordinals in a transaction
+    await db.transaction(async (tx) => {
+      for (const col of columns) {
+        await tx.update(exerciseColumns)
+          .set({ ordinal: col.ordinal })
+          .where(and(eq(exerciseColumns.id, col.id), eq(exerciseColumns.exerciseId, id)));
+      }
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Reorder columns error:', error);
+    res.status(500).json({ error: 'Failed to reorder columns' });
+  }
+});
+
 export { router as exercisesRouter };
