@@ -2,7 +2,7 @@
 import { useCallback, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ArrowLeft, AlertTriangle, Database } from 'lucide-react';
+import { ArrowLeft, AlertTriangle, Database, Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { fetchExerciseDetail, bulkClassify } from '../api/exercises';
 import { useExerciseRecords } from '../hooks/useExerciseRecords';
@@ -12,6 +12,8 @@ import { SpreadsheetHeader } from '../components/grid/SpreadsheetHeader';
 import { EnrichmentGrid } from '../components/grid/EnrichmentGrid';
 import { SpreadsheetFooter } from '../components/grid/SpreadsheetFooter';
 import { BulkEditPanel } from '../components/grid/BulkEditPanel';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { BulkClassificationPayload, PaginatedRecords } from '@mapforge/shared/types';
 
 export function EnrichmentSpreadsheetPage() {
@@ -115,17 +117,19 @@ export function EnrichmentSpreadsheetPage() {
   // --- Page Loading State ---
   if (exerciseLoading) {
     return (
-      <div className="flex flex-col h-screen bg-forge-950">
-        <div className="h-14 bg-forge-900 border-b border-forge-700 px-6 flex items-center">
-          <button
+      <div className="flex flex-col h-screen bg-background">
+        <div className="h-14 bg-card border-b border-border px-6 flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => navigate('/dashboard')}
-            className="text-forge-400 hover:text-forge-200 mr-3"
+            className="mr-3"
           >
             <ArrowLeft size={18} />
-          </button>
+          </Button>
         </div>
         <div className="flex-1 flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       </div>
     );
@@ -134,25 +138,27 @@ export function EnrichmentSpreadsheetPage() {
   // --- Exercise Error State ---
   if (exerciseError || !exercise) {
     return (
-      <div className="flex flex-col h-screen bg-forge-950">
-        <div className="h-14 bg-forge-900 border-b border-forge-700 px-6 flex items-center">
-          <button
+      <div className="flex flex-col h-screen bg-background">
+        <div className="h-14 bg-card border-b border-border px-6 flex items-center">
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => navigate('/dashboard')}
-            className="text-forge-400 hover:text-forge-200 mr-3"
+            className="mr-3"
           >
             <ArrowLeft size={18} />
-          </button>
+          </Button>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <AlertTriangle size={48} className="text-status-error mx-auto mb-4" />
-            <p className="text-forge-200 mb-2">Failed to load exercise</p>
-            <button
+            <AlertTriangle size={48} className="text-destructive mx-auto mb-4" />
+            <p className="text-foreground mb-2">Failed to load exercise</p>
+            <Button
+              variant="link"
               onClick={() => navigate('/dashboard')}
-              className="text-sm text-amber-400 hover:text-amber-300"
             >
               Back to Dashboard
-            </button>
+            </Button>
           </div>
         </div>
       </div>
@@ -160,17 +166,18 @@ export function EnrichmentSpreadsheetPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-forge-950">
+    <div className="flex flex-col h-screen bg-background">
       {/* TopBar */}
-      <div className="h-14 bg-forge-900 border-b border-forge-700 px-6 flex items-center justify-between shrink-0">
+      <div className="h-14 bg-card border-b border-border px-6 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
-          <button
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => navigate('/dashboard')}
-            className="text-forge-400 hover:text-forge-200"
           >
             <ArrowLeft size={18} />
-          </button>
-          <h1 className="text-lg font-semibold text-forge-100">{exercise.name}</h1>
+          </Button>
+          <h1 className="text-lg font-semibold text-foreground">{exercise.name}</h1>
         </div>
       </div>
 
@@ -191,29 +198,31 @@ export function EnrichmentSpreadsheetPage() {
       {recordsLoading ? (
         <div className="flex-1 px-6 py-4 space-y-2">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div
+            <Skeleton
               key={i}
-              className="h-8 bg-forge-850 rounded animate-pulse"
+              className="h-8 w-full"
             />
           ))}
         </div>
       ) : recordsError ? (
-        <div className="mx-6 mt-4 bg-status-error/10 border border-status-error/30 rounded-md p-3 flex items-center gap-3">
-          <AlertTriangle size={16} className="text-status-error shrink-0" />
-          <span className="text-sm text-forge-200">Failed to load records.</span>
-          <button
+        <div className="mx-6 mt-4 bg-destructive/10 border border-destructive/30 rounded-md p-3 flex items-center gap-3">
+          <AlertTriangle size={16} className="text-destructive shrink-0" />
+          <span className="text-sm text-foreground">Failed to load records.</span>
+          <Button
+            variant="link"
+            size="sm"
             onClick={() => refetchRecords()}
-            className="text-sm text-amber-400 hover:text-amber-300 ml-auto"
+            className="ml-auto"
           >
             Retry
-          </button>
+          </Button>
         </div>
       ) : records.length === 0 ? (
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <Database size={48} className="text-forge-600 mx-auto mb-4" />
-            <p className="text-lg font-medium text-forge-300 mb-1">No records yet</p>
-            <p className="text-sm text-forge-500">
+            <Database size={48} className="text-muted-foreground/50 mx-auto mb-4" />
+            <p className="text-lg font-medium text-muted-foreground mb-1">No records yet</p>
+            <p className="text-sm text-muted-foreground">
               Source data has not been loaded. Contact your administrator.
             </p>
           </div>
