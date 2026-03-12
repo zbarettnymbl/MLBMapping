@@ -62,13 +62,13 @@ export const MultiSelectEditor = forwardRef<unknown, MultiSelectEditorProps>(
     return (
       <div
         className={[
-          'bg-forge-850 border border-forge-700 rounded-md shadow-xl',
+          'bg-popover border border-border rounded-md shadow-xl',
           'min-w-[200px] max-w-[320px] flex flex-col',
         ].join(' ')}
         onKeyDown={handleKeyDown}
       >
         {/* Search */}
-        <div className="sticky top-0 border-b border-forge-700 p-1.5">
+        <div className="sticky top-0 border-b border-border p-1.5">
           <input
             ref={inputRef}
             type="text"
@@ -77,24 +77,24 @@ export const MultiSelectEditor = forwardRef<unknown, MultiSelectEditorProps>(
             placeholder="Search..."
             className={[
               'w-full px-2 py-1 text-sm rounded',
-              'bg-forge-900 border border-forge-700 text-forge-100',
-              'placeholder:text-forge-500',
-              'focus:outline-none focus:ring-1 focus:ring-amber-500/40',
+              'bg-background border border-input text-foreground',
+              'placeholder:text-muted-foreground',
+              'focus:outline-none focus:ring-1 focus:ring-ring/40',
             ].join(' ')}
           />
         </div>
 
         {/* Select All / Clear All */}
-        <div className="flex gap-2 px-3 py-1.5 border-b border-forge-700">
+        <div className="flex gap-2 px-3 py-1.5 border-b border-border">
           <button
             onClick={() => setSelected(new Set(options))}
-            className="text-xs text-amber-400 hover:text-amber-300"
+            className="text-xs text-accent hover:text-accent/80"
           >
             Select All
           </button>
           <button
             onClick={() => setSelected(new Set())}
-            className="text-xs text-forge-400 hover:text-forge-300"
+            className="text-xs text-muted-foreground hover:text-foreground"
           >
             Clear All
           </button>
@@ -107,15 +107,15 @@ export const MultiSelectEditor = forwardRef<unknown, MultiSelectEditorProps>(
               key={opt}
               className={[
                 'flex items-center gap-2 px-3 py-1.5 text-sm cursor-pointer',
-                'hover:bg-forge-800',
-                selected.has(opt) ? 'text-amber-400' : 'text-forge-200',
+                'hover:bg-muted',
+                selected.has(opt) ? 'text-accent' : 'text-popover-foreground',
               ].join(' ')}
             >
               <input
                 type="checkbox"
                 checked={selected.has(opt)}
                 onChange={() => toggle(opt)}
-                className="accent-amber-500"
+                className="accent-accent"
               />
               {opt}
             </label>
@@ -123,12 +123,12 @@ export const MultiSelectEditor = forwardRef<unknown, MultiSelectEditorProps>(
         </div>
 
         {/* Done button */}
-        <div className="border-t border-forge-700 p-1.5">
+        <div className="border-t border-border p-1.5">
           <button
             onClick={() => stopEditing()}
             className={[
               'w-full px-2 py-1 text-xs font-medium rounded',
-              'bg-amber-600/20 text-amber-400 hover:bg-amber-600/30',
+              'bg-accent/10 text-accent hover:bg-accent/20',
             ].join(' ')}
           >
             Done ({selected.size} selected)

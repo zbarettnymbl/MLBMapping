@@ -17,7 +17,7 @@ export const CellErrorPopover = forwardRef<HTMLDivElement, CellErrorPopoverProps
         ref={ref}
         style={style}
         className={[
-          'bg-forge-800 border rounded-md p-2 shadow-lg z-50',
+          'bg-muted border rounded-md p-2 shadow-lg z-50',
           'border-status-error/30',
         ].join(' ')}
       >
@@ -30,7 +30,7 @@ export const CellErrorPopover = forwardRef<HTMLDivElement, CellErrorPopoverProps
                 err.severity === 'error' ? 'text-status-error' : 'text-amber-400',
               ].join(' ')}
             />
-            <span className="text-sm text-forge-200">{err.message}</span>
+            <span className="text-sm text-foreground">{err.message}</span>
           </div>
         ))}
       </div>

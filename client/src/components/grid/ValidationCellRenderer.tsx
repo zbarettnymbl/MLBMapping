@@ -40,7 +40,7 @@ export const ValidationCellRenderer = forwardRef<HTMLDivElement, ValidationCellR
         onMouseLeave={() => setShowPopover(false)}
       >
         {isEmpty && column.required ? (
-          <span className="text-forge-600 text-sm italic">
+          <span className="text-muted-foreground text-sm italic">
             {column.dataType === 'picklist' || column.dataType === 'multi_select'
               ? 'Select...'
               : 'Enter...'}

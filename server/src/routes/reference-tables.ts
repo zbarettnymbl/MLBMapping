@@ -103,16 +103,20 @@ router.post('/:id/import-csv', requireRole('admin'), upload.single('file'), asyn
   const { id } = req.params;
   if (!req.file) { res.status(400).json({ error: 'No file uploaded' }); return; }
 
-  // Snapshot for versioning
-  const currentRows = await db.select().from(referenceTableRows).where(eq(referenceTableRows.referenceTableId, id));
-  const [table] = await db.select().from(referenceTables).where(eq(referenceTables.id, id));
-  if (table) {
-    const [maxVersion] = await db.select({ max: sql<number>`coalesce(max(${referenceTableVersions.version}), 0)::int` })
-      .from(referenceTableVersions).where(eq(referenceTableVersions.referenceTableId, id));
-    await db.insert(referenceTableVersions).values({
-      referenceTableId: id, version: (maxVersion?.max ?? 0) + 1,
-      snapshot: { columns: table.columns, rows: currentRows }, createdBy: req.user!.id,
-    });
+  // Snapshot for versioning (skip if versions table doesn't exist yet)
+  try {
+    const currentRows = await db.select().from(referenceTableRows).where(eq(referenceTableRows.referenceTableId, id));
+    const [table] = await db.select().from(referenceTables).where(eq(referenceTables.id, id));
+    if (table) {
+      const [maxVersion] = await db.select({ max: sql<number>`coalesce(max(${referenceTableVersions.version}), 0)::int` })
+        .from(referenceTableVersions).where(eq(referenceTableVersions.referenceTableId, id));
+      await db.insert(referenceTableVersions).values({
+        referenceTableId: id, version: (maxVersion?.max ?? 0) + 1,
+        snapshot: { columns: table.columns, rows: currentRows }, createdBy: req.user!.id,
+      });
+    }
+  } catch {
+    // versions table may not exist yet
   }
 
   const { columns, rows } = parseCsvBuffer(req.file.buffer);
@@ -144,10 +148,14 @@ router.get('/:id/values', async (req: Request, res: Response) => {
 
 // GET /api/v1/reference-tables/:id/versions
 router.get('/:id/versions', async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const versions = await db.select().from(referenceTableVersions)
-    .where(eq(referenceTableVersions.referenceTableId, id)).orderBy(referenceTableVersions.version);
-  res.json({ versions });
+  try {
+    const { id } = req.params;
+    const versions = await db.select().from(referenceTableVersions)
+      .where(eq(referenceTableVersions.referenceTableId, id)).orderBy(referenceTableVersions.version);
+    res.json({ versions });
+  } catch {
+    res.json({ versions: [] });
+  }
 });
 
 // POST /api/v1/reference-tables/:id/refresh-bigquery

@@ -44,13 +44,13 @@ export function QuickFilterBar({ activeFilter, counts, onChange }: QuickFilterBa
               'px-3 py-1 rounded-full text-xs font-medium cursor-pointer border transition-colors',
               isActive
                 ? activeClasses
-                : 'bg-forge-850 text-forge-400 border-forge-750 hover:border-forge-600',
+                : 'bg-muted text-muted-foreground border-border hover:border-foreground/30',
             ].join(' ')}
           >
             {label}{' '}
             <span
               className={[
-                isActive ? 'opacity-80' : 'text-forge-500',
+                isActive ? 'opacity-80' : 'text-muted-foreground',
               ].join(' ')}
             >
               ({count})

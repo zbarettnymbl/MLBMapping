@@ -29,15 +29,15 @@ export function SpreadsheetHeader({
   const pct = stats.completionPercentage;
 
   return (
-    <div className="px-6 py-3 bg-forge-900 border-b border-forge-800 space-y-3">
+    <div className="px-6 py-3 bg-card border-b border-border space-y-3">
       {/* Row 1: Progress */}
       <div>
         <div className="flex items-center justify-between mb-1">
-          <span className="text-sm text-forge-200">
+          <span className="text-sm text-foreground">
             {stats.classifiedRecords} of {stats.totalRecords} records classified ({pct}%)
           </span>
         </div>
-        <div className="w-full h-2 bg-forge-800 rounded-full overflow-hidden">
+        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
           <div
             className="h-full bg-amber-500 rounded-full transition-all duration-300"
             style={{ width: `${pct}%` }}
@@ -47,12 +47,12 @@ export function SpreadsheetHeader({
         {stats.columnStats.length > 0 && (
           <div className="flex gap-4 mt-2">
             {stats.columnStats.map((cs) => {
-              let colorClass = 'text-forge-400';
-              if (cs.percentage >= 100) colorClass = 'text-status-clean';
+              let colorClass = 'text-muted-foreground';
+              if (cs.percentage >= 100) colorClass = 'text-success';
               else if (cs.percentage >= 50) colorClass = 'text-amber-400';
               return (
                 <span key={cs.columnKey} className="text-xs">
-                  <span className="text-forge-400">{cs.label}: </span>
+                  <span className="text-muted-foreground">{cs.label}: </span>
                   <span className={colorClass}>{cs.percentage}%</span>
                 </span>
               );
@@ -80,7 +80,7 @@ export function SpreadsheetHeader({
           <div className="relative">
             <Search
               size={14}
-              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-forge-500"
+              className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
             />
             <input
               type="text"
@@ -89,9 +89,9 @@ export function SpreadsheetHeader({
               placeholder="Search records..."
               className={[
                 'w-64 pl-8 pr-3 py-1.5 text-sm rounded',
-                'bg-forge-850 border border-forge-750 text-forge-100',
-                'placeholder:text-forge-500',
-                'focus:outline-none focus:ring-1 focus:ring-amber-500/40',
+                'bg-background border border-input text-foreground',
+                'placeholder:text-muted-foreground',
+                'focus:outline-none focus:ring-1 focus:ring-ring/40',
               ].join(' ')}
             />
           </div>
@@ -103,8 +103,8 @@ export function SpreadsheetHeader({
             className={[
               'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border',
               selectedCount === 0
-                ? 'bg-forge-850 text-forge-600 border-forge-750 cursor-not-allowed'
-                : 'bg-forge-850 text-forge-200 border-forge-700 hover:bg-forge-800',
+                ? 'bg-muted text-muted-foreground border-border cursor-not-allowed'
+                : 'bg-card text-foreground border-border hover:bg-muted',
             ].join(' ')}
           >
             <Pencil size={12} />
@@ -116,7 +116,7 @@ export function SpreadsheetHeader({
             onClick={onExportCsv}
             className={[
               'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded',
-              'text-forge-400 hover:text-forge-200 hover:bg-forge-850',
+              'text-muted-foreground hover:text-foreground hover:bg-muted',
             ].join(' ')}
           >
             <Download size={12} />

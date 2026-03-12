@@ -129,12 +129,12 @@ export const DependentPicklistEditor = forwardRef<unknown, DependentPicklistEdit
       return (
         <div
           className={[
-            'bg-forge-850 border border-forge-700 rounded-md shadow-xl',
+            'bg-popover border border-border rounded-md shadow-xl',
             'min-w-[200px] max-w-[320px] p-4',
           ].join(' ')}
         >
-          <p className="text-sm text-forge-400">
-            Select <span className="text-forge-200 font-medium">{parentLabel}</span> first
+          <p className="text-sm text-muted-foreground">
+            Select <span className="text-foreground font-medium">{parentLabel}</span> first
           </p>
         </div>
       );
@@ -143,13 +143,13 @@ export const DependentPicklistEditor = forwardRef<unknown, DependentPicklistEdit
     return (
       <div
         className={[
-          'bg-forge-850 border border-forge-700 rounded-md shadow-xl',
+          'bg-popover border border-border rounded-md shadow-xl',
           'min-w-[200px] max-w-[320px] flex flex-col',
         ].join(' ')}
         onKeyDown={handleKeyDown}
       >
         {/* Search input */}
-        <div className="sticky top-0 border-b border-forge-700 p-1.5">
+        <div className="sticky top-0 border-b border-border p-1.5">
           <input
             ref={inputRef}
             type="text"
@@ -158,9 +158,9 @@ export const DependentPicklistEditor = forwardRef<unknown, DependentPicklistEdit
             placeholder="Search..."
             className={[
               'w-full px-2 py-1 text-sm rounded',
-              'bg-forge-900 border border-forge-700 text-forge-100',
-              'placeholder:text-forge-500',
-              'focus:outline-none focus:ring-1 focus:ring-amber-500/40',
+              'bg-background border border-input text-foreground',
+              'placeholder:text-muted-foreground',
+              'focus:outline-none focus:ring-1 focus:ring-ring/40',
             ].join(' ')}
           />
         </div>
@@ -168,9 +168,9 @@ export const DependentPicklistEditor = forwardRef<unknown, DependentPicklistEdit
         {/* Options list */}
         <div ref={listRef} className="max-h-60 overflow-y-auto">
           {isLoading ? (
-            <div className="px-3 py-2 text-sm text-forge-500">Loading...</div>
+            <div className="px-3 py-2 text-sm text-muted-foreground">Loading...</div>
           ) : filtered.length === 0 ? (
-            <div className="px-3 py-2 text-sm text-forge-500">No matches</div>
+            <div className="px-3 py-2 text-sm text-muted-foreground">No matches</div>
           ) : (
             filtered.map((opt, i) => (
               <div
@@ -179,10 +179,10 @@ export const DependentPicklistEditor = forwardRef<unknown, DependentPicklistEdit
                 onClick={() => selectOption(opt)}
                 className={[
                   'px-3 py-1.5 text-sm cursor-pointer',
-                  i === highlightIndex ? 'bg-forge-800' : '',
+                  i === highlightIndex ? 'bg-muted' : '',
                   opt === value
-                    ? 'bg-amber-600/10 text-amber-400'
-                    : 'text-forge-200 hover:bg-forge-800',
+                    ? 'bg-accent/10 text-accent'
+                    : 'text-popover-foreground hover:bg-muted',
                 ].join(' ')}
               >
                 {opt}
@@ -193,12 +193,12 @@ export const DependentPicklistEditor = forwardRef<unknown, DependentPicklistEdit
 
         {/* Clear button */}
         {value && !column.required && (
-          <div className="border-t border-forge-700 p-1.5">
+          <div className="border-t border-border p-1.5">
             <button
               onClick={() => selectOption(null)}
               className={[
-                'w-full px-2 py-1 text-xs text-forge-400 rounded',
-                'hover:bg-forge-800 hover:text-forge-200',
+                'w-full px-2 py-1 text-xs text-muted-foreground rounded',
+                'hover:bg-muted hover:text-foreground',
               ].join(' ')}
             >
               Clear selection

@@ -2,30 +2,30 @@
 
 /* Source columns (read-only) */
 .source-cell {
-  background-color: var(--color-forge-900);
-  color: var(--color-forge-400);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
 }
 .source-header {
-  background-color: var(--color-forge-900);
-  color: var(--color-forge-400);
+  background-color: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
 }
 
 /* Classification columns (editable) */
 .classification-cell {
-  background-color: var(--color-forge-950);
-  color: var(--color-forge-50);
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
 .classification-header {
-  background-color: var(--color-forge-900);
-  border-bottom: 2px solid var(--color-amber-500);
+  background-color: hsl(var(--muted));
+  border-bottom: 2px solid #f59e0b;
 }
 
 /* Separator */
 .separator-cell {
-  background-color: var(--color-forge-700);
+  background-color: hsl(var(--border));
 }
 .separator-header {
-  background-color: var(--color-forge-700);
+  background-color: hsl(var(--border));
 }
 
 /* Row states */
@@ -36,8 +36,8 @@
   background-color: rgba(234, 179, 8, 0.06);
 }
 .row-error .classification-cell {
-  border-left: 2px solid var(--color-status-error);
+  border-left: 2px solid var(--color-destructive, #ef4444);
 }
 .row-classified {
-  border-left: 2px solid var(--color-status-clean);
+  border-left: 2px solid var(--color-success, #22c55e);
 }

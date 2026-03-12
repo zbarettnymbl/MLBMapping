@@ -11,22 +11,33 @@ const router = Router();
 router.use(authMiddleware);
 
 // GET /api/v1/exercises -- list exercises for the authenticated user
-router.get('/', requireRole('user'), async (req: Request, res: Response) => {
+router.get('/', requireRole('user', 'admin'), async (req: Request, res: Response) => {
   try {
     const userId = req.user!.id;
+    const isAdmin = req.user!.role === 'admin';
 
-    // Find exercises assigned to this user
-    const assignments = await db
-      .select({ exerciseId: userExerciseAssignments.exerciseId })
-      .from(userExerciseAssignments)
-      .where(eq(userExerciseAssignments.userId, userId));
+    let exerciseIds: string[];
 
-    if (assignments.length === 0) {
+    if (isAdmin) {
+      // Admin sees all exercises in their org
+      const orgExercises = await db
+        .select({ id: enrichmentExercises.id })
+        .from(enrichmentExercises)
+        .where(eq(enrichmentExercises.orgId, req.user!.orgId));
+      exerciseIds = orgExercises.map((e) => e.id);
+    } else {
+      // Regular users see only assigned exercises
+      const assignments = await db
+        .select({ exerciseId: userExerciseAssignments.exerciseId })
+        .from(userExerciseAssignments)
+        .where(eq(userExerciseAssignments.userId, userId));
+      exerciseIds = assignments.map((a) => a.exerciseId);
+    }
+
+    if (exerciseIds.length === 0) {
       res.json({ exercises: [] });
       return;
     }
-
-    const exerciseIds = assignments.map((a) => a.exerciseId);
 
     const exercises: ExerciseListItem[] = [];
 

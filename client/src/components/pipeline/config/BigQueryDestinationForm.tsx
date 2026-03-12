@@ -7,6 +7,28 @@ interface Props {
   config: BigQueryDestNodeConfig;
 }
 
+const DEMO_PROJECTS = [
+  'mlb-baseball-dev',
+  'mlb-baseball-prod',
+  'mlb-analytics-sandbox',
+];
+
+const DEMO_DATASETS: Record<string, string[]> = {
+  'mlb-baseball-dev': ['development_programming', 'broadcast_raw', 'staging'],
+  'mlb-baseball-prod': ['development_programming', 'broadcast_classifications', 'reporting'],
+  'mlb-analytics-sandbox': ['experiments', 'test_data'],
+};
+
+const DEMO_TABLES: Record<string, string[]> = {
+  development_programming: ['enriched_program_classifications', 'program_registrations_2026', 'program_categories'],
+  broadcast_raw: ['broadcast_feeds', 'network_schedules'],
+  staging: ['stg_enriched_output', 'stg_classifications'],
+  broadcast_classifications: ['classified_programs', 'classification_audit_log'],
+  reporting: ['rpt_program_summary', 'rpt_broadcast_coverage'],
+  experiments: ['test_output', 'classification_results'],
+  test_data: ['mock_output'],
+};
+
 export function BigQueryDestinationForm({ nodeId, config }: Props) {
   const updateNodeConfig = usePipelineStore(s => s.updateNodeConfig);
   const { data: credentials = [] } = useCredentials();
@@ -14,6 +36,9 @@ export function BigQueryDestinationForm({ nodeId, config }: Props) {
   const update = (partial: Partial<BigQueryDestNodeConfig>) => {
     updateNodeConfig(nodeId, { ...config, ...partial });
   };
+
+  const datasets = config.gcpProject ? (DEMO_DATASETS[config.gcpProject] || []) : [];
+  const tables = config.dataset ? (DEMO_TABLES[config.dataset] || []) : [];
 
   return (
     <div className="space-y-3">
@@ -32,33 +57,44 @@ export function BigQueryDestinationForm({ nodeId, config }: Props) {
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">GCP Project</label>
-        <input
-          type="text"
+        <select
           value={config.gcpProject || ''}
-          onChange={(e) => update({ gcpProject: e.target.value })}
-          placeholder="my-gcp-project"
+          onChange={(e) => update({ gcpProject: e.target.value, dataset: '', tableName: '' })}
           className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
-        />
+        >
+          <option value="">Select project...</option>
+          {DEMO_PROJECTS.map(p => (
+            <option key={p} value={p}>{p}</option>
+          ))}
+        </select>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Dataset</label>
-        <input
-          type="text"
+        <select
           value={config.dataset || ''}
-          onChange={(e) => update({ dataset: e.target.value })}
-          placeholder="my_dataset"
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
-        />
+          onChange={(e) => update({ dataset: e.target.value, tableName: '' })}
+          disabled={!config.gcpProject}
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground disabled:opacity-50"
+        >
+          <option value="">Select dataset...</option>
+          {datasets.map(d => (
+            <option key={d} value={d}>{d}</option>
+          ))}
+        </select>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Table Name</label>
-        <input
-          type="text"
+        <select
           value={config.tableName || ''}
           onChange={(e) => update({ tableName: e.target.value })}
-          placeholder="destination_table"
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
-        />
+          disabled={!config.dataset}
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground disabled:opacity-50"
+        >
+          <option value="">Select table...</option>
+          {tables.map(t => (
+            <option key={t} value={t}>{t}</option>
+          ))}
+        </select>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Write Mode</label>
@@ -69,7 +105,7 @@ export function BigQueryDestinationForm({ nodeId, config }: Props) {
               onClick={() => update({ writeMode: mode })}
               className={`flex-1 px-2 py-1.5 rounded text-xs border ${
                 config.writeMode === mode
-                  ? 'bg-purple-500/20 border-purple-500/50 text-purple-300'
+                  ? 'bg-purple-50 border-purple-400 text-purple-700'
                   : 'bg-muted border-border text-muted-foreground'
               }`}
             >

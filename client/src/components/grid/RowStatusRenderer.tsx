@@ -31,7 +31,7 @@ export const RowStatusRenderer = forwardRef<HTMLDivElement, RowStatusRendererPro
       icon = <Check size={16} className="text-status-clean" />;
       tooltip = 'Fully classified';
     } else {
-      icon = <Minus size={16} className="text-forge-600" />;
+      icon = <Minus size={16} className="text-muted-foreground" />;
       tooltip = 'Unclassified';
     }
 

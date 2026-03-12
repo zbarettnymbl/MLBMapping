@@ -37,11 +37,11 @@ export const ClassificationColumnHeader = forwardRef<
       ref={ref}
       className={[
         'flex items-center gap-1.5 px-2 w-full h-full',
-        'text-forge-50 text-xs font-semibold',
+        'text-foreground text-xs font-semibold',
       ].join(' ')}
       title={tooltipLines.join('\n')}
     >
-      <Icon size={12} className="text-forge-400 shrink-0" />
+      <Icon size={12} className="text-muted-foreground shrink-0" />
       <span className="truncate">{props.displayName}</span>
       {col.required && (
         <span className="text-amber-400 text-[10px] font-bold shrink-0">*</span>

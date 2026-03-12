@@ -120,7 +120,7 @@ export function CreateReferenceTableModal({ open, onClose }: CreateReferenceTabl
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) handleClose(); }}>
-      <DialogContent className="max-w-4xl">
+      <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col overflow-hidden">
         <DialogHeader>
           <DialogTitle>Create Reference Table (Step {step}/2)</DialogTitle>
         </DialogHeader>
@@ -172,22 +172,24 @@ export function CreateReferenceTableModal({ open, onClose }: CreateReferenceTabl
         )}
 
         {step === 2 && (
-          <div className="space-y-4">
-            {source === 'manual' && (
-              <ManualColumnEditor columns={columns} onChange={setColumns} />
-            )}
-            {source === 'csv' && (
-              <CsvUploadStep
-                onParsed={({ columns: cols, file }) => {
-                  setCsvColumns(cols);
-                  setCsvFile(file);
-                }}
-              />
-            )}
-            {source === 'bigquery' && (
-              <BigQuerySourceStep onConfigured={setBqConfig} />
-            )}
-            <div className="flex justify-between">
+          <div className="flex flex-col min-h-0 flex-1">
+            <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+              {source === 'manual' && (
+                <ManualColumnEditor columns={columns} onChange={setColumns} />
+              )}
+              {source === 'csv' && (
+                <CsvUploadStep
+                  onParsed={({ columns: cols, file }) => {
+                    setCsvColumns(cols);
+                    setCsvFile(file);
+                  }}
+                />
+              )}
+              {source === 'bigquery' && (
+                <BigQuerySourceStep onConfigured={setBqConfig} />
+              )}
+            </div>
+            <div className="flex justify-between pt-4 border-t border-border/50 shrink-0">
               <Button variant="ghost" onClick={() => setStep(1)}>
                 Back
               </Button>

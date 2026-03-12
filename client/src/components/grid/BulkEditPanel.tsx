@@ -82,7 +82,7 @@ export function BulkEditPanel({
             disabled={!field.apply}
             className={[
               'w-full px-2 py-1.5 text-sm rounded',
-              'bg-forge-900 border border-forge-700 text-forge-100',
+              'bg-card border border-border text-foreground',
               !field.apply ? 'opacity-40' : '',
             ].join(' ')}
           >
@@ -101,7 +101,7 @@ export function BulkEditPanel({
             disabled={!field.apply}
             className={[
               'w-full px-2 py-1.5 text-sm rounded',
-              'bg-forge-900 border border-forge-700 text-forge-100',
+              'bg-card border border-border text-foreground',
               !field.apply ? 'opacity-40' : '',
             ].join(' ')}
           >
@@ -121,7 +121,7 @@ export function BulkEditPanel({
             disabled={!field.apply}
             className={[
               'w-full px-2 py-1.5 text-sm rounded',
-              'bg-forge-900 border border-forge-700 text-forge-100',
+              'bg-card border border-border text-foreground',
               !field.apply ? 'opacity-40' : '',
             ].join(' ')}
           />
@@ -137,7 +137,7 @@ export function BulkEditPanel({
             disabled={!field.apply}
             className={[
               'w-full px-2 py-1.5 text-sm rounded',
-              'bg-forge-900 border border-forge-700 text-forge-100',
+              'bg-card border border-border text-foreground',
               !field.apply ? 'opacity-40' : '',
             ].join(' ')}
           />
@@ -151,7 +151,7 @@ export function BulkEditPanel({
             disabled={!field.apply}
             className={[
               'w-full px-2 py-1.5 text-sm rounded',
-              'bg-forge-900 border border-forge-700 text-forge-100',
+              'bg-card border border-border text-foreground',
               !field.apply ? 'opacity-40' : '',
             ].join(' ')}
           />
@@ -170,16 +170,16 @@ export function BulkEditPanel({
       {/* Modal */}
       <div
         className={[
-          'relative bg-forge-900 border border-forge-700 rounded-lg shadow-2xl',
+          'relative bg-card border border-border rounded-lg shadow-2xl',
           'w-full max-w-lg max-h-[80vh] flex flex-col',
         ].join(' ')}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-forge-800">
-          <h2 className="text-lg font-semibold text-forge-50">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+          <h2 className="text-lg font-semibold text-foreground">
             Apply to {count} selected record{count !== 1 ? 's' : ''}
           </h2>
-          <button onClick={onClose} className="text-forge-400 hover:text-forge-200">
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
             <X size={18} />
           </button>
         </div>
@@ -195,7 +195,7 @@ export function BulkEditPanel({
                   onChange={(e) => updateField(col.key, { apply: e.target.checked })}
                   className="accent-amber-500"
                 />
-                <span className="text-sm font-medium text-forge-200">{col.label}</span>
+                <span className="text-sm font-medium text-foreground">{col.label}</span>
                 {col.required && (
                   <span className="text-amber-400 text-xs">*</span>
                 )}
@@ -206,8 +206,8 @@ export function BulkEditPanel({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-5 py-3 border-t border-forge-800">
-          <span className="text-xs text-forge-400">
+        <div className="flex items-center justify-between px-5 py-3 border-t border-border">
+          <span className="text-xs text-muted-foreground">
             Only checked fields will be updated
           </span>
           <div className="flex gap-2">
@@ -215,7 +215,7 @@ export function BulkEditPanel({
               onClick={onClose}
               className={[
                 'px-3 py-1.5 text-sm rounded',
-                'text-forge-400 hover:text-forge-200 hover:bg-forge-800',
+                'text-muted-foreground hover:text-foreground hover:bg-muted',
               ].join(' ')}
             >
               Cancel
@@ -226,7 +226,7 @@ export function BulkEditPanel({
               className={[
                 'px-3 py-1.5 text-sm font-medium rounded',
                 appliedCount === 0
-                  ? 'bg-forge-800 text-forge-600 cursor-not-allowed'
+                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
                   : confirming
                     ? 'bg-status-error text-white'
                     : 'bg-amber-600 text-white hover:bg-amber-500',

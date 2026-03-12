@@ -45,7 +45,7 @@ function storeEdgesToRF(storeEdges: ReturnType<typeof usePipelineStore.getState>
     source: e.source,
     target: e.target,
     animated: true,
-    style: { stroke: 'var(--amber-500)', strokeWidth: 2 },
+    style: { stroke: '#f59e0b', strokeWidth: 2 },
   }));
 }
 
@@ -141,11 +141,11 @@ export function PipelineCanvas() {
         onDrop={onDrop}
         colorMode={resolvedTheme}
         fitView
-        className="bg-forge-950"
+        className="bg-background"
       >
-        <Background color="var(--forge-700)" gap={20} />
-        <Controls className="!bg-forge-800 !border-forge-700" />
-        <MiniMap className="!bg-forge-900" nodeColor="#f59e0b" />
+        <Background color="hsl(var(--border))" gap={20} />
+        <Controls className="!bg-card !border-border" />
+        <MiniMap className="!bg-muted" nodeColor="#f59e0b" />
       </ReactFlow>
     </div>
   );

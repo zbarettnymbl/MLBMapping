@@ -17,11 +17,11 @@ export const SourceColumnHeader = forwardRef<HTMLDivElement, SourceColumnHeaderP
         ref={ref}
         className={[
           'flex items-center gap-1.5 px-2 w-full h-full',
-          'text-forge-400 text-xs font-medium uppercase tracking-wide',
+          'text-muted-foreground text-xs font-medium uppercase tracking-wide',
         ].join(' ')}
         title={col.description || col.label}
       >
-        <Lock size={12} className="text-forge-500 shrink-0" />
+        <Lock size={12} className="text-muted-foreground shrink-0" />
         <span className="truncate">{props.displayName}</span>
       </div>
     );

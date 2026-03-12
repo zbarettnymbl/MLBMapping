@@ -21,8 +21,8 @@ export function SpreadsheetFooter({
   return (
     <div
       className={[
-        'px-6 py-2 bg-forge-900 border-t border-forge-800',
-        'flex items-center justify-between text-xs text-forge-400',
+        'px-6 py-2 bg-card border-t border-border',
+        'flex items-center justify-between text-xs text-muted-foreground',
       ].join(' ')}
     >
       <span>
@@ -36,15 +36,15 @@ export function SpreadsheetFooter({
           className={[
             'flex items-center gap-1 px-2 py-1 rounded',
             page <= 1
-              ? 'text-forge-600 cursor-not-allowed'
-              : 'text-forge-300 hover:bg-forge-800 hover:text-forge-100',
+              ? 'text-muted-foreground cursor-not-allowed'
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
           ].join(' ')}
         >
           <ChevronLeft size={14} />
           Prev
         </button>
 
-        <span className="text-forge-300">
+        <span className="text-muted-foreground">
           Page {page} of {totalPages}
         </span>
 
@@ -54,8 +54,8 @@ export function SpreadsheetFooter({
           className={[
             'flex items-center gap-1 px-2 py-1 rounded',
             page >= totalPages
-              ? 'text-forge-600 cursor-not-allowed'
-              : 'text-forge-300 hover:bg-forge-800 hover:text-forge-100',
+              ? 'text-muted-foreground cursor-not-allowed'
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
           ].join(' ')}
         >
           Next

@@ -15,7 +15,7 @@ export const BooleanCellRenderer = forwardRef<HTMLDivElement, ICellRendererParam
         <div
           className={[
             'w-8 h-4 rounded-full relative transition-colors',
-            isTrue ? 'bg-amber-500' : 'bg-forge-700',
+            isTrue ? 'bg-amber-500' : 'bg-muted',
           ].join(' ')}
         >
           <div

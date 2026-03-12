@@ -25,7 +25,7 @@ export const DateCellEditor = forwardRef<unknown, DateCellEditorProps>(
     return (
       <div
         className={[
-          'bg-forge-850 border border-forge-700 rounded-md shadow-xl p-2',
+          'bg-popover border border-border rounded-md shadow-xl p-2',
         ].join(' ')}
       >
         <input
@@ -47,8 +47,8 @@ export const DateCellEditor = forwardRef<unknown, DateCellEditorProps>(
           }}
           className={[
             'px-2 py-1 text-sm rounded',
-            'bg-forge-900 border border-forge-700 text-forge-100',
-            'focus:outline-none focus:ring-1 focus:ring-amber-500/40',
+            'bg-background border border-input text-foreground',
+            'focus:outline-none focus:ring-1 focus:ring-ring/40',
           ].join(' ')}
         />
         {!column.required && value && (
@@ -57,7 +57,7 @@ export const DateCellEditor = forwardRef<unknown, DateCellEditorProps>(
               setValue('');
               setTimeout(() => stopEditing(), 0);
             }}
-            className="mt-1 text-xs text-forge-400 hover:text-forge-200"
+            className="mt-1 text-xs text-muted-foreground hover:text-foreground"
           >
             Clear
           </button>

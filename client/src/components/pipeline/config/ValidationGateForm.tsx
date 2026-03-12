@@ -78,7 +78,7 @@ export function ValidationGateForm({ nodeId, config }: Props) {
             onClick={() => updateNodeConfig(nodeId, { ...config, failAction: 'stop' })}
             className={`flex-1 px-2 py-1.5 rounded text-sm border ${
               config.failAction === 'stop' || !config.failAction
-                ? 'bg-red-500/20 border-red-500/50 text-red-300'
+                ? 'bg-red-50 border-red-400 text-red-700'
                 : 'bg-muted border-border text-muted-foreground'
             }`}
           >
@@ -88,7 +88,7 @@ export function ValidationGateForm({ nodeId, config }: Props) {
             onClick={() => updateNodeConfig(nodeId, { ...config, failAction: 'warn_and_continue' })}
             className={`flex-1 px-2 py-1.5 rounded text-xs border ${
               config.failAction === 'warn_and_continue'
-                ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-300'
+                ? 'bg-yellow-50 border-yellow-400 text-yellow-700'
                 : 'bg-muted border-border text-muted-foreground'
             }`}
           >
