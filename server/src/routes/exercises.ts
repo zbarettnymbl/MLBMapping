@@ -1179,4 +1179,61 @@ router.post('/:id/assignments/:assignmentId/notify', requireRole('admin'), async
   }
 });
 
+// POST /api/v1/exercises/:id/columns/add -- add a single column
+router.post('/:id/columns/add', requireRole('admin'), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const { key, label, description, dataType, columnRole, required, defaultValue, config, validationRules, referenceLink, dependentConfig, ordinal, visible } = req.body;
+
+    if (!key || !label || !dataType || !columnRole) {
+      res.status(400).json({ error: 'key, label, dataType, and columnRole are required' });
+      return;
+    }
+
+    // Auto-assign ordinal if not provided (append to end)
+    let finalOrdinal = ordinal;
+    if (finalOrdinal === undefined || finalOrdinal === null) {
+      const [maxOrd] = await db.select({ max: sql<number>`coalesce(max(${exerciseColumns.ordinal}), -1)` })
+        .from(exerciseColumns)
+        .where(eq(exerciseColumns.exerciseId, id));
+      finalOrdinal = (maxOrd?.max ?? -1) + 1;
+    }
+
+    const [column] = await db.insert(exerciseColumns).values({
+      exerciseId: id,
+      key,
+      label,
+      description: description || null,
+      dataType,
+      ordinal: finalOrdinal,
+      columnRole,
+      required: required ?? false,
+      defaultValue: defaultValue ?? null,
+      config: config ?? {},
+      validationRules: validationRules ?? [],
+      referenceLink: referenceLink ?? null,
+      dependentConfig: dependentConfig ?? null,
+      visible: visible ?? true,
+    }).returning();
+
+    // If this is a classification column, add the key to all existing enrichment_records classifications
+    if (columnRole === 'classification') {
+      setImmediate(async () => {
+        try {
+          await db.execute(
+            sql`UPDATE enrichment_records SET classifications = classifications || jsonb_build_object(${key}, null) WHERE exercise_id = ${id}::uuid AND NOT (classifications ? ${key})`
+          );
+        } catch (err) {
+          console.error(`[AddColumn] Failed to initialize classification key "${key}":`, err);
+        }
+      });
+    }
+
+    res.status(201).json({ column });
+  } catch (error) {
+    console.error('Add column error:', error);
+    res.status(500).json({ error: 'Failed to add column' });
+  }
+});
+
 export { router as exercisesRouter };
