@@ -41,3 +41,20 @@
 .row-classified {
   border-left: 2px solid var(--color-success, #22c55e);
 }
+
+/* Schema Editor Grid */
+.schema-source-header {
+  background-color: var(--muted) !important;
+}
+.schema-source-cell {
+  background-color: color-mix(in srgb, var(--muted) 30%, transparent) !important;
+}
+.schema-classification-header {
+  background-color: color-mix(in srgb, var(--primary) 10%, var(--background)) !important;
+}
+.schema-classification-cell {
+  background-color: color-mix(in srgb, var(--primary) 5%, transparent) !important;
+}
+.schema-separator-left {
+  border-left: 2px solid var(--border) !important;
+}
