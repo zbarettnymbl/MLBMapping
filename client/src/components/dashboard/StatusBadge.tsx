@@ -1,4 +1,3 @@
-import { forwardRef } from 'react';
 import type { AdminExerciseListItem } from '../../types';
 import { Badge } from '@/components/ui/badge';
 
@@ -43,13 +42,11 @@ function deriveStatus(exercise: AdminExerciseListItem): DisplayStatus {
 
 export { deriveStatus };
 
-export const StatusBadge = forwardRef<HTMLDivElement, StatusBadgeProps>(
-  function StatusBadge({ exercise }, ref) {
-    const status = deriveStatus(exercise);
-    return (
-      <Badge ref={ref} variant={statusVariantMap[status]}>
-        {status}
-      </Badge>
-    );
-  }
-);
+export function StatusBadge({ exercise }: StatusBadgeProps) {
+  const status = deriveStatus(exercise);
+  return (
+    <Badge variant={statusVariantMap[status]}>
+      {status}
+    </Badge>
+  );
+}
