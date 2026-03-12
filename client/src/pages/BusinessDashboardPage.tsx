@@ -2,10 +2,9 @@ import { AlertTriangle, ClipboardList } from 'lucide-react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { StatusSummaryBar } from '@/components/dashboard/StatusSummaryBar';
 import { ExerciseCard } from '@/components/dashboard/ExerciseCard';
-import { Button } from '@/components/common/Button';
-import { Spinner } from '@/components/common/Spinner';
-import { EmptyState } from '@/components/common/EmptyState';
-import { Card } from '@/components/common/Card';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import { useMyExercises } from '@/hooks/useExercises';
 import type { ExerciseListItem } from '@mapforge/shared';
 
@@ -30,20 +29,22 @@ function sortExercises(exercises: ExerciseListItem[]): ExerciseListItem[] {
 
 function SkeletonCard() {
   return (
-    <Card padding="md">
-      <div className="animate-pulse space-y-3">
-        <div className="flex gap-2">
-          <div className="h-5 w-16 bg-forge-850 rounded" />
-          <div className="h-5 w-24 bg-forge-850 rounded" />
+    <Card>
+      <CardContent className="p-4">
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-5 w-24" />
+          </div>
+          <Skeleton className="h-6 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+          <Skeleton className="h-2.5 w-full rounded-full mt-4" />
+          <div className="flex justify-between pt-3 border-t border-border">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-8 w-36" />
+          </div>
         </div>
-        <div className="h-6 w-3/4 bg-forge-850 rounded" />
-        <div className="h-4 w-1/2 bg-forge-850 rounded" />
-        <div className="h-2.5 w-full bg-forge-850 rounded-full mt-4" />
-        <div className="flex justify-between pt-3 border-t border-forge-800">
-          <div className="h-4 w-24 bg-forge-850 rounded" />
-          <div className="h-8 w-36 bg-forge-850 rounded" />
-        </div>
-      </div>
+      </CardContent>
     </Card>
   );
 }
@@ -69,21 +70,23 @@ export function BusinessDashboardPage() {
     return (
       <AppLayout title="My Assignments">
         <div className="p-6 max-w-3xl mx-auto">
-          <Card padding="md">
-            <div className="flex items-center gap-3">
-              <AlertTriangle size={20} className="text-status-error shrink-0" />
-              <div className="flex-1">
-                <p className="text-sm font-medium text-forge-100">
-                  Failed to load exercises
-                </p>
-                <p className="text-xs text-forge-400 mt-0.5">
-                  There was a problem fetching your assignments. Please try again.
-                </p>
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-3">
+                <AlertTriangle size={20} className="text-destructive shrink-0" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-foreground">
+                    Failed to load exercises
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    There was a problem fetching your assignments. Please try again.
+                  </p>
+                </div>
+                <Button variant="secondary" size="sm" onClick={() => refetch()}>
+                  Retry
+                </Button>
               </div>
-              <Button variant="secondary" size="sm" onClick={() => refetch()}>
-                Retry
-              </Button>
-            </div>
+            </CardContent>
           </Card>
         </div>
       </AppLayout>
@@ -94,11 +97,15 @@ export function BusinessDashboardPage() {
   if (!exercises || exercises.length === 0) {
     return (
       <AppLayout title="My Assignments">
-        <EmptyState
-          icon={<ClipboardList size={48} />}
-          heading="No exercises assigned"
-          body="Contact your administrator to get assigned to an enrichment exercise."
-        />
+        <div className="flex flex-col items-center justify-center py-16 px-8 text-center">
+          <div className="text-muted-foreground mb-4">
+            <ClipboardList size={48} />
+          </div>
+          <h3 className="text-lg font-semibold text-foreground mb-2">No exercises assigned</h3>
+          <p className="text-sm text-muted-foreground max-w-sm mb-6">
+            Contact your administrator to get assigned to an enrichment exercise.
+          </p>
+        </div>
       </AppLayout>
     );
   }
