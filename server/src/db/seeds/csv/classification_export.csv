@@ -1,0 +1,21 @@
+siteId,programId,programName,broadcastNetwork,airDate,homeTeam,awayTeam,venue,sportCategory,contentTier,rightsStatus,verifiedSport,verifiedLeague,classifiedBy,classifiedAt
+22001,3998001,PHI @ NYY,YES Network,2026-04-05,New York Yankees,Philadelphia Phillies,Yankee Stadium,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,erin.kowalski@mlb.com,2026-03-05T14:22:00Z
+22002,3998002,BOS @ NYM,SNY,2026-04-05,New York Mets,Boston Red Sox,Citi Field,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,marcus.johnson@mlb.com,2026-03-05T14:25:00Z
+22003,3998003,CHC @ LAD,ESPN,2026-04-05,Los Angeles Dodgers,Chicago Cubs,Dodger Stadium,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,rachel.nguyen@mlb.com,2026-03-05T15:01:00Z
+22004,3998004,ATL @ BOS,NESN,2026-04-06,Boston Red Sox,Atlanta Braves,Fenway Park,Live Regular Season,Tier 2 - Standard,Confirmed,Baseball,MLB,david.thompson@mlb.com,2026-03-05T15:10:00Z
+22005,3998005,HOU @ CHC,Marquee Sports Network,2026-04-06,Chicago Cubs,Houston Astros,Wrigley Field,Live Regular Season,Tier 2 - Standard,Confirmed,Baseball,MLB,erin.kowalski@mlb.com,2026-03-05T15:15:00Z
+22008,3998008,NYY @ LAD,ESPN,2026-04-07,Los Angeles Dodgers,New York Yankees,Dodger Stadium,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,marcus.johnson@mlb.com,2026-03-05T16:00:00Z
+22009,3998009,MLB Tonight - 2026-04-07,MLB Network,2026-04-07,,,,Studio Programming,Tier 3 - Value,Confirmed,Baseball,MLB,rachel.nguyen@mlb.com,2026-03-05T16:05:00Z
+22010,3998010,New York Yankees Pre-Game Live,YES Network,2026-04-08,New York Yankees,,,Pre/Post Game,Tier 3 - Value,Confirmed,Baseball,MLB,david.thompson@mlb.com,2026-03-05T16:10:00Z
+22011,3998011,SD @ ATL,TBS,2026-04-08,Atlanta Braves,San Diego Padres,Truist Park,Live Regular Season,Tier 2 - Standard,Confirmed,Baseball,MLB,erin.kowalski@mlb.com,2026-03-06T09:00:00Z
+22012,3998012,PHI @ HOU,Fox Sports 1,2026-04-08,Houston Astros,Philadelphia Phillies,Minute Maid Park,Live Regular Season,Tier 2 - Standard,Confirmed,Baseball,MLB,marcus.johnson@mlb.com,2026-03-06T09:05:00Z
+22013,3998013,BOS @ SF,Apple TV+,2026-04-09,San Francisco Giants,Boston Red Sox,Oracle Park,Live Regular Season,Tier 2 - Standard,Pending,Baseball,MLB,rachel.nguyen@mlb.com,2026-03-06T09:12:00Z
+22014,3998014,NYM @ TEX,Fox,2026-04-09,Texas Rangers,New York Mets,Globe Life Field,Live Regular Season,Tier 2 - Standard,Confirmed,Baseball,MLB,david.thompson@mlb.com,2026-03-06T09:15:00Z
+22015,3998015,CHC @ STL,ESPN2,2026-04-10,St. Louis Cardinals,Chicago Cubs,Busch Stadium,Live Regular Season,Tier 2 - Standard,Confirmed,Baseball,MLB,erin.kowalski@mlb.com,2026-03-06T10:00:00Z
+22016,3998016,Atlanta Braves Post-Game Wrap,Bally Sports,2026-04-10,Atlanta Braves,,,Pre/Post Game,Tier 4 - Filler,Confirmed,Baseball,MLB,marcus.johnson@mlb.com,2026-03-06T10:02:00Z
+22017,3998017,LAD @ NYY,ESPN,2026-04-11,New York Yankees,Los Angeles Dodgers,Yankee Stadium,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,rachel.nguyen@mlb.com,2026-03-06T10:15:00Z
+22022,3998022,MLB Quick Pitch - 2026-04-12,MLB Network,2026-04-12,,,,Highlights / Recap,Tier 4 - Filler,Confirmed,Baseball,MLB,david.thompson@mlb.com,2026-03-06T11:00:00Z
+22024,3998024,NYY @ HOU,ESPN,2026-04-13,Houston Astros,New York Yankees,Minute Maid Park,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,erin.kowalski@mlb.com,2026-03-06T11:20:00Z
+22040,3998040,NYM @ LAD,ESPN,2026-04-20,Los Angeles Dodgers,New York Mets,Dodger Stadium,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,marcus.johnson@mlb.com,2026-03-07T09:00:00Z
+22046,3998046,NYY @ NYM,ESPN,2026-04-23,New York Mets,New York Yankees,Citi Field,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,rachel.nguyen@mlb.com,2026-03-07T10:30:00Z
+22057,3998057,BOS @ ATL,ESPN,2026-04-27,Atlanta Braves,Boston Red Sox,Truist Park,Live Regular Season,Tier 1 - Premium,Confirmed,Baseball,MLB,david.thompson@mlb.com,2026-03-07T14:00:00Z

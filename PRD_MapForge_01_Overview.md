@@ -10,7 +10,7 @@
 
 MapForge is a full-stack web application that enables MLB's Baseball & Softball Development analytics team to dynamically enrich, classify, and manage data originating from external systems (primarily BigQuery). The platform replaces a patchwork of Google Sheets, manual refresh processes, and locked-down spreadsheets with a structured, multi-user application that enforces data quality, provides audit trails, and automates the round-trip of data between BigQuery and the classification interface.
 
-This PRD is informed by a live client discovery call and a demo of DataForge (an existing AI-powered data ingestion & transformation platform). DataForge's core building blocks -- templates, reference tables, validation rules, pipelines, and audit logging -- serve as the architectural foundation. The key shift is from DataForge's column-to-column mapping model to an enrichment model where source data is read-only and business users add new classification columns.
+This PRD is informed by a live client discovery call and detailed technical requirements analysis. MapForge's core building blocks -- templates, reference tables, validation rules, pipelines, and audit logging -- form the architectural foundation. The platform follows an enrichment model where source data is read-only and business users add new classification columns.
 
 ---
 
@@ -176,20 +176,19 @@ This use case validates the concept but is NOT the target for MapForge. It is in
 
 ---
 
-## DataForge Components to Leverage
+## Platform Architecture Foundations
 
-The following existing DataForge subsystems map directly to MapForge requirements:
+MapForge is built on the following core architectural components, each purpose-designed to support dynamic data enrichment workflows:
 
-| DataForge Component | MapForge Application | Adaptation Needed |
+| Component | Purpose | Key Capabilities |
 |---|---|---|
-| **Templates** (`shared/src/types/template.ts`) | Define the schema for each enrichment exercise -- source columns (read-only) + classification columns (editable) | Add `editable` flag per column; support "enrichment mode" where source columns are locked |
-| **Reference Tables** (`server/src/routes/referenceTables.ts`, `client/src/components/referenceTables/`) | Managed lookup lists (sport categories, categorizations, headcount categories) | Add BigQuery as a refresh source alongside manual/URL/SFTP |
-| **Validation Rules** (ValidationRuleData, RelationalRule, ValidationHook in template types) | Enforce data quality -- required fields, valid picklist selections, conditional requirements | Leverage as-is; add dependent-dropdown validation |
-| **Pipelines** (`shared/src/types/pipeline.ts`, `client/src/components/pipeline/`) | Automated BigQuery pull -> enrich -> validate -> BigQuery push | Add BigQuery source/destination node types |
-| **Audit Log** (`server/src/routes/auditLog.ts`) | Track every classification change with user attribution | Leverage as-is |
-| **AG Grid Spreadsheet** (`client/src/components/grid/SpreadsheetGrid.tsx`) | Primary data entry interface for business users | Modify to support mixed read-only/editable columns; add pivot-table view option |
-| **Custom Column Types** (`shared/src/types/template.ts` -- CustomColumnType) | Reusable column type definitions (e.g., "Sport Category Picklist") across exercises | Leverage as-is |
-| **Template Relationships** (TemplateRelationship in template types) | Cross-reference between classification columns and reference tables | Leverage as-is for foreign-key-style validation |
-| **Row Constraints** (RowConstraint types) | Enforce cross-column rules like "if sportCategory = Girls Baseball, categorization must be a Girls Baseball value" | Leverage conditional_required constraint type |
-| **Organizations & Auth** (`server/src/routes/organizations.ts`, `server/src/routes/auth.ts`) | Multi-user access with role-based permissions | Extend with assignment-level access control |
-| **Notifications** (`server/src/routes/notifications.ts`, `client/src/components/notifications/`) | Alert business users when new data needs classification or deadlines approach | Add email notification channel |
+| **Templates** | Define the schema for each enrichment exercise -- source columns (read-only) + classification columns (editable) | Per-column editability flags; enrichment mode where source columns are locked; reusable custom column type definitions |
+| **Reference Tables** | Managed lookup lists for classification values (sport categories, categorizations, headcount categories, etc.) | Manual entry, URL import, SFTP sync, and BigQuery as refresh sources; versioned updates |
+| **Validation Rules** | Enforce data quality at the point of entry -- required fields, valid picklist selections, conditional requirements | Relational rules, validation hooks, dependent-dropdown validation, cross-column conditional logic |
+| **Pipelines** | Automated data flow: BigQuery pull, enrich, validate, BigQuery push | Configurable source/destination node types including BigQuery; scheduled and on-demand execution |
+| **Audit Log** | Track every classification change with user attribution and timestamps | Full change history per cell; who changed what, when, and from what prior value |
+| **AG Grid Spreadsheet** | Primary data entry interface for business users | Mixed read-only/editable column support; pivot-table view option for matrix-style data; inline validation feedback |
+| **Template Relationships** | Cross-reference between classification columns and reference tables | Foreign-key-style validation ensuring selected values exist in the governing reference table |
+| **Row Constraints** | Enforce cross-column business rules (e.g., "if sportCategory = Girls Baseball, categorization must be a Girls Baseball value") | Conditional-required constraint types; multi-column dependency chains |
+| **Organizations & Auth** | Multi-user access with role-based permissions | Assignment-level access control scoping users to specific enrichment exercises and datasets |
+| **Notifications** | Alert business users when new data needs classification or deadlines approach | In-app and email notification channels; configurable triggers |

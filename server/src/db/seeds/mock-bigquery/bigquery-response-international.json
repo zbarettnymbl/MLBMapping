@@ -1,0 +1,505 @@
+{
+  "kind": "bigquery#queryResponse",
+  "schema": {
+    "fields": [
+      { "name": "event_id", "type": "STRING", "mode": "REQUIRED" },
+      { "name": "event_name", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "event_type", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "sport", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "country", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "city", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "start_date", "type": "DATE", "mode": "NULLABLE" },
+      { "name": "end_date", "type": "DATE", "mode": "NULLABLE" },
+      { "name": "level", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "participating_countries", "type": "INTEGER", "mode": "NULLABLE" },
+      { "name": "total_participants", "type": "INTEGER", "mode": "NULLABLE" },
+      { "name": "mlb_affiliated", "type": "BOOLEAN", "mode": "NULLABLE" },
+      { "name": "broadcast_partner", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "notes", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "updated_at", "type": "TIMESTAMP", "mode": "NULLABLE" }
+    ]
+  },
+  "jobReference": {
+    "projectId": "mlb-broadcast-analytics",
+    "jobId": "job_international_001",
+    "location": "US"
+  },
+  "totalRows": "25",
+  "rows": [
+    {
+      "f": [
+        { "v": "INTL-001" },
+        { "v": "2026 World Baseball Classic Qualifier - Pool A" },
+        { "v": "qualifier" },
+        { "v": "baseball" },
+        { "v": "Taiwan" },
+        { "v": "Taichung" },
+        { "v": "2026-03-14" },
+        { "v": "2026-03-19" },
+        { "v": "professional" },
+        { "v": "6" },
+        { "v": "180" },
+        { "v": "true" },
+        { "v": "ESPN" },
+        { "v": "Pool A qualifier featuring teams from Asia-Pacific region" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-002" },
+        { "v": "2026 World Baseball Classic Qualifier - Pool B" },
+        { "v": "qualifier" },
+        { "v": "baseball" },
+        { "v": "Dominican Republic" },
+        { "v": "Santo Domingo" },
+        { "v": "2026-03-14" },
+        { "v": "2026-03-19" },
+        { "v": "professional" },
+        { "v": "6" },
+        { "v": "180" },
+        { "v": "true" },
+        { "v": "MLB Network" },
+        { "v": "Pool B qualifier featuring teams from the Caribbean and Latin America" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-003" },
+        { "v": "Asia Professional Baseball Championship" },
+        { "v": "tournament" },
+        { "v": "baseball" },
+        { "v": "Japan" },
+        { "v": "Tokyo" },
+        { "v": "2026-04-05" },
+        { "v": "2026-04-12" },
+        { "v": "professional" },
+        { "v": "4" },
+        { "v": "120" },
+        { "v": "true" },
+        { "v": "NHK" },
+        { "v": "Annual championship between Japan, South Korea, Taiwan, and Australia" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-004" },
+        { "v": "Caribbean Series 2026" },
+        { "v": "tournament" },
+        { "v": "baseball" },
+        { "v": "Venezuela" },
+        { "v": "Caracas" },
+        { "v": "2026-02-01" },
+        { "v": "2026-02-10" },
+        { "v": "professional" },
+        { "v": "8" },
+        { "v": "240" },
+        { "v": "true" },
+        { "v": "ESPN" },
+        { "v": "Premier winter league championship tournament" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-005" },
+        { "v": "European Baseball Championship" },
+        { "v": "tournament" },
+        { "v": "baseball" },
+        { "v": "Netherlands" },
+        { "v": "Rotterdam" },
+        { "v": "2026-07-10" },
+        { "v": "2026-07-20" },
+        { "v": "professional" },
+        { "v": "12" },
+        { "v": "300" },
+        { "v": "false" },
+        { "v": "Fox Sports" },
+        { "v": null },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-006" },
+        { "v": "MLB International Prospect Showcase - Dominican Republic" },
+        { "v": "showcase" },
+        { "v": "baseball" },
+        { "v": "Dominican Republic" },
+        { "v": "Boca Chica" },
+        { "v": "2026-06-15" },
+        { "v": "2026-06-20" },
+        { "v": "amateur" },
+        { "v": "1" },
+        { "v": "150" },
+        { "v": "true" },
+        { "v": "MLB Network" },
+        { "v": "Top international amateur prospects evaluated by all 30 MLB clubs" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-007" },
+        { "v": "Women's Softball World Cup Qualifier" },
+        { "v": "qualifier" },
+        { "v": "softball" },
+        { "v": "Japan" },
+        { "v": "Osaka" },
+        { "v": "2026-05-20" },
+        { "v": "2026-05-28" },
+        { "v": "professional" },
+        { "v": "8" },
+        { "v": "200" },
+        { "v": "false" },
+        { "v": "NHK" },
+        { "v": "Qualifying round for the 2027 Women's Softball World Cup" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-008" },
+        { "v": "Pan American Youth Baseball Championship" },
+        { "v": "tournament" },
+        { "v": "baseball" },
+        { "v": "Mexico" },
+        { "v": "Monterrey" },
+        { "v": "2026-08-01" },
+        { "v": "2026-08-10" },
+        { "v": "youth" },
+        { "v": "10" },
+        { "v": "250" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "U-18 tournament featuring top youth talent from the Americas" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-009" },
+        { "v": "MLB Development Tour - South Korea" },
+        { "v": "development_tour" },
+        { "v": "baseball" },
+        { "v": "South Korea" },
+        { "v": "Seoul" },
+        { "v": "2026-01-10" },
+        { "v": "2026-01-18" },
+        { "v": "youth" },
+        { "v": "1" },
+        { "v": "80" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "Coaching clinics and player development camps run by MLB staff" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-010" },
+        { "v": "Italian Baseball League All-Star Exhibition" },
+        { "v": "exhibition" },
+        { "v": "baseball" },
+        { "v": "Italy" },
+        { "v": "Bologna" },
+        { "v": "2026-07-04" },
+        { "v": "2026-07-05" },
+        { "v": "professional" },
+        { "v": "1" },
+        { "v": "50" },
+        { "v": "false" },
+        { "v": null },
+        { "v": null },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-011" },
+        { "v": "Australia Baseball Prospect Showcase" },
+        { "v": "showcase" },
+        { "v": "baseball" },
+        { "v": "Australia" },
+        { "v": "Sydney" },
+        { "v": "2026-11-05" },
+        { "v": "2026-11-10" },
+        { "v": "amateur" },
+        { "v": "1" },
+        { "v": "90" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "Annual showcase for top Australian amateur prospects" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-012" },
+        { "v": "Cuba-Mexico Exhibition Series" },
+        { "v": "exhibition" },
+        { "v": "baseball" },
+        { "v": "Cuba" },
+        { "v": "Havana" },
+        { "v": "2026-03-22" },
+        { "v": "2026-03-25" },
+        { "v": "professional" },
+        { "v": "2" },
+        { "v": "60" },
+        { "v": "false" },
+        { "v": "ESPN" },
+        { "v": "Four-game exhibition series between Cuban and Mexican national teams" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-013" },
+        { "v": "MLB Development Tour - Brazil" },
+        { "v": "development_tour" },
+        { "v": "baseball" },
+        { "v": "Brazil" },
+        { "v": "Sao Paulo" },
+        { "v": "2026-02-15" },
+        { "v": "2026-02-22" },
+        { "v": "youth" },
+        { "v": "1" },
+        { "v": "100" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "Grassroots development initiative in partnership with Brazilian baseball federation" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-014" },
+        { "v": "Puerto Rico Collegiate Baseball Invitational" },
+        { "v": "tournament" },
+        { "v": "baseball" },
+        { "v": "Puerto Rico" },
+        { "v": "San Juan" },
+        { "v": "2026-06-01" },
+        { "v": "2026-06-07" },
+        { "v": "collegiate" },
+        { "v": "4" },
+        { "v": "120" },
+        { "v": "true" },
+        { "v": "MLB Network" },
+        { "v": null },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-015" },
+        { "v": "Asia-Pacific Softball Championship" },
+        { "v": "tournament" },
+        { "v": "softball" },
+        { "v": "Australia" },
+        { "v": "Melbourne" },
+        { "v": "2026-09-10" },
+        { "v": "2026-09-18" },
+        { "v": "professional" },
+        { "v": "6" },
+        { "v": "150" },
+        { "v": "false" },
+        { "v": "Fox Sports" },
+        { "v": "Regional championship featuring top Asia-Pacific softball nations" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-016" },
+        { "v": "MLB International Prospect Showcase - Venezuela" },
+        { "v": "showcase" },
+        { "v": "baseball" },
+        { "v": "Venezuela" },
+        { "v": "Maracaibo" },
+        { "v": "2026-07-25" },
+        { "v": "2026-07-30" },
+        { "v": "amateur" },
+        { "v": "1" },
+        { "v": "130" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "Scouting event for Venezuelan amateur talent ahead of international signing period" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-017" },
+        { "v": "Netherlands Antilles Youth Softball Development Camp" },
+        { "v": "development_tour" },
+        { "v": "softball" },
+        { "v": "Netherlands" },
+        { "v": "Willemstad" },
+        { "v": "2026-04-18" },
+        { "v": "2026-04-23" },
+        { "v": "youth" },
+        { "v": "3" },
+        { "v": "75" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "Youth softball development camp focused on Caribbean island nations" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-018" },
+        { "v": "Japan-USA Collegiate Baseball Series" },
+        { "v": "exhibition" },
+        { "v": "baseball" },
+        { "v": "Japan" },
+        { "v": "Nagoya" },
+        { "v": "2026-06-20" },
+        { "v": "2026-06-26" },
+        { "v": "collegiate" },
+        { "v": "2" },
+        { "v": "60" },
+        { "v": "false" },
+        { "v": "NHK" },
+        { "v": "Annual goodwill series between top Japanese and American university teams" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-019" },
+        { "v": "Central American Baseball Championship" },
+        { "v": "tournament" },
+        { "v": "baseball" },
+        { "v": "Mexico" },
+        { "v": "Mexico City" },
+        { "v": "2026-10-03" },
+        { "v": "2026-10-12" },
+        { "v": "professional" },
+        { "v": "7" },
+        { "v": "210" },
+        { "v": "false" },
+        { "v": "Fox Sports" },
+        { "v": null },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-020" },
+        { "v": "MLB Taiwan Prospect Showcase" },
+        { "v": "showcase" },
+        { "v": "baseball" },
+        { "v": "Taiwan" },
+        { "v": "Taipei" },
+        { "v": "2026-08-15" },
+        { "v": "2026-08-19" },
+        { "v": "amateur" },
+        { "v": "1" },
+        { "v": "85" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "Prospect evaluation event in partnership with CPBL" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-021" },
+        { "v": "Dominican Summer League Showcase" },
+        { "v": "showcase" },
+        { "v": "baseball" },
+        { "v": "Dominican Republic" },
+        { "v": "San Pedro de Macoris" },
+        { "v": "2026-05-10" },
+        { "v": "2026-05-14" },
+        { "v": "amateur" },
+        { "v": "1" },
+        { "v": "200" },
+        { "v": "true" },
+        { "v": "MLB Network" },
+        { "v": "Pre-season showcase for Dominican Summer League affiliates" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-022" },
+        { "v": "MLB Development Tour - South Africa" },
+        { "v": "development_tour" },
+        { "v": "baseball" },
+        { "v": "South Africa" },
+        { "v": "Cape Town" },
+        { "v": "2026-09-01" },
+        { "v": "2026-09-08" },
+        { "v": "youth" },
+        { "v": "1" },
+        { "v": "60" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "Growing the game initiative on the African continent" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-023" },
+        { "v": "World Softball Championship Qualifier - Americas" },
+        { "v": "qualifier" },
+        { "v": "softball" },
+        { "v": "Puerto Rico" },
+        { "v": "Ponce" },
+        { "v": "2026-04-28" },
+        { "v": "2026-05-04" },
+        { "v": "professional" },
+        { "v": "8" },
+        { "v": "192" },
+        { "v": "false" },
+        { "v": "ESPN" },
+        { "v": "Americas zone qualifier for the 2027 World Softball Championship" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-024" },
+        { "v": "Korea-Japan Youth Baseball Exchange" },
+        { "v": "exhibition" },
+        { "v": "baseball" },
+        { "v": "South Korea" },
+        { "v": "Busan" },
+        { "v": "2026-08-22" },
+        { "v": "2026-08-26" },
+        { "v": "youth" },
+        { "v": "2" },
+        { "v": "48" },
+        { "v": "false" },
+        { "v": null },
+        { "v": null },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "INTL-025" },
+        { "v": "MLB Development Tour - Italy" },
+        { "v": "development_tour" },
+        { "v": "baseball" },
+        { "v": "Italy" },
+        { "v": "Parma" },
+        { "v": "2026-11-15" },
+        { "v": "2026-11-21" },
+        { "v": "youth" },
+        { "v": "1" },
+        { "v": "70" },
+        { "v": "true" },
+        { "v": null },
+        { "v": "European development camp in partnership with Italian Baseball Softball Federation" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    }
+  ]
+}

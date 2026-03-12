@@ -1,0 +1,43 @@
+/* client/src/components/grid/grid.css */
+
+/* Source columns (read-only) */
+.source-cell {
+  background-color: var(--color-forge-900);
+  color: var(--color-forge-400);
+}
+.source-header {
+  background-color: var(--color-forge-900);
+  color: var(--color-forge-400);
+}
+
+/* Classification columns (editable) */
+.classification-cell {
+  background-color: var(--color-forge-950);
+  color: var(--color-forge-50);
+}
+.classification-header {
+  background-color: var(--color-forge-900);
+  border-bottom: 2px solid var(--color-amber-500);
+}
+
+/* Separator */
+.separator-cell {
+  background-color: var(--color-forge-700);
+}
+.separator-header {
+  background-color: var(--color-forge-700);
+}
+
+/* Row states */
+.row-new {
+  background-color: rgba(8, 145, 178, 0.08);
+}
+.row-changed {
+  background-color: rgba(234, 179, 8, 0.06);
+}
+.row-error .classification-cell {
+  border-left: 2px solid var(--color-status-error);
+}
+.row-classified {
+  border-left: 2px solid var(--color-status-clean);
+}

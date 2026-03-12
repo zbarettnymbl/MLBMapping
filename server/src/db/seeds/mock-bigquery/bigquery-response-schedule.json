@@ -1,0 +1,399 @@
+{
+  "kind": "bigquery#queryResponse",
+  "schema": {
+    "fields": [
+      { "name": "schedule_id", "type": "STRING", "mode": "REQUIRED" },
+      { "name": "program_id", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "broadcast_date", "type": "DATE", "mode": "NULLABLE" },
+      { "name": "broadcast_time_et", "type": "TIME", "mode": "NULLABLE" },
+      { "name": "broadcast_time_pt", "type": "TIME", "mode": "NULLABLE" },
+      { "name": "network_name", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "network_id", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "feed_type", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "home_team_name", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "home_team_id", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "away_team_name", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "away_team_id", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "venue_name", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "venue_id", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "game_type", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "series_name", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "broadcast_language", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "estimated_duration_min", "type": "INTEGER", "mode": "NULLABLE" },
+      { "name": "blackout_regions", "type": "STRING", "mode": "REPEATED" },
+      { "name": "is_nationally_televised", "type": "BOOLEAN", "mode": "NULLABLE" },
+      { "name": "source_last_updated", "type": "TIMESTAMP", "mode": "NULLABLE" }
+    ]
+  },
+  "jobReference": {
+    "projectId": "mlb-broadcast-analytics",
+    "jobId": "job_schedule_789ghi_20260311",
+    "location": "US"
+  },
+  "totalRows": "30",
+  "rows": [
+    {
+      "f": [
+        { "v": "SCH-2026-0001" }, { "v": "3998001" }, { "v": "2026-04-05" },
+        { "v": "19:05:00" }, { "v": "16:05:00" }, { "v": "YES Network" },
+        { "v": "NET-YES" }, { "v": "home" }, { "v": "New York Yankees" },
+        { "v": "TM-NYY" }, { "v": "Philadelphia Phillies" }, { "v": "TM-PHI" },
+        { "v": "Yankee Stadium" }, { "v": "VEN-001" }, { "v": "regular_season" },
+        { "v": null }, { "v": "English" }, { "v": "210" },
+        { "v": ["NY-Metro", "Philadelphia-Metro"] }, { "v": "false" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0002" }, { "v": "3998002" }, { "v": "2026-04-05" },
+        { "v": "19:10:00" }, { "v": "16:10:00" }, { "v": "SNY" },
+        { "v": "NET-SNY" }, { "v": "home" }, { "v": "New York Mets" },
+        { "v": "TM-NYM" }, { "v": "Boston Red Sox" }, { "v": "TM-BOS" },
+        { "v": "Citi Field" }, { "v": "VEN-002" }, { "v": "regular_season" },
+        { "v": null }, { "v": "English" }, { "v": "210" },
+        { "v": ["NY-Metro", "Boston-Metro"] }, { "v": "false" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0003" }, { "v": "3998003" }, { "v": "2026-04-05" },
+        { "v": "22:10:00" }, { "v": "19:10:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Los Angeles Dodgers" },
+        { "v": "TM-LAD" }, { "v": "Chicago Cubs" }, { "v": "TM-CHC" },
+        { "v": "Dodger Stadium" }, { "v": "VEN-003" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0004" }, { "v": "3998008" }, { "v": "2026-04-07" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Los Angeles Dodgers" },
+        { "v": "TM-LAD" }, { "v": "New York Yankees" }, { "v": "TM-NYY" },
+        { "v": "Dodger Stadium" }, { "v": "VEN-003" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0005" }, { "v": "3998017" }, { "v": "2026-04-11" },
+        { "v": "19:05:00" }, { "v": "16:05:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "New York Yankees" },
+        { "v": "TM-NYY" }, { "v": "Los Angeles Dodgers" }, { "v": "TM-LAD" },
+        { "v": "Yankee Stadium" }, { "v": "VEN-001" }, { "v": "regular_season" },
+        { "v": null }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0006" }, { "v": "3998024" }, { "v": "2026-04-13" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Houston Astros" },
+        { "v": "TM-HOU" }, { "v": "New York Yankees" }, { "v": "TM-NYY" },
+        { "v": "Minute Maid Park" }, { "v": "VEN-007" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0007" }, { "v": "3998040" }, { "v": "2026-04-20" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Los Angeles Dodgers" },
+        { "v": "TM-LAD" }, { "v": "New York Mets" }, { "v": "TM-NYM" },
+        { "v": "Dodger Stadium" }, { "v": "VEN-003" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0008" }, { "v": "3998046" }, { "v": "2026-04-23" },
+        { "v": "19:10:00" }, { "v": "16:10:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "New York Mets" },
+        { "v": "TM-NYM" }, { "v": "New York Yankees" }, { "v": "TM-NYY" },
+        { "v": "Citi Field" }, { "v": "VEN-002" }, { "v": "regular_season" },
+        { "v": "Subway Series" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0009" }, { "v": "3998057" }, { "v": "2026-04-27" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Atlanta Braves" },
+        { "v": "TM-ATL" }, { "v": "Boston Red Sox" }, { "v": "TM-BOS" },
+        { "v": "Truist Park" }, { "v": "VEN-008" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0010" }, { "v": "3998072" }, { "v": "2026-05-04" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "New York Mets" },
+        { "v": "TM-NYM" }, { "v": "Los Angeles Dodgers" }, { "v": "TM-LAD" },
+        { "v": "Citi Field" }, { "v": "VEN-002" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0011" }, { "v": "3998088" }, { "v": "2026-05-11" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Atlanta Braves" },
+        { "v": "TM-ATL" }, { "v": "New York Yankees" }, { "v": "TM-NYY" },
+        { "v": "Truist Park" }, { "v": "VEN-008" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0012" }, { "v": "3998104" }, { "v": "2026-05-18" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Los Angeles Dodgers" },
+        { "v": "TM-LAD" }, { "v": "Texas Rangers" }, { "v": "TM-TEX" },
+        { "v": "Dodger Stadium" }, { "v": "VEN-003" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0013" }, { "v": "3998120" }, { "v": "2026-05-25" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "New York Mets" },
+        { "v": "TM-NYM" }, { "v": "Boston Red Sox" }, { "v": "TM-BOS" },
+        { "v": "Citi Field" }, { "v": "VEN-002" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0014" }, { "v": "3998134" }, { "v": "2026-05-31" },
+        { "v": "19:00:00" }, { "v": "16:00:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Los Angeles Dodgers" },
+        { "v": "TM-LAD" }, { "v": "Houston Astros" }, { "v": "TM-HOU" },
+        { "v": "Dodger Stadium" }, { "v": "VEN-003" }, { "v": "regular_season" },
+        { "v": "Sunday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0015" }, { "v": "3998136" }, { "v": "2026-06-01" },
+        { "v": "19:10:00" }, { "v": "16:10:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "Boston Red Sox" },
+        { "v": "TM-BOS" }, { "v": "New York Yankees" }, { "v": "TM-NYY" },
+        { "v": "Fenway Park" }, { "v": "VEN-004" }, { "v": "regular_season" },
+        { "v": "Rivalry Series" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0016" }, { "v": "3998004" }, { "v": "2026-04-06" },
+        { "v": "13:35:00" }, { "v": "10:35:00" }, { "v": "NESN" },
+        { "v": "NET-NESN" }, { "v": "home" }, { "v": "Boston Red Sox" },
+        { "v": "TM-BOS" }, { "v": "Atlanta Braves" }, { "v": "TM-ATL" },
+        { "v": "Fenway Park" }, { "v": "VEN-004" }, { "v": "regular_season" },
+        { "v": null }, { "v": "English" }, { "v": "210" },
+        { "v": ["Boston-Metro", "Atlanta-Metro"] }, { "v": "false" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0017" }, { "v": "3998005" }, { "v": "2026-04-06" },
+        { "v": "14:20:00" }, { "v": "11:20:00" }, { "v": "Marquee Sports Network" },
+        { "v": "NET-MARQ" }, { "v": "home" }, { "v": "Chicago Cubs" },
+        { "v": "TM-CHC" }, { "v": "Houston Astros" }, { "v": "TM-HOU" },
+        { "v": "Wrigley Field" }, { "v": "VEN-005" }, { "v": "regular_season" },
+        { "v": null }, { "v": "English" }, { "v": "210" },
+        { "v": ["Chicago-Metro", "Houston-Metro"] }, { "v": "false" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0018" }, { "v": "3998006" }, { "v": "2026-04-06" },
+        { "v": "16:10:00" }, { "v": "13:10:00" }, { "v": "Fox Sports 1" },
+        { "v": "NET-FS1" }, { "v": "national" }, { "v": "San Diego Padres" },
+        { "v": "TM-SD" }, { "v": "San Francisco Giants" }, { "v": "TM-SF" },
+        { "v": "Petco Park" }, { "v": "VEN-010" }, { "v": "regular_season" },
+        { "v": null }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0019" }, { "v": "3998011" }, { "v": "2026-04-08" },
+        { "v": "19:20:00" }, { "v": "16:20:00" }, { "v": "TBS" },
+        { "v": "NET-TBS" }, { "v": "national" }, { "v": "Atlanta Braves" },
+        { "v": "TM-ATL" }, { "v": "San Diego Padres" }, { "v": "TM-SD" },
+        { "v": "Truist Park" }, { "v": "VEN-008" }, { "v": "regular_season" },
+        { "v": null }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0020" }, { "v": "3998013" }, { "v": "2026-04-09" },
+        { "v": "21:45:00" }, { "v": "18:45:00" }, { "v": "Apple TV+" },
+        { "v": "NET-APTV" }, { "v": "national" }, { "v": "San Francisco Giants" },
+        { "v": "TM-SF" }, { "v": "Boston Red Sox" }, { "v": "TM-BOS" },
+        { "v": "Oracle Park" }, { "v": "VEN-006" }, { "v": "regular_season" },
+        { "v": "Friday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0021" }, { "v": "3998118" }, { "v": "2026-05-24" },
+        { "v": "19:05:00" }, { "v": "16:05:00" }, { "v": "ESPN" },
+        { "v": "NET-ESPN" }, { "v": "national" }, { "v": "New York Yankees" },
+        { "v": "TM-NYY" }, { "v": "Los Angeles Dodgers" }, { "v": "TM-LAD" },
+        { "v": "Yankee Stadium" }, { "v": "VEN-001" }, { "v": "regular_season" },
+        { "v": null }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0022" }, { "v": "3998141" }, { "v": "2026-06-04" },
+        { "v": "19:05:00" }, { "v": "16:05:00" }, { "v": "Fox" },
+        { "v": "NET-FOX" }, { "v": "national" }, { "v": "New York Yankees" },
+        { "v": "TM-NYY" }, { "v": "New York Mets" }, { "v": "TM-NYM" },
+        { "v": "Yankee Stadium" }, { "v": "VEN-001" }, { "v": "regular_season" },
+        { "v": "Subway Series" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0023" }, { "v": "3998147" }, { "v": "2026-06-07" },
+        { "v": "16:00:00" }, { "v": "13:00:00" }, { "v": "Fox" },
+        { "v": "NET-FOX" }, { "v": "national" }, { "v": "Los Angeles Dodgers" },
+        { "v": "TM-LAD" }, { "v": "New York Yankees" }, { "v": "TM-NYY" },
+        { "v": "Dodger Stadium" }, { "v": "VEN-003" }, { "v": "regular_season" },
+        { "v": "Weekend Showcase" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0024" }, { "v": "3998009" }, { "v": "2026-04-07" },
+        { "v": "22:00:00" }, { "v": "19:00:00" }, { "v": "MLB Network" },
+        { "v": "NET-MLBN" }, { "v": "national" }, { "v": null },
+        { "v": null }, { "v": null }, { "v": null },
+        { "v": "MLB Network Studio" }, { "v": "VEN-STU-01" }, { "v": "studio" },
+        { "v": "MLB Tonight" }, { "v": "English" }, { "v": "60" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0025" }, { "v": "3998010" }, { "v": "2026-04-08" },
+        { "v": "18:00:00" }, { "v": "15:00:00" }, { "v": "YES Network" },
+        { "v": "NET-YES" }, { "v": "home" }, { "v": "New York Yankees" },
+        { "v": "TM-NYY" }, { "v": null }, { "v": null },
+        { "v": "Yankee Stadium" }, { "v": "VEN-001" }, { "v": "pregame" },
+        { "v": "Yankees Pre-Game Live" }, { "v": "English" }, { "v": "30" },
+        { "v": ["NY-Metro"] }, { "v": "false" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0026" }, { "v": "3998016" }, { "v": "2026-04-10" },
+        { "v": "22:30:00" }, { "v": "19:30:00" }, { "v": "Bally Sports" },
+        { "v": "NET-BALLY" }, { "v": "home" }, { "v": "Atlanta Braves" },
+        { "v": "TM-ATL" }, { "v": null }, { "v": null },
+        { "v": "Truist Park" }, { "v": "VEN-008" }, { "v": "postgame" },
+        { "v": "Braves Post-Game Wrap" }, { "v": "English" }, { "v": "30" },
+        { "v": ["Atlanta-Metro"] }, { "v": "false" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0027" }, { "v": "3998022" }, { "v": "2026-04-12" },
+        { "v": "23:30:00" }, { "v": "20:30:00" }, { "v": "MLB Network" },
+        { "v": "NET-MLBN" }, { "v": "national" }, { "v": null },
+        { "v": null }, { "v": null }, { "v": null },
+        { "v": "MLB Network Studio" }, { "v": "VEN-STU-01" }, { "v": "highlights" },
+        { "v": "MLB Quick Pitch" }, { "v": "English" }, { "v": "30" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0028" }, { "v": "3998117" }, { "v": "2026-05-24" },
+        { "v": "20:10:00" }, { "v": "17:10:00" }, { "v": "Fox" },
+        { "v": "NET-FOX" }, { "v": "national" }, { "v": "Houston Astros" },
+        { "v": "TM-HOU" }, { "v": "Texas Rangers" }, { "v": "TM-TEX" },
+        { "v": "Minute Maid Park" }, { "v": "VEN-007" }, { "v": "regular_season" },
+        { "v": "Lone Star Series" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0029" }, { "v": "3998137" }, { "v": "2026-06-02" },
+        { "v": "14:20:00" }, { "v": "11:20:00" }, { "v": "Fox" },
+        { "v": "NET-FOX" }, { "v": "national" }, { "v": "Chicago Cubs" },
+        { "v": "TM-CHC" }, { "v": "St. Louis Cardinals" }, { "v": "TM-STL" },
+        { "v": "Wrigley Field" }, { "v": "VEN-005" }, { "v": "regular_season" },
+        { "v": "Rivalry Series" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "SCH-2026-0030" }, { "v": "3998149" }, { "v": "2026-06-07" },
+        { "v": "21:45:00" }, { "v": "18:45:00" }, { "v": "Apple TV+" },
+        { "v": "NET-APTV" }, { "v": "national" }, { "v": "San Francisco Giants" },
+        { "v": "TM-SF" }, { "v": "San Diego Padres" }, { "v": "TM-SD" },
+        { "v": "Oracle Park" }, { "v": "VEN-006" }, { "v": "regular_season" },
+        { "v": "Friday Night Baseball" }, { "v": "English" }, { "v": "210" },
+        { "v": [] }, { "v": "true" },
+        { "v": "1.709856e+09" }
+      ]
+    }
+  ],
+  "totalBytesProcessed": "8945632",
+  "jobComplete": true,
+  "cacheHit": false
+}

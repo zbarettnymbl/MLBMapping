@@ -1,0 +1,55 @@
+import type { ExerciseListItem } from '@mapforge/shared';
+
+export const mockExercises: ExerciseListItem[] = [
+  {
+    id: 'ex-1',
+    name: 'Development Programming 2026',
+    description: 'Classify program registrations by sport and category',
+    status: 'active',
+    totalRecords: 342,
+    classifiedRecords: 267,
+    errorCount: 3,
+    lastUpdatedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+    deadline: '2026-04-15T00:00:00.000Z',
+    hasNewRecords: true,
+    newRecordCount: 12,
+    columnStats: [
+      { columnKey: 'sportCategory', label: 'Sport Category', filledCount: 325, totalCount: 342, percentage: 95 },
+      { columnKey: 'categorization', label: 'Categorization', filledCount: 274, totalCount: 342, percentage: 80 },
+    ],
+  },
+  {
+    id: 'ex-2',
+    name: 'Draft Ranking Weights 2026',
+    description: 'Assign weights by tier, rank, and position',
+    status: 'active',
+    totalRecords: 24,
+    classifiedRecords: 0,
+    errorCount: 0,
+    lastUpdatedAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+    deadline: '2026-03-31T00:00:00.000Z',
+    hasNewRecords: false,
+    newRecordCount: 0,
+    columnStats: [
+      { columnKey: 'tierWeight', label: 'Tier Weight', filledCount: 0, totalCount: 24, percentage: 0 },
+      { columnKey: 'positionWeight', label: 'Position Weight', filledCount: 0, totalCount: 24, percentage: 0 },
+    ],
+  },
+  {
+    id: 'ex-3',
+    name: 'Scouting Event Classification',
+    description: 'Map scouting events to regions and event types for the 2026 season',
+    status: 'active',
+    totalRecords: 156,
+    classifiedRecords: 156,
+    errorCount: 0,
+    lastUpdatedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+    deadline: '2026-05-01T00:00:00.000Z',
+    hasNewRecords: false,
+    newRecordCount: 0,
+    columnStats: [
+      { columnKey: 'region', label: 'Region', filledCount: 156, totalCount: 156, percentage: 100 },
+      { columnKey: 'eventType', label: 'Event Type', filledCount: 156, totalCount: 156, percentage: 100 },
+    ],
+  },
+];

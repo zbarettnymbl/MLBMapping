@@ -1,0 +1,51 @@
+siteId,programId,programName,programDescription,broadcastNetwork,airDate,airTime,sport,league,homeTeam,awayTeam,venue,programType,duration,isLive
+22101,3998101,PHI @ SD,Regular season game. Philadelphia Phillies at San Diego Padres.,Bally Sports,2026-05-17,21:40:00,Baseball,MLB,San Diego Padres,Philadelphia Phillies,Petco Park,Live Game,210,1
+22102,3998102,CHC @ BOS,Regular season game. Chicago Cubs at Boston Red Sox.,NESN,2026-05-17,16:05:00,Baseball,MLB,Boston Red Sox,Chicago Cubs,Fenway Park,Live Game,210,1
+22103,3998103,SF @ NYY,Regular season game. San Francisco Giants at New York Yankees.,YES Network,2026-05-18,13:05:00,Baseball,MLB,New York Yankees,San Francisco Giants,Yankee Stadium,Live Game,210,1
+22104,3998104,TEX @ LAD,Sunday Night Baseball. Texas Rangers at Los Angeles Dodgers.,ESPN,2026-05-18,19:00:00,Baseball,MLB,Los Angeles Dodgers,Texas Rangers,Dodger Stadium,Live Game,210,1
+22105,3998105,ATL @ NYM,Regular season game. Atlanta Braves at New York Mets.,SNY,2026-05-19,19:10:00,Baseball,MLB,New York Mets,Atlanta Braves,Citi Field,Live Game,210,1
+22106,3998106,STL @ HOU,Regular season game. St. Louis Cardinals at Houston Astros.,Fox Sports 1,2026-05-19,20:10:00,Baseball,MLB,Houston Astros,St. Louis Cardinals,Minute Maid Park,Live Game,210,1
+22107,3998107,LAD @ CHC,Regular season game. Los Angeles Dodgers at Chicago Cubs.,Marquee Sports Network,2026-05-20,14:20:00,Baseball,MLB,Chicago Cubs,Los Angeles Dodgers,Wrigley Field,Live Game,210,1
+22108,3998108,BOS @ TEX,Regular season game. Boston Red Sox at Texas Rangers.,Bally Sports,2026-05-20,20:05:00,Baseball,MLB,Texas Rangers,Boston Red Sox,Globe Life Field,Live Game,210,1
+22109,3998109,NYY @ PHI,Regular season game. New York Yankees at Philadelphia Phillies.,NBC Sports,2026-05-21,19:05:00,Baseball,MLB,Philadelphia Phillies,New York Yankees,Citizens Bank Park,Live Game,210,1
+22110,3998110,NYM @ SD,Regular season game. New York Mets at San Diego Padres.,Fox Sports 1,2026-05-21,21:40:00,Baseball,MLB,San Diego Padres,New York Mets,Petco Park,Live Game,210,1
+22111,3998111,HOU @ SF,Regular season game. Houston Astros at San Francisco Giants.,Apple TV+,2026-05-22,21:45:00,Baseball,MLB,San Francisco Giants,Houston Astros,Oracle Park,Live Game,210,1
+22112,3998112,ATL @ STL,Regular season game. Atlanta Braves at St. Louis Cardinals.,Fox,2026-05-22,19:15:00,Baseball,MLB,St. Louis Cardinals,Atlanta Braves,Busch Stadium,Live Game,210,1
+22113,3998113,MLB Tonight - 2026-05-22,Midweek studio analysis with trade deadline preview.,MLB Network,2026-05-22,22:00:00,Baseball,MLB,,,MLB Network Studio,Studio Show,60,0
+22114,3998114,SD @ BOS,Regular season game. San Diego Padres at Boston Red Sox.,NESN,2026-05-23,19:10:00,Baseball,MLB,Boston Red Sox,San Diego Padres,Fenway Park,Live Game,210,1
+22115,3998115,CHC @ NYM,Regular season game. Chicago Cubs at New York Mets.,SNY,2026-05-23,19:10:00,Baseball,MLB,New York Mets,Chicago Cubs,Citi Field,Live Game,210,1
+22116,3998116,PHI @ ATL,Regular season game. Philadelphia Phillies at Atlanta Braves.,TBS,2026-05-24,16:20:00,Baseball,MLB,Atlanta Braves,Philadelphia Phillies,Truist Park,Live Game,210,1
+22117,3998117,TEX @ HOU,Lone Star Series. Texas Rangers at Houston Astros.,Fox,2026-05-24,20:10:00,Baseball,MLB,Houston Astros,Texas Rangers,Minute Maid Park,Live Game,210,1
+22118,3998118,LAD @ NYY,Regular season game. Los Angeles Dodgers at New York Yankees.,ESPN,2026-05-24,19:05:00,Baseball,MLB,New York Yankees,Los Angeles Dodgers,Yankee Stadium,Live Game,210,1
+22119,3998119,SF @ STL,Regular season game. San Francisco Giants at St. Louis Cardinals.,Fox Sports 1,2026-05-25,14:15:00,Baseball,MLB,St. Louis Cardinals,San Francisco Giants,Busch Stadium,Live Game,210,1
+22120,3998120,BOS @ NYM,Sunday Night Baseball. Boston Red Sox at New York Mets.,ESPN,2026-05-25,19:00:00,Baseball,MLB,New York Mets,Boston Red Sox,Citi Field,Live Game,210,1
+22121,3998121,NYY @ CHC,Regular season game. New York Yankees at Chicago Cubs.,Marquee Sports Network,2026-05-26,14:20:00,Baseball,MLB,Chicago Cubs,New York Yankees,Wrigley Field,Live Game,210,1
+22122,3998122,HOU @ PHI,Regular season game. Houston Astros at Philadelphia Phillies.,NBC Sports,2026-05-26,19:05:00,Baseball,MLB,Philadelphia Phillies,Houston Astros,Citizens Bank Park,Live Game,210,1
+22123,3998123,ATL @ LAD,Regular season game. Atlanta Braves at Los Angeles Dodgers.,ESPN2,2026-05-27,22:10:00,Baseball,MLB,Los Angeles Dodgers,Atlanta Braves,Dodger Stadium,Live Game,210,1
+22124,3998124,STL @ TEX,Regular season game. St. Louis Cardinals at Texas Rangers.,Bally Sports,2026-05-27,20:05:00,Baseball,MLB,Texas Rangers,St. Louis Cardinals,Globe Life Field,Live Game,210,1
+22125,3998125,SD @ SF,Bay Area Rivalry. San Diego Padres at San Francisco Giants.,NBC Sports,2026-05-28,21:45:00,Baseball,MLB,San Francisco Giants,San Diego Padres,Oracle Park,Live Game,210,1
+22126,3998126,NYM @ BOS,Regular season game. New York Mets at Boston Red Sox.,NESN,2026-05-28,19:10:00,Baseball,MLB,Boston Red Sox,New York Mets,Fenway Park,Live Game,210,1
+22127,3998127,Chicago Cubs Post-Game Wrap,Post-game analysis and player interviews after tonight's Cubs game.,Marquee Sports Network,2026-05-28,22:30:00,Baseball,MLB,Chicago Cubs,,Wrigley Field,Post-Game Show,30,0
+22128,3998128,PHI @ NYY,Regular season game. Philadelphia Phillies at New York Yankees.,YES Network,2026-05-29,19:05:00,Baseball,MLB,New York Yankees,Philadelphia Phillies,Yankee Stadium,Live Game,210,1
+22129,3998129,LAD @ HOU,Regular season game. Los Angeles Dodgers at Houston Astros.,Fox Sports 1,2026-05-29,20:10:00,Baseball,MLB,Houston Astros,Los Angeles Dodgers,Minute Maid Park,Live Game,210,1
+22130,3998130,CHC @ ATL,Regular season game. Chicago Cubs at Atlanta Braves.,TBS,2026-05-30,19:20:00,Baseball,MLB,Atlanta Braves,Chicago Cubs,Truist Park,Live Game,210,1
+22131,3998131,BOS @ STL,Regular season game. Boston Red Sox at St. Louis Cardinals.,Fox,2026-05-30,19:15:00,Baseball,MLB,St. Louis Cardinals,Boston Red Sox,Busch Stadium,Live Game,210,1
+22132,3998132,TEX @ NYM,Regular season game. Texas Rangers at New York Mets.,SNY,2026-05-31,13:10:00,Baseball,MLB,New York Mets,Texas Rangers,Citi Field,Live Game,210,1
+22133,3998133,SF @ PHI,Regular season game. San Francisco Giants at Philadelphia Phillies.,NBC Sports,2026-05-31,16:05:00,Baseball,MLB,Philadelphia Phillies,San Francisco Giants,Citizens Bank Park,Live Game,210,1
+22134,3998134,HOU @ LAD,Sunday Night Baseball. Houston Astros at Los Angeles Dodgers.,ESPN,2026-05-31,19:00:00,Baseball,MLB,Los Angeles Dodgers,Houston Astros,Dodger Stadium,Live Game,210,1
+22135,3998135,SD @ ATL,Regular season game. San Diego Padres at Atlanta Braves.,Bally Sports,2026-06-01,19:20:00,Baseball,MLB,Atlanta Braves,San Diego Padres,Truist Park,Live Game,210,1
+22136,3998136,NYY @ BOS,Rivalry Series. New York Yankees at Boston Red Sox.,ESPN,2026-06-01,19:10:00,Baseball,MLB,Boston Red Sox,New York Yankees,Fenway Park,Live Game,210,1
+22137,3998137,STL @ CHC,Rivalry Series. St. Louis Cardinals at Chicago Cubs.,Fox,2026-06-02,14:20:00,Baseball,MLB,Chicago Cubs,St. Louis Cardinals,Wrigley Field,Live Game,210,1
+22138,3998138,MLB Quick Pitch - 2026-06-02,Late-night recap of all games from around the league.,MLB Network,2026-06-02,23:30:00,Baseball,MLB,,,MLB Network Studio,Highlight Reel,30,0
+22139,3998139,ATL @ TEX,Regular season game. Atlanta Braves at Texas Rangers.,Fox Sports 1,2026-06-03,20:05:00,Baseball,MLB,Texas Rangers,Atlanta Braves,Globe Life Field,Live Game,210,1
+22140,3998140,LAD @ SD,Freeway Series. Los Angeles Dodgers at San Diego Padres.,ESPN2,2026-06-03,21:40:00,Baseball,MLB,San Diego Padres,Los Angeles Dodgers,Petco Park,Live Game,210,1
+22141,3998141,NYM @ NYY,Subway Series. New York Mets at New York Yankees.,Fox,2026-06-04,19:05:00,Baseball,MLB,New York Yankees,New York Mets,Yankee Stadium,Live Game,210,1
+22142,3998142,PHI @ BOS,Regular season game. Philadelphia Phillies at Boston Red Sox.,NESN,2026-06-04,19:10:00,Baseball,MLB,Boston Red Sox,Philadelphia Phillies,Fenway Park,Live Game,210,1
+22143,3998143,SF @ HOU,Regular season game. San Francisco Giants at Houston Astros.,Bally Sports,2026-06-05,20:10:00,Baseball,MLB,Houston Astros,San Francisco Giants,Minute Maid Park,Live Game,210,1
+22144,3998144,CHC @ STL,Rivalry Series. Chicago Cubs at St. Louis Cardinals.,Fox Sports 1,2026-06-05,19:15:00,Baseball,MLB,St. Louis Cardinals,Chicago Cubs,Busch Stadium,Live Game,210,1
+22145,3998145,TEX @ PHI,Regular season game. Texas Rangers at Philadelphia Phillies.,NBC Sports,2026-06-06,19:05:00,Baseball,MLB,Philadelphia Phillies,Texas Rangers,Citizens Bank Park,Live Game,210,1
+22146,3998146,BOS @ ATL,Regular season game. Boston Red Sox at Atlanta Braves.,TBS,2026-06-06,19:20:00,Baseball,MLB,Atlanta Braves,Boston Red Sox,Truist Park,Live Game,210,1
+22147,3998147,NYY @ LAD,Weekend Showcase. New York Yankees at Los Angeles Dodgers.,Fox,2026-06-07,16:00:00,Baseball,MLB,Los Angeles Dodgers,New York Yankees,Dodger Stadium,Live Game,210,1
+22148,3998148,HOU @ NYM,Regular season game. Houston Astros at New York Mets.,SNY,2026-06-07,19:10:00,Baseball,MLB,New York Mets,Houston Astros,Citi Field,Live Game,210,1
+22149,3998149,SD @ SF,Regular season game. San Diego Padres at San Francisco Giants.,Apple TV+,2026-06-07,21:45:00,Baseball,MLB,San Francisco Giants,San Diego Padres,Oracle Park,Live Game,210,1
+22150,3998150,MLB Tonight - 2026-06-07,Weekend studio show with standings and playoff race analysis.,MLB Network,2026-06-07,22:00:00,Baseball,MLB,,,MLB Network Studio,Studio Show,60,0

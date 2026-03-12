@@ -1,0 +1,623 @@
+{
+  "kind": "bigquery#queryResponse",
+  "schema": {
+    "fields": [
+      { "name": "venue_id", "type": "STRING", "mode": "REQUIRED" },
+      { "name": "venue_name", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "city", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "state", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "country", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "capacity", "type": "INTEGER", "mode": "NULLABLE" },
+      { "name": "surface_type", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "roof_type", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "year_opened", "type": "INTEGER", "mode": "NULLABLE" },
+      { "name": "team_id", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "facility_type", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "latitude", "type": "FLOAT", "mode": "NULLABLE" },
+      { "name": "longitude", "type": "FLOAT", "mode": "NULLABLE" },
+      { "name": "updated_at", "type": "TIMESTAMP", "mode": "NULLABLE" }
+    ]
+  },
+  "jobReference": {
+    "projectId": "mlb-broadcast-analytics",
+    "jobId": "job_venues_001",
+    "location": "US"
+  },
+  "totalRows": "33",
+  "rows": [
+    {
+      "f": [
+        { "v": "VEN-001" },
+        { "v": "Yankee Stadium" },
+        { "v": "Bronx" },
+        { "v": "NY" },
+        { "v": "US" },
+        { "v": "46537" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2009" },
+        { "v": "TM-NYY" },
+        { "v": "mlb_stadium" },
+        { "v": "40.8296" },
+        { "v": "-73.9262" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-002" },
+        { "v": "Fenway Park" },
+        { "v": "Boston" },
+        { "v": "MA" },
+        { "v": "US" },
+        { "v": "37755" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1912" },
+        { "v": "TM-BOS" },
+        { "v": "mlb_stadium" },
+        { "v": "42.3467" },
+        { "v": "-71.0972" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-003" },
+        { "v": "Dodger Stadium" },
+        { "v": "Los Angeles" },
+        { "v": "CA" },
+        { "v": "US" },
+        { "v": "56000" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1962" },
+        { "v": "TM-LAD" },
+        { "v": "mlb_stadium" },
+        { "v": "34.0739" },
+        { "v": "-118.2400" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-004" },
+        { "v": "Wrigley Field" },
+        { "v": "Chicago" },
+        { "v": "IL" },
+        { "v": "US" },
+        { "v": "41649" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1914" },
+        { "v": "TM-CHC" },
+        { "v": "mlb_stadium" },
+        { "v": "41.9484" },
+        { "v": "-87.6553" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-005" },
+        { "v": "Oracle Park" },
+        { "v": "San Francisco" },
+        { "v": "CA" },
+        { "v": "US" },
+        { "v": "41915" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2000" },
+        { "v": "TM-SFG" },
+        { "v": "mlb_stadium" },
+        { "v": "37.7786" },
+        { "v": "-122.3893" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-006" },
+        { "v": "Minute Maid Park" },
+        { "v": "Houston" },
+        { "v": "TX" },
+        { "v": "US" },
+        { "v": "41168" },
+        { "v": "natural_grass" },
+        { "v": "retractable" },
+        { "v": "2000" },
+        { "v": "TM-HOU" },
+        { "v": "mlb_stadium" },
+        { "v": "29.7573" },
+        { "v": "-95.3555" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-007" },
+        { "v": "Citizens Bank Park" },
+        { "v": "Philadelphia" },
+        { "v": "PA" },
+        { "v": "US" },
+        { "v": "42792" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2004" },
+        { "v": "TM-PHI" },
+        { "v": "mlb_stadium" },
+        { "v": "39.9061" },
+        { "v": "-75.1665" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-008" },
+        { "v": "Busch Stadium" },
+        { "v": "St. Louis" },
+        { "v": "MO" },
+        { "v": "US" },
+        { "v": "45494" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2006" },
+        { "v": "TM-STL" },
+        { "v": "mlb_stadium" },
+        { "v": "38.6226" },
+        { "v": "-90.1928" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-009" },
+        { "v": "American Family Field" },
+        { "v": "Milwaukee" },
+        { "v": "WI" },
+        { "v": "US" },
+        { "v": "41900" },
+        { "v": "natural_grass" },
+        { "v": "retractable" },
+        { "v": "2001" },
+        { "v": "TM-MIL" },
+        { "v": "mlb_stadium" },
+        { "v": "43.0280" },
+        { "v": "-87.9712" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-010" },
+        { "v": "Citi Field" },
+        { "v": "Queens" },
+        { "v": "NY" },
+        { "v": "US" },
+        { "v": "41922" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2009" },
+        { "v": "TM-NYM" },
+        { "v": "mlb_stadium" },
+        { "v": "40.7571" },
+        { "v": "-73.8458" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-011" },
+        { "v": "Nationals Park" },
+        { "v": "Washington" },
+        { "v": "DC" },
+        { "v": "US" },
+        { "v": "41339" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2008" },
+        { "v": "TM-WSH" },
+        { "v": "mlb_stadium" },
+        { "v": "38.8730" },
+        { "v": "-77.0074" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-012" },
+        { "v": "Truist Park" },
+        { "v": "Atlanta" },
+        { "v": "GA" },
+        { "v": "US" },
+        { "v": "41084" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2017" },
+        { "v": "TM-ATL" },
+        { "v": "mlb_stadium" },
+        { "v": "33.8908" },
+        { "v": "-84.4678" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-013" },
+        { "v": "LoanDepot Park" },
+        { "v": "Miami" },
+        { "v": "FL" },
+        { "v": "US" },
+        { "v": "36742" },
+        { "v": "natural_grass" },
+        { "v": "retractable" },
+        { "v": "2012" },
+        { "v": "TM-MIA" },
+        { "v": "mlb_stadium" },
+        { "v": "25.7781" },
+        { "v": "-80.2196" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-014" },
+        { "v": "Tropicana Field" },
+        { "v": "St. Petersburg" },
+        { "v": "FL" },
+        { "v": "US" },
+        { "v": "25000" },
+        { "v": "artificial_turf" },
+        { "v": "fixed" },
+        { "v": "1990" },
+        { "v": "TM-TBR" },
+        { "v": "mlb_stadium" },
+        { "v": "27.7682" },
+        { "v": "-82.6534" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-015" },
+        { "v": "Rogers Centre" },
+        { "v": "Toronto" },
+        { "v": "ON" },
+        { "v": "CA" },
+        { "v": "49282" },
+        { "v": "artificial_turf" },
+        { "v": "retractable" },
+        { "v": "1989" },
+        { "v": "TM-TOR" },
+        { "v": "mlb_stadium" },
+        { "v": "43.6414" },
+        { "v": "-79.3894" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-016" },
+        { "v": "Camden Yards" },
+        { "v": "Baltimore" },
+        { "v": "MD" },
+        { "v": "US" },
+        { "v": "45971" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1992" },
+        { "v": "TM-BAL" },
+        { "v": "mlb_stadium" },
+        { "v": "39.2838" },
+        { "v": "-76.6216" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-017" },
+        { "v": "PNC Park" },
+        { "v": "Pittsburgh" },
+        { "v": "PA" },
+        { "v": "US" },
+        { "v": "38362" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2001" },
+        { "v": "TM-PIT" },
+        { "v": "mlb_stadium" },
+        { "v": "40.4469" },
+        { "v": "-80.0057" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-018" },
+        { "v": "Great American Ball Park" },
+        { "v": "Cincinnati" },
+        { "v": "OH" },
+        { "v": "US" },
+        { "v": "42319" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2003" },
+        { "v": "TM-CIN" },
+        { "v": "mlb_stadium" },
+        { "v": "39.0975" },
+        { "v": "-84.5069" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-019" },
+        { "v": "Progressive Field" },
+        { "v": "Cleveland" },
+        { "v": "OH" },
+        { "v": "US" },
+        { "v": "34830" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1994" },
+        { "v": "TM-CLE" },
+        { "v": "mlb_stadium" },
+        { "v": "41.4962" },
+        { "v": "-81.6852" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-020" },
+        { "v": "Comerica Park" },
+        { "v": "Detroit" },
+        { "v": "MI" },
+        { "v": "US" },
+        { "v": "41083" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2000" },
+        { "v": "TM-DET" },
+        { "v": "mlb_stadium" },
+        { "v": "42.3390" },
+        { "v": "-83.0485" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-021" },
+        { "v": "Target Field" },
+        { "v": "Minneapolis" },
+        { "v": "MN" },
+        { "v": "US" },
+        { "v": "38544" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2010" },
+        { "v": "TM-MIN" },
+        { "v": "mlb_stadium" },
+        { "v": "44.9817" },
+        { "v": "-93.2776" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-022" },
+        { "v": "Guaranteed Rate Field" },
+        { "v": "Chicago" },
+        { "v": "IL" },
+        { "v": "US" },
+        { "v": "40615" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1991" },
+        { "v": "TM-CHW" },
+        { "v": "mlb_stadium" },
+        { "v": "41.8299" },
+        { "v": "-87.6338" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-023" },
+        { "v": "Kauffman Stadium" },
+        { "v": "Kansas City" },
+        { "v": "MO" },
+        { "v": "US" },
+        { "v": "37903" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1973" },
+        { "v": "TM-KCR" },
+        { "v": "mlb_stadium" },
+        { "v": "39.0517" },
+        { "v": "-94.4803" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-024" },
+        { "v": "Globe Life Field" },
+        { "v": "Arlington" },
+        { "v": "TX" },
+        { "v": "US" },
+        { "v": "40300" },
+        { "v": "artificial_turf" },
+        { "v": "retractable" },
+        { "v": "2020" },
+        { "v": "TM-TEX" },
+        { "v": "mlb_stadium" },
+        { "v": "32.7473" },
+        { "v": "-97.0845" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-025" },
+        { "v": "T-Mobile Park" },
+        { "v": "Seattle" },
+        { "v": "WA" },
+        { "v": "US" },
+        { "v": "47929" },
+        { "v": "natural_grass" },
+        { "v": "retractable" },
+        { "v": "1999" },
+        { "v": "TM-SEA" },
+        { "v": "mlb_stadium" },
+        { "v": "47.5914" },
+        { "v": "-122.3325" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-026" },
+        { "v": "Angel Stadium" },
+        { "v": "Anaheim" },
+        { "v": "CA" },
+        { "v": "US" },
+        { "v": "45517" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1966" },
+        { "v": "TM-LAA" },
+        { "v": "mlb_stadium" },
+        { "v": "33.8003" },
+        { "v": "-117.8827" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-027" },
+        { "v": "Oakland Coliseum" },
+        { "v": "Oakland" },
+        { "v": "CA" },
+        { "v": "US" },
+        { "v": "46847" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1966" },
+        { "v": "TM-OAK" },
+        { "v": "mlb_stadium" },
+        { "v": "37.7516" },
+        { "v": "-122.2005" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-028" },
+        { "v": "Petco Park" },
+        { "v": "San Diego" },
+        { "v": "CA" },
+        { "v": "US" },
+        { "v": "42445" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2004" },
+        { "v": "TM-SDP" },
+        { "v": "mlb_stadium" },
+        { "v": "32.7076" },
+        { "v": "-117.1570" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-029" },
+        { "v": "Chase Field" },
+        { "v": "Phoenix" },
+        { "v": "AZ" },
+        { "v": "US" },
+        { "v": "48519" },
+        { "v": "natural_grass" },
+        { "v": "retractable" },
+        { "v": "1998" },
+        { "v": "TM-ARI" },
+        { "v": "mlb_stadium" },
+        { "v": "33.4455" },
+        { "v": "-112.0667" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-030" },
+        { "v": "Coors Field" },
+        { "v": "Denver" },
+        { "v": "CO" },
+        { "v": "US" },
+        { "v": "50398" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1995" },
+        { "v": "TM-COL" },
+        { "v": "mlb_stadium" },
+        { "v": "39.7559" },
+        { "v": "-104.9942" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-031" },
+        { "v": "George M. Steinbrenner Field" },
+        { "v": "Tampa" },
+        { "v": "FL" },
+        { "v": "US" },
+        { "v": "11026" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "1996" },
+        { "v": "TM-NYY" },
+        { "v": "spring_training" },
+        { "v": "27.9787" },
+        { "v": "-82.5043" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-032" },
+        { "v": "Camelback Ranch" },
+        { "v": "Glendale" },
+        { "v": "AZ" },
+        { "v": "US" },
+        { "v": "12000" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2009" },
+        { "v": "TM-LAD" },
+        { "v": "spring_training" },
+        { "v": "33.5053" },
+        { "v": "-112.2318" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "VEN-033" },
+        { "v": "MLB Youth Development Center" },
+        { "v": "Vero Beach" },
+        { "v": "FL" },
+        { "v": "US" },
+        { "v": "2500" },
+        { "v": "natural_grass" },
+        { "v": "open" },
+        { "v": "2018" },
+        { "v": null },
+        { "v": "development_center" },
+        { "v": "27.6386" },
+        { "v": "-80.3973" },
+        { "v": "2026-03-01T00:00:00Z" }
+      ]
+    }
+  ]
+}
