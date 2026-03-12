@@ -86,6 +86,11 @@ export function Step1ExerciseInfo() {
               </label>
             ))}
           </div>
+          <p className="text-sm text-forge-400 mt-2">
+            {exerciseInfo.viewMode === 'flat'
+              ? 'Flat: Each record is a single row. Best for straightforward classification where each row is independent.'
+              : 'Matrix: Records are grouped and displayed in a grid layout. Best for cross-referencing data across two dimensions (e.g., players vs. categories).'}
+          </p>
         </div>
         {error && <p className="text-red-400 text-sm">{error}</p>}
         <button

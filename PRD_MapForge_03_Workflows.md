@@ -15,9 +15,6 @@ Admin lands on MapForge dashboard
   -> Selects: "BigQuery" as data source type
   -> Exercise created in DRAFT status
 ```
-
-**DataForge parallel**: Creating a new Template via `client/src/components/templates/TemplateForm.tsx`. The form collects name, description, and column definitions.
-
 ### Step 2: Configure the Data Source
 
 ```
@@ -32,9 +29,6 @@ Admin enters BigQuery connection details:
   -> Set refresh schedule: Manual | Hourly | Daily | Weekly | Custom Cron
   -> Save source configuration
 ```
-
-**DataForge parallel**: Extends the file upload flow (`client/src/components/import/UploadPane.tsx`). Instead of uploading a file, the admin configures a live connection. The preview step mirrors the existing `HeaderPane.tsx` column detection.
-
 ### Step 3: Define Source Columns (Read-Only)
 
 ```
@@ -45,9 +39,6 @@ System auto-detects columns from BigQuery source
      - All source columns are automatically read-only (lockCells: true)
   -> Admin reorders columns as desired
 ```
-
-**DataForge parallel**: Column configuration in `TemplateForm.tsx` with `ColumnAdvancedOptions.tsx`. The `lockCells` flag on `TemplateColumn` already handles read-only behavior.
-
 ### Step 4: Add Classification Columns (Editable)
 
 ```
@@ -67,9 +58,6 @@ Admin clicks "Add Classification Column"
      (e.g., "Filter values based on [sportCategory] column using [Reference Table: Sport Hierarchy]")
   -> Repeats for each classification column needed
 ```
-
-**DataForge parallel**: `DataTypePicker.tsx`, `ValueSourceSelector.tsx`, and `ColumnAdvancedOptions.tsx` in the templates component folder handle column type selection and configuration. `CustomColumnTypesPanel.tsx` supports reusable type definitions.
-
 ### Step 5: Configure Validation Rules
 
 ```
@@ -81,9 +69,6 @@ Admin adds validation rules:
      "Weight values must sum to 1.0 per tier"
   -> Each rule has: severity (error/warning), error message
 ```
-
-**DataForge parallel**: `RelationalRulesPanel.tsx` and `RowConstraintsPanel.tsx` provide the validation rule builder. `ValidationHooksPanel.tsx` supports custom JavaScript validation logic. The `GenerateRelationalRuleRequest` type even supports natural-language rule generation via AI.
-
 ### Step 6: Set Up Reference Tables (if not already done)
 
 ```
@@ -93,9 +78,6 @@ If the exercise uses picklist values that don't yet exist:
   -> Adds rows manually, uploads CSV, or connects to BigQuery
   -> Returns to exercise config and links the picklist column to the reference table
 ```
-
-**DataForge parallel**: `client/src/components/referenceTables/CreateTableModal.tsx` and `server/src/routes/referenceTables.ts`. The linking is done via `CreateColumnReferenceLinkRequest`.
-
 ### Step 7: Assign Users
 
 ```
@@ -105,9 +87,6 @@ Admin navigates to exercise's "Access" tab
   -> Optionally sets a deadline date
   -> Optionally writes a message that users see when they open the exercise
 ```
-
-**DataForge parallel**: New capability. DataForge's organization/API key model is admin-focused. MapForge needs per-exercise user assignment.
-
 ### Step 8: Build Pipeline (Optional but Recommended)
 
 ```
@@ -123,9 +102,6 @@ Admin navigates to Pipelines
   -> Sets trigger: Cron schedule (e.g., daily at 2 AM) or manual
   -> Saves and activates pipeline
 ```
-
-**DataForge parallel**: `PipelineCanvas.tsx`, `NodePalette.tsx`, `NodeConfigPanel.tsx`, `TriggerConfig.tsx`. The visual pipeline builder is one of the most mature parts of DataForge. New node types (BigQuery Source, BigQuery Destination, Enrichment Exercise) would be added alongside existing ones.
-
 ### Step 9: Publish
 
 ```
@@ -172,9 +148,6 @@ Spreadsheet view loads:
 Progress bar at top: "267 of 342 records classified (78%)"
 Quick filters: [All] [Unclassified] [Classified] [Has Errors]
 ```
-
-**DataForge parallel**: `SpreadsheetGrid.tsx` with AG Grid. Column headers use `ColumnHeaderRenderer.tsx`. Row status indicators use `RowStatusRenderer.tsx`. Error feedback uses `ErrorCellRenderer.tsx` and `CellErrorPopover.tsx`.
-
 ### Step 3: Use Dropdowns and Dependent Filters
 
 ```
@@ -222,9 +195,6 @@ but picks "Boys Baseball Breakthrough Series" for categorization
   -> User corrects the sportCategory to "Boys Baseball"
   -> Error clears automatically
 ```
-
-**DataForge parallel**: `ErrorSidebar.tsx` shows all validation errors in a filterable list. `CellErrorPopover.tsx` shows per-cell error details. The validation engine runs both client-side (instant feedback) and server-side (on save).
-
 ### Step 6: Return Later to Continue
 
 ```
@@ -280,9 +250,6 @@ Admin navigates to "Audit Log" for Development Programming 2026
   -> Admin can filter by user, date range, column, or record
   -> Admin can export log as CSV
 ```
-
-**DataForge parallel**: `server/src/routes/auditLog.ts` provides the backend. The existing audit log captures entity-level changes. MapForge would capture cell-level changes.
-
 ---
 
 ## Workflow 4: Pipeline Execution (Automated)
@@ -341,9 +308,6 @@ It's 2:00 AM. The daily cron trigger fires for "Development Programming Pipeline
         67 records still awaiting classification."
      - If new records were added, also notifies assigned business users
 ```
-
-**DataForge parallel**: The entire pipeline execution flow is built. `PipelineRunViewer.tsx` shows execution results. `PipelineNodeExecution` tracks per-node status. The trigger system supports cron schedules.
-
 ---
 
 ## Workflow 5: Admin Adds a New Use Case (Reuse Pattern)
@@ -421,5 +385,3 @@ Pipeline unpivots the matrix before pushing to BigQuery:
   | Top 40 | 1    | HS IF          | Pipeline | 0.086  |
   | ...    |      |                |          |        |
 ```
-
-**DataForge parallel**: AG Grid has pivot mode built-in. The `AggregateConfig.tsx` pipeline node handles aggregation. An "unpivot" transform node would be added. The `SheetTransformConfig.tsx` node already supports general data transformations.

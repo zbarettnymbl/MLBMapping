@@ -14,13 +14,13 @@ const TERMINAL_STATUSES = ['success', 'failed', 'cancelled'];
 
 export function PipelineBuilderPage() {
   const { id } = useParams<{ id: string }>();
-  const store = usePipelineStore();
+  const activeRunId = usePipelineStore(s => s.activeRunId);
 
   // Load pipeline
   useEffect(() => {
     if (id && id !== 'new') {
       fetchPipeline(id).then(data => {
-        store.loadPipeline({
+        usePipelineStore.getState().loadPipeline({
           id: data.id, name: data.name,
           nodes: data.nodes, edges: data.edges,
           triggerType: data.triggerType, triggerConfig: data.triggerConfig,
@@ -28,18 +28,17 @@ export function PipelineBuilderPage() {
         });
       }).catch(console.error);
     } else {
-      store.reset();
+      usePipelineStore.getState().reset();
     }
   }, [id]);
 
   // Poll run status
   useEffect(() => {
-    const runId = usePipelineStore.getState().activeRunId;
-    if (!runId) return;
+    if (!activeRunId) return;
 
     const interval = setInterval(async () => {
       try {
-        const { run, nodeRuns } = await fetchRunDetail(runId);
+        const { run, nodeRuns } = await fetchRunDetail(activeRunId);
         const statuses: Record<string, NodeRunStatus> = {};
         const details: Record<string, { inputRowCount: number | null; outputRowCount: number | null; startedAt: string | null; completedAt: string | null; errorMessage: string | null }> = {};
         for (const nr of nodeRuns) {
@@ -64,9 +63,9 @@ export function PipelineBuilderPage() {
     }, 2000);
 
     return () => clearInterval(interval);
-  }, [store.activeRunId]);
+  }, [activeRunId]);
 
-  // Unsaved changes warning (browser tab close/refresh only — useBlocker requires data router)
+  // Unsaved changes warning (browser tab close/refresh only -- useBlocker requires data router)
   useEffect(() => {
     const handler = (e: BeforeUnloadEvent) => {
       if (usePipelineStore.getState().isDirty) {

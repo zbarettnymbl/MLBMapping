@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useExerciseWizardStore } from '@/stores/exerciseWizardStore';
 import { fetchCredentials } from '@/api/credentials';
-import { testBigQueryConnection, previewBigQueryData } from '@/api/bigquery';
+import {
+  testBigQueryConnection,
+  previewBigQueryData,
+  fetchBigQueryDatasets,
+  fetchBigQueryTables,
+} from '@/api/bigquery';
 import { apiClient } from '@/api/client';
 import type { CredentialMetadata, BigQueryPreviewResult } from '@mapforge/shared';
 
@@ -37,11 +42,61 @@ export function Step2DataSource() {
   const [preview, setPreview] = useState<BigQueryPreviewResult | null>(null);
   const [selectedKeys, setSelectedKeys] = useState<string[]>(uniqueKeyColumns);
 
+  // Cascading dropdown state
+  const [datasets, setDatasets] = useState<string[]>([]);
+  const [tables, setTables] = useState<string[]>([]);
+  const [loadingDatasets, setLoadingDatasets] = useState(false);
+  const [loadingTables, setLoadingTables] = useState(false);
+
   useEffect(() => {
     fetchCredentials()
       .then(setCredentials)
       .catch(() => {});
   }, []);
+
+  // When credential changes, fetch datasets and auto-fill project
+  useEffect(() => {
+    if (!credentialId) {
+      setDatasets([]);
+      setTables([]);
+      setGcpProject('');
+      setDataset('');
+      setTableOrQuery('');
+      return;
+    }
+    setLoadingDatasets(true);
+    setDatasets([]);
+    setTables([]);
+    setDataset('');
+    setTableOrQuery('');
+    fetchBigQueryDatasets(credentialId)
+      .then((result) => {
+        setGcpProject(result.gcpProject);
+        setDatasets(result.datasets);
+      })
+      .catch(() => {
+        setDatasets([]);
+      })
+      .finally(() => setLoadingDatasets(false));
+  }, [credentialId]);
+
+  // When dataset changes, fetch tables
+  useEffect(() => {
+    if (!credentialId || !dataset) {
+      setTables([]);
+      setTableOrQuery('');
+      return;
+    }
+    setLoadingTables(true);
+    setTables([]);
+    if (queryType === 'table') {
+      setTableOrQuery('');
+    }
+    fetchBigQueryTables(credentialId, dataset)
+      .then(setTables)
+      .catch(() => setTables([]))
+      .finally(() => setLoadingTables(false));
+  }, [credentialId, dataset, queryType]);
 
   const handleTest = async () => {
     setTesting(true);
@@ -128,12 +183,16 @@ export function Step2DataSource() {
     );
   };
 
+  const selectClass =
+    'w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100';
+
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <h2 className="text-xl font-semibold text-forge-100">
         Data Source Configuration
       </h2>
       <div className="grid grid-cols-2 gap-4">
+        {/* Credential */}
         <div className="col-span-2">
           <label className="block text-sm font-medium text-forge-300 mb-1">
             Credential
@@ -141,7 +200,7 @@ export function Step2DataSource() {
           <select
             value={credentialId}
             onChange={(e) => setCredentialId(e.target.value)}
-            className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
+            className={selectClass}
           >
             <option value="">Select credential...</option>
             {credentials.map((c) => (
@@ -151,6 +210,8 @@ export function Step2DataSource() {
             ))}
           </select>
         </div>
+
+        {/* GCP Project (read-only, auto-filled from credential) */}
         <div>
           <label className="block text-sm font-medium text-forge-300 mb-1">
             GCP Project
@@ -158,21 +219,39 @@ export function Step2DataSource() {
           <input
             type="text"
             value={gcpProject}
-            onChange={(e) => setGcpProject(e.target.value)}
-            className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
+            readOnly
+            className={`${selectClass} opacity-70 cursor-not-allowed`}
+            placeholder={credentialId ? 'Loading...' : 'Select a credential first'}
           />
         </div>
+
+        {/* Dataset dropdown */}
         <div>
           <label className="block text-sm font-medium text-forge-300 mb-1">
             Dataset
           </label>
-          <input
-            type="text"
+          <select
             value={dataset}
             onChange={(e) => setDataset(e.target.value)}
-            className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
-          />
+            disabled={!credentialId || loadingDatasets}
+            className={`${selectClass} disabled:opacity-50`}
+          >
+            <option value="">
+              {loadingDatasets
+                ? 'Loading datasets...'
+                : !credentialId
+                  ? 'Select a credential first'
+                  : 'Select dataset...'}
+            </option>
+            {datasets.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
         </div>
+
+        {/* Source Type */}
         <div className="col-span-2">
           <label className="block text-sm font-medium text-forge-300 mb-1">
             Source Type
@@ -192,23 +271,39 @@ export function Step2DataSource() {
               </label>
             ))}
           </div>
+
+          {/* Table dropdown or SQL textarea */}
           {queryType === 'table' ? (
-            <input
-              type="text"
+            <select
               value={tableOrQuery}
               onChange={(e) => setTableOrQuery(e.target.value)}
-              placeholder="Table name"
-              className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
-            />
+              disabled={!dataset || loadingTables}
+              className={`${selectClass} disabled:opacity-50`}
+            >
+              <option value="">
+                {loadingTables
+                  ? 'Loading tables...'
+                  : !dataset
+                    ? 'Select a dataset first'
+                    : 'Select table...'}
+              </option>
+              {tables.map((t) => (
+                <option key={t} value={t}>
+                  {t}
+                </option>
+              ))}
+            </select>
           ) : (
             <textarea
               value={tableOrQuery}
               onChange={(e) => setTableOrQuery(e.target.value)}
               placeholder="SELECT * FROM ..."
-              className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100 h-24 resize-none font-mono text-sm"
+              className={`${selectClass} h-24 resize-none font-mono text-sm`}
             />
           )}
         </div>
+
+        {/* Refresh Schedule */}
         <div className="col-span-2">
           <label className="block text-sm font-medium text-forge-300 mb-1">
             Refresh Schedule
@@ -216,7 +311,7 @@ export function Step2DataSource() {
           <select
             value={schedule}
             onChange={(e) => setSchedule(e.target.value)}
-            className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
+            className={selectClass}
           >
             <option value="">Manual only</option>
             <option value="0 * * * *">Hourly</option>
@@ -225,6 +320,8 @@ export function Step2DataSource() {
           </select>
         </div>
       </div>
+
+      {/* Test Connection */}
       <div className="flex items-center gap-4">
         <button
           onClick={handleTest}
@@ -247,6 +344,8 @@ export function Step2DataSource() {
           </span>
         )}
       </div>
+
+      {/* Preview */}
       {preview && (
         <div className="space-y-4">
           <h3 className="text-lg font-medium text-forge-200">
@@ -302,6 +401,8 @@ export function Step2DataSource() {
           </div>
         </div>
       )}
+
+      {/* Save */}
       <button
         onClick={handleSave}
         disabled={!dataSource.isConnected && !preview}

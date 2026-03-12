@@ -131,6 +131,11 @@ function validateNodeConfig(node: PipelineNode): ValidationError[] {
       if (!c.rules || c.rules.length === 0) errors.push({ nodeId: node.id, message: `"${node.label}": At least one validation rule is required` });
       break;
     }
+    case 'transform': {
+      const c = config as any;
+      if (!c.transformType) errors.push({ nodeId: node.id, message: `"${node.label}": Transform type is required` });
+      break;
+    }
     case 'notification': {
       const c = config as any;
       if (!c.channels || c.channels.length === 0) errors.push({ nodeId: node.id, message: `"${node.label}": At least one notification channel is required` });

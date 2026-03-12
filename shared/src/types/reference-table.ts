@@ -41,6 +41,8 @@ export interface CreateReferenceTablePayload {
   columns: ReferenceTableColumn[];
   primaryKeyColumn?: string;
   displayColumn?: string;
+  refreshSource?: 'manual' | 'url' | 'sftp' | 'bigquery';
+  refreshConfig?: Record<string, unknown>;
 }
 
 export interface UpdateReferenceTablePayload {

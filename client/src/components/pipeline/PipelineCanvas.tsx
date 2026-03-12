@@ -50,51 +50,52 @@ function storeEdgesToRF(storeEdges: ReturnType<typeof usePipelineStore.getState>
 }
 
 export function PipelineCanvas() {
-  const store = usePipelineStore();
+  const storeNodes = usePipelineStore(s => s.nodes);
+  const storeEdges = usePipelineStore(s => s.edges);
   const nodeRunStatuses = usePipelineStore(s => s.nodeRunStatuses);
   const validationErrors = usePipelineStore(s => s.validationErrors);
   const { resolvedTheme } = useTheme();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const [rfNodes, setRfNodes, onNodesChange] = useNodesState(storeNodesToRF(store.nodes));
-  const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState(storeEdgesToRF(store.edges));
+  const [rfNodes, setRfNodes, onNodesChange] = useNodesState(storeNodesToRF(storeNodes));
+  const [rfEdges, setRfEdges, onEdgesChange] = useEdgesState(storeEdgesToRF(storeEdges));
 
   // Sync store -> RF when store changes (e.g. addNode, loadPipeline, reset, run status)
   useEffect(() => {
-    setRfNodes(storeNodesToRF(store.nodes));
-  }, [store.nodes, nodeRunStatuses, validationErrors, setRfNodes]);
+    setRfNodes(storeNodesToRF(storeNodes));
+  }, [storeNodes, nodeRunStatuses, validationErrors, setRfNodes]);
 
-  const prevStoreEdgesRef = useRef(store.edges);
+  const prevStoreEdgesRef = useRef(storeEdges);
 
   useEffect(() => {
-    if (store.edges !== prevStoreEdgesRef.current) {
-      prevStoreEdgesRef.current = store.edges;
-      setRfEdges(storeEdgesToRF(store.edges));
+    if (storeEdges !== prevStoreEdgesRef.current) {
+      prevStoreEdgesRef.current = storeEdges;
+      setRfEdges(storeEdgesToRF(storeEdges));
     }
-  }, [store.edges, setRfEdges]);
+  }, [storeEdges, setRfEdges]);
 
-  // Sync RF -> store on drag stop (persist position changes)
+  // Use getState() in callbacks for stable references (no re-render on every store change)
   const onNodeDragStop = useCallback((_: React.MouseEvent, node: Node) => {
-    store.updateNodePosition(node.id, node.position);
-  }, [store]);
+    usePipelineStore.getState().updateNodePosition(node.id, node.position);
+  }, []);
 
   const onConnect = useCallback((connection: Connection) => {
     if (connection.source && connection.target) {
-      store.addEdge({
+      usePipelineStore.getState().addEdge({
         id: `e-${connection.source}-${connection.target}`,
         source: connection.source,
         target: connection.target,
       });
     }
-  }, [store]);
+  }, []);
 
   const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
-    store.selectNode(node.id);
-  }, [store]);
+    usePipelineStore.getState().selectNode(node.id);
+  }, []);
 
   const onPaneClick = useCallback(() => {
-    store.selectNode(null);
-  }, [store]);
+    usePipelineStore.getState().selectNode(null);
+  }, []);
 
   const onDragOver = useCallback((event: DragEvent) => {
     event.preventDefault();
@@ -115,14 +116,14 @@ export function PipelineCanvas() {
       y: event.clientY - bounds.top - 20,
     };
 
-    store.addNode({
+    usePipelineStore.getState().addNode({
       id: `node-${Date.now()}`,
       type,
       label,
       position,
       config: { nodeType: type } as PipelineNodeConfig,
     });
-  }, [store]);
+  }, []);
 
   return (
     <div ref={wrapperRef} className="w-full h-full">

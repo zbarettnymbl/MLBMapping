@@ -1,0 +1,310 @@
+{
+  "kind": "bigquery#queryResponse",
+  "schema": {
+    "fields": [
+      { "name": "program_id", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "site_id", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "program_name", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "program_description", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "broadcast_network", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "air_date", "type": "DATE", "mode": "NULLABLE" },
+      { "name": "air_time", "type": "TIME", "mode": "NULLABLE" },
+      { "name": "sport", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "league", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "home_team", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "away_team", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "venue", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "program_type", "type": "STRING", "mode": "NULLABLE" },
+      { "name": "duration_minutes", "type": "INTEGER", "mode": "NULLABLE" },
+      { "name": "is_live", "type": "BOOLEAN", "mode": "NULLABLE" },
+      { "name": "created_at", "type": "TIMESTAMP", "mode": "NULLABLE" },
+      { "name": "updated_at", "type": "TIMESTAMP", "mode": "NULLABLE" }
+    ]
+  },
+  "jobReference": {
+    "projectId": "mlb-broadcast-analytics",
+    "jobId": "job_abc123def456_20260311",
+    "location": "US"
+  },
+  "totalRows": "25",
+  "rows": [
+    {
+      "f": [
+        { "v": "3998001" }, { "v": "22001" }, { "v": "PHI @ NYY" },
+        { "v": "Regular season game. Philadelphia Phillies at New York Yankees." },
+        { "v": "YES Network" }, { "v": "2026-04-05" }, { "v": "19:05:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Yankees" },
+        { "v": "Philadelphia Phillies" }, { "v": "Yankee Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998002" }, { "v": "22002" }, { "v": "BOS @ NYM" },
+        { "v": "Regular season game. Boston Red Sox at New York Mets." },
+        { "v": "SNY" }, { "v": "2026-04-05" }, { "v": "19:10:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Mets" },
+        { "v": "Boston Red Sox" }, { "v": "Citi Field" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998003" }, { "v": "22003" }, { "v": "CHC @ LAD" },
+        { "v": "Regular season game. Chicago Cubs at Los Angeles Dodgers." },
+        { "v": "ESPN" }, { "v": "2026-04-05" }, { "v": "22:10:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Los Angeles Dodgers" },
+        { "v": "Chicago Cubs" }, { "v": "Dodger Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998008" }, { "v": "22008" }, { "v": "NYY @ LAD" },
+        { "v": "Sunday Night Baseball. New York Yankees at Los Angeles Dodgers." },
+        { "v": "ESPN" }, { "v": "2026-04-07" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Los Angeles Dodgers" },
+        { "v": "New York Yankees" }, { "v": "Dodger Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998009" }, { "v": "22009" }, { "v": "MLB Tonight - 2026-04-07" },
+        { "v": "Studio analysis and highlights from around the league." },
+        { "v": "MLB Network" }, { "v": "2026-04-07" }, { "v": "22:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": null },
+        { "v": null }, { "v": "MLB Network Studio" },
+        { "v": "Studio Show" }, { "v": "60" }, { "v": "false" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998010" }, { "v": "22010" }, { "v": "New York Yankees Pre-Game Live" },
+        { "v": "Pre-game coverage of tonight's Yankees game." },
+        { "v": "YES Network" }, { "v": "2026-04-08" }, { "v": "18:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Yankees" },
+        { "v": null }, { "v": "Yankee Stadium" },
+        { "v": "Pre-Game Show" }, { "v": "30" }, { "v": "false" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998017" }, { "v": "22017" }, { "v": "LAD @ NYY" },
+        { "v": "Regular season game. Los Angeles Dodgers at New York Yankees." },
+        { "v": "ESPN" }, { "v": "2026-04-11" }, { "v": "19:05:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Yankees" },
+        { "v": "Los Angeles Dodgers" }, { "v": "Yankee Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998024" }, { "v": "22024" }, { "v": "NYY @ HOU" },
+        { "v": "Sunday Night Baseball. New York Yankees at Houston Astros." },
+        { "v": "ESPN" }, { "v": "2026-04-13" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Houston Astros" },
+        { "v": "New York Yankees" }, { "v": "Minute Maid Park" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998040" }, { "v": "22040" }, { "v": "NYM @ LAD" },
+        { "v": "Sunday Night Baseball. New York Mets at Los Angeles Dodgers." },
+        { "v": "ESPN" }, { "v": "2026-04-20" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Los Angeles Dodgers" },
+        { "v": "New York Mets" }, { "v": "Dodger Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998046" }, { "v": "22046" }, { "v": "NYY @ NYM" },
+        { "v": "Subway Series. New York Yankees at New York Mets." },
+        { "v": "ESPN" }, { "v": "2026-04-23" }, { "v": "19:10:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Mets" },
+        { "v": "New York Yankees" }, { "v": "Citi Field" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998057" }, { "v": "22057" }, { "v": "BOS @ ATL" },
+        { "v": "Sunday Night Baseball. Boston Red Sox at Atlanta Braves." },
+        { "v": "ESPN" }, { "v": "2026-04-27" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Atlanta Braves" },
+        { "v": "Boston Red Sox" }, { "v": "Truist Park" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998062" }, { "v": "22062" }, { "v": "CHC @ NYY" },
+        { "v": "Regular season game. Chicago Cubs at New York Yankees." },
+        { "v": "YES Network" }, { "v": "2026-04-30" }, { "v": "19:05:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Yankees" },
+        { "v": "Chicago Cubs" }, { "v": "Yankee Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998072" }, { "v": "22072" }, { "v": "LAD @ NYM" },
+        { "v": "Sunday Night Baseball. Los Angeles Dodgers at New York Mets." },
+        { "v": "ESPN" }, { "v": "2026-05-04" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Mets" },
+        { "v": "Los Angeles Dodgers" }, { "v": "Citi Field" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998088" }, { "v": "22088" }, { "v": "NYY @ ATL" },
+        { "v": "Sunday Night Baseball. New York Yankees at Atlanta Braves." },
+        { "v": "ESPN" }, { "v": "2026-05-11" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Atlanta Braves" },
+        { "v": "New York Yankees" }, { "v": "Truist Park" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998100" }, { "v": "22100" }, { "v": "HOU @ ATL" },
+        { "v": "Regular season game. Houston Astros at Atlanta Braves." },
+        { "v": "TBS" }, { "v": "2026-05-16" }, { "v": "19:20:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Atlanta Braves" },
+        { "v": "Houston Astros" }, { "v": "Truist Park" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998104" }, { "v": "22104" }, { "v": "TEX @ LAD" },
+        { "v": "Sunday Night Baseball. Texas Rangers at Los Angeles Dodgers." },
+        { "v": "ESPN" }, { "v": "2026-05-18" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Los Angeles Dodgers" },
+        { "v": "Texas Rangers" }, { "v": "Dodger Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998118" }, { "v": "22118" }, { "v": "LAD @ NYY" },
+        { "v": "Regular season game. Los Angeles Dodgers at New York Yankees." },
+        { "v": "ESPN" }, { "v": "2026-05-24" }, { "v": "19:05:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Yankees" },
+        { "v": "Los Angeles Dodgers" }, { "v": "Yankee Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998120" }, { "v": "22120" }, { "v": "BOS @ NYM" },
+        { "v": "Sunday Night Baseball. Boston Red Sox at New York Mets." },
+        { "v": "ESPN" }, { "v": "2026-05-25" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Mets" },
+        { "v": "Boston Red Sox" }, { "v": "Citi Field" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998134" }, { "v": "22134" }, { "v": "HOU @ LAD" },
+        { "v": "Sunday Night Baseball. Houston Astros at Los Angeles Dodgers." },
+        { "v": "ESPN" }, { "v": "2026-05-31" }, { "v": "19:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Los Angeles Dodgers" },
+        { "v": "Houston Astros" }, { "v": "Dodger Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998136" }, { "v": "22136" }, { "v": "NYY @ BOS" },
+        { "v": "Rivalry Series. New York Yankees at Boston Red Sox." },
+        { "v": "ESPN" }, { "v": "2026-06-01" }, { "v": "19:10:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Boston Red Sox" },
+        { "v": "New York Yankees" }, { "v": "Fenway Park" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998141" }, { "v": "22141" }, { "v": "NYM @ NYY" },
+        { "v": "Subway Series. New York Mets at New York Yankees." },
+        { "v": "Fox" }, { "v": "2026-06-04" }, { "v": "19:05:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "New York Yankees" },
+        { "v": "New York Mets" }, { "v": "Yankee Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998147" }, { "v": "22147" }, { "v": "NYY @ LAD" },
+        { "v": "Weekend Showcase. New York Yankees at Los Angeles Dodgers." },
+        { "v": "Fox" }, { "v": "2026-06-07" }, { "v": "16:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": "Los Angeles Dodgers" },
+        { "v": "New York Yankees" }, { "v": "Dodger Stadium" },
+        { "v": "Live Game" }, { "v": "210" }, { "v": "true" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998038" }, { "v": "22038" }, { "v": "MLB Tonight - 2026-04-19" },
+        { "v": "Weekend studio show with analysis and highlights." },
+        { "v": "MLB Network" }, { "v": "2026-04-19" }, { "v": "20:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": null },
+        { "v": null }, { "v": "MLB Network Studio" },
+        { "v": "Studio Show" }, { "v": "60" }, { "v": "false" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998071" }, { "v": "22071" }, { "v": "MLB Tonight - 2026-05-03" },
+        { "v": "Saturday night studio show with highlights and analysis." },
+        { "v": "MLB Network" }, { "v": "2026-05-03" }, { "v": "22:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": null },
+        { "v": null }, { "v": "MLB Network Studio" },
+        { "v": "Studio Show" }, { "v": "60" }, { "v": "false" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    },
+    {
+      "f": [
+        { "v": "3998150" }, { "v": "22150" }, { "v": "MLB Tonight - 2026-06-07" },
+        { "v": "Weekend studio show with standings and playoff race analysis." },
+        { "v": "MLB Network" }, { "v": "2026-06-07" }, { "v": "22:00:00" },
+        { "v": "Baseball" }, { "v": "MLB" }, { "v": null },
+        { "v": null }, { "v": "MLB Network Studio" },
+        { "v": "Studio Show" }, { "v": "60" }, { "v": "false" },
+        { "v": "1.709856e+09" }, { "v": "1.709856e+09" }
+      ]
+    }
+  ],
+  "totalBytesProcessed": "4521984",
+  "jobComplete": true,
+  "cacheHit": false
+}

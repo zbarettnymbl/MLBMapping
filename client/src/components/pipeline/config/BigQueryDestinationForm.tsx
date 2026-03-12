@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
 import { usePipelineStore } from '@/stores/pipelineStore';
-import { fetchCredentials } from '@/api/credentials';
-import type { BigQueryDestNodeConfig, CredentialMetadata } from '@mapforge/shared';
+import { useCredentials } from '@/hooks/useCredentials';
+import type { BigQueryDestNodeConfig } from '@mapforge/shared';
 
 interface Props {
   nodeId: string;
@@ -10,11 +9,7 @@ interface Props {
 
 export function BigQueryDestinationForm({ nodeId, config }: Props) {
   const updateNodeConfig = usePipelineStore(s => s.updateNodeConfig);
-  const [credentials, setCredentials] = useState<CredentialMetadata[]>([]);
-
-  useEffect(() => {
-    fetchCredentials().then(setCredentials).catch(console.error);
-  }, []);
+  const { data: credentials = [] } = useCredentials();
 
   const update = (partial: Partial<BigQueryDestNodeConfig>) => {
     updateNodeConfig(nodeId, { ...config, ...partial });

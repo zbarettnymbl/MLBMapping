@@ -64,8 +64,9 @@ export function NodeConfigDrawer() {
   const nodeErrors = validationErrors.filter(e => e.nodeId === selectedNodeId);
 
   const handleLabelChange = (label: string) => {
+    const currentNodes = usePipelineStore.getState().nodes;
     usePipelineStore.getState().setNodes(
-      nodes.map(n => n.id === selectedNode.id ? { ...n, label } : n)
+      currentNodes.map(n => n.id === selectedNode.id ? { ...n, label } : n)
     );
   };
 

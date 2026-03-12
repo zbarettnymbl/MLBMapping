@@ -24,9 +24,8 @@ export function PipelineRunsPage() {
   };
 
   return (
-    <AppLayout>
+    <AppLayout title="Pipeline Runs">
       <div className="p-6 space-y-6">
-        <h1 className="text-2xl font-bold text-forge-100">Pipeline Runs</h1>
         <div className="space-y-2">
           {runs.map(run => (
             <div key={run.id} onClick={() => viewRunDetail(run.id)}

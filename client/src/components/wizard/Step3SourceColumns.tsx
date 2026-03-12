@@ -1,8 +1,13 @@
+import { useState, useRef } from 'react';
+import { GripVertical } from 'lucide-react';
 import { useExerciseWizardStore } from '@/stores/exerciseWizardStore';
 import type { WizardSourceColumn } from '@mapforge/shared';
 
 export function Step3SourceColumns() {
   const { sourceColumns, setSourceColumns } = useExerciseWizardStore();
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+  const dragNodeRef = useRef<HTMLDivElement | null>(null);
 
   const updateColumn = (
     index: number,
@@ -13,43 +18,61 @@ export function Step3SourceColumns() {
     setSourceColumns(updated);
   };
 
-  const moveColumn = (index: number, direction: 'up' | 'down') => {
+  const handleDragStart = (e: React.DragEvent, index: number) => {
+    setDragIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    if (dragNodeRef.current) {
+      e.dataTransfer.setDragImage(dragNodeRef.current, 0, 0);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setOverIndex(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropIndex: number) => {
+    e.preventDefault();
+    if (dragIndex === null || dragIndex === dropIndex) return;
     const updated = [...sourceColumns];
-    const swapIndex = direction === 'up' ? index - 1 : index + 1;
-    if (swapIndex < 0 || swapIndex >= updated.length) return;
-    [updated[index], updated[swapIndex]] = [updated[swapIndex], updated[index]];
+    const [moved] = updated.splice(dragIndex, 1);
+    updated.splice(dropIndex, 0, moved);
     updated.forEach((col, i) => (col.ordinal = i));
     setSourceColumns(updated);
+  };
+
+  const handleDragEnd = () => {
+    setDragIndex(null);
+    setOverIndex(null);
   };
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <h2 className="text-xl font-semibold text-forge-100">Source Columns</h2>
       <p className="text-sm text-forge-400">
-        Configure how source columns appear to business users. These columns are
-        read-only.
+        Configure how source columns appear to business users. Drag to reorder.
       </p>
       <div className="space-y-2">
         {sourceColumns.map((col, index) => (
           <div
             key={col.key}
-            className="flex items-center gap-3 p-3 bg-forge-800 border border-forge-700 rounded-md"
+            ref={dragIndex === index ? dragNodeRef : undefined}
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDrop={(e) => handleDrop(e, index)}
+            onDragEnd={handleDragEnd}
+            className={`flex items-center gap-3 p-3 bg-forge-800 border rounded-md transition-colors ${
+              dragIndex === index
+                ? 'opacity-50 border-forge-600'
+                : overIndex === index && dragIndex !== null
+                  ? 'border-amber-500'
+                  : 'border-forge-700'
+            }`}
           >
-            <div className="flex flex-col gap-1">
-              <button
-                onClick={() => moveColumn(index, 'up')}
-                disabled={index === 0}
-                className="text-forge-400 hover:text-forge-200 disabled:opacity-30 text-xs"
-              >
-                &#9650;
-              </button>
-              <button
-                onClick={() => moveColumn(index, 'down')}
-                disabled={index === sourceColumns.length - 1}
-                className="text-forge-400 hover:text-forge-200 disabled:opacity-30 text-xs"
-              >
-                &#9660;
-              </button>
+            <div className="cursor-grab active:cursor-grabbing text-forge-500 hover:text-forge-300">
+              <GripVertical size={16} />
             </div>
             <span className="text-sm text-forge-500 font-mono w-32 truncate">
               {col.key}

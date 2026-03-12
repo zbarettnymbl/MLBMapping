@@ -4,7 +4,7 @@
 
 ## Architecture Overview
 
-MapForge inherits DataForge's full-stack architecture and adapts it for the enrichment use case. The system is a monorepo with a React frontend, Node.js backend, PostgreSQL database, and BigQuery integration layer.
+MapForge is built as a full-stack monorepo application with a React frontend, Node.js backend, PostgreSQL database, and BigQuery integration layer.
 
 ```
 +----------------------------------+
@@ -32,22 +32,22 @@ MapForge inherits DataForge's full-stack architecture and adapts it for the enri
 
 ## Technology Stack
 
-### Carried Forward from DataForge
+### Core Technology Stack
 
-| Layer | Technology | DataForge Reference |
-|---|---|---|
-| Frontend framework | React 19 + TypeScript 5.9 | `client/` directory |
-| Build tool | Vite 7 | `client/vite.config.ts` |
-| CSS framework | Tailwind CSS 4 | `client/src/index.css` (design system) |
-| Spreadsheet grid | AG Grid Community Edition | `client/src/components/grid/SpreadsheetGrid.tsx` |
-| State management (app) | Zustand | `client/src/stores/` |
-| State management (server) | React Query | `client/src/hooks/` |
-| Backend framework | Node.js + Express 5 + TypeScript | `server/` directory |
-| ORM | Drizzle ORM | `server/src/db/` |
-| Database | PostgreSQL 16 | `server/src/db/schema.ts` |
-| Caching | Redis | Sidecar container in ECS |
-| Icons | lucide-react | Used throughout client |
-| Pipeline visualization | React Flow | `client/src/components/pipeline/PipelineCanvas.tsx` |
+| Layer | Technology |
+|---|---|
+| Frontend framework | React 19 + TypeScript 5.9 |
+| Build tool | Vite 7 |
+| CSS framework | Tailwind CSS 4 |
+| Spreadsheet grid | AG Grid Community Edition |
+| State management (app) | Zustand |
+| State management (server) | React Query |
+| Backend framework | Node.js + Express 5 + TypeScript |
+| ORM | Drizzle ORM |
+| Database | PostgreSQL 16 |
+| Caching | Redis |
+| Icons | lucide-react |
+| Pipeline visualization | React Flow |
 
 ### New / Changed for MapForge
 
@@ -63,21 +63,19 @@ MapForge inherits DataForge's full-stack architecture and adapts it for the enri
 
 ## GCP Architecture (Target Deployment)
 
-The client's infrastructure is Google Cloud. The DataForge AWS architecture maps to GCP as follows:
+The client's infrastructure is Google Cloud. MapForge is deployed on GCP using the following managed services:
 
-```
-DataForge (AWS)                    MapForge (GCP)
-─────────────────                  ──────────────────
-ECS Fargate (containers)    ->     Cloud Run (containers)
-RDS PostgreSQL              ->     Cloud SQL for PostgreSQL
-ECR (container registry)    ->     Artifact Registry
-ALB (load balancer)         ->     Cloud Run built-in LB (or Cloud Load Balancing)
-Secrets Manager             ->     Secret Manager
-S3 (file storage)           ->     Cloud Storage
-ElastiCache Redis           ->     Memorystore for Redis
-Route 53 (DNS)              ->     Cloud DNS
-CloudWatch (logs)           ->     Cloud Logging
-```
+| Service | Purpose |
+|---|---|
+| Cloud Run | Container hosting (API server + worker) |
+| Cloud SQL for PostgreSQL | Relational database |
+| Artifact Registry | Container image storage |
+| Cloud Load Balancing | HTTPS load balancing (or Cloud Run built-in LB) |
+| Secret Manager | Credentials and configuration secrets |
+| Cloud Storage | File storage |
+| Memorystore for Redis | Caching layer |
+| Cloud DNS | DNS management |
+| Cloud Logging | Centralized logging |
 
 ### GCP Architecture Diagram
 
@@ -123,24 +121,23 @@ CloudWatch (logs)           ->     Cloud Logging
 | **Total (Dev)** | | **~$50-75/month** |
 | **Total (Prod)** | | **~$75-130/month** |
 
-Comparable to DataForge's $40-50/month AWS cost, with the Redis instance being the largest fixed cost.
+The Redis instance (Memorystore) is the largest fixed cost. Production costs scale primarily with Cloud SQL tier and BigQuery query volume.
 
 ---
 
 ## Database Schema (Key Tables)
 
-### Carried from DataForge (with adaptations)
+### Core Tables
 
 ```sql
--- Organizations (REUSE)
--- Already exists in DataForge; represents the client's team
+-- Organizations
 organizations (id, name, slug, settings, created_at, updated_at)
 
--- Users (ADAPT from DataForge auth)
+-- Users
 users (id, org_id, email, name, password_hash, google_id, role: 'admin'|'user',
        avatar_url, last_login_at, created_at, updated_at)
 
--- Reference Tables (REUSE)
+-- Reference Tables
 reference_tables (id, org_id, name, description, columns: jsonb,
                   primary_key_column, display_column, row_count,
                   refresh_source: 'manual'|'url'|'sftp'|'bigquery',
@@ -153,7 +150,7 @@ reference_table_rows (id, reference_table_id, data: jsonb, ordinal)
 ### New Tables for MapForge
 
 ```sql
--- Enrichment Exercises (evolved from DataForge templates)
+-- Enrichment Exercises
 enrichment_exercises (
   id uuid PRIMARY KEY,
   org_id uuid REFERENCES organizations,
@@ -169,7 +166,7 @@ enrichment_exercises (
   updated_at timestamptz DEFAULT now()
 );
 
--- Exercise Columns (evolved from DataForge template_columns)
+-- Exercise Columns
 exercise_columns (
   id uuid PRIMARY KEY,
   exercise_id uuid REFERENCES enrichment_exercises,
@@ -284,15 +281,15 @@ bigquery_destinations (
 
 ## API Endpoints (Key Routes)
 
-### Carried from DataForge
+### Existing API Routes
 
-| Method | Path | DataForge Route | MapForge Usage |
-|---|---|---|---|
-| CRUD | `/api/reference-tables/*` | `referenceTables.ts` | Manage lookup tables |
-| CRUD | `/api/pipelines/*` | `pipelines.ts` | Build automation pipelines |
-| GET | `/api/audit-log` | `auditLog.ts` | View change history |
-| CRUD | `/api/organizations/*` | `organizations.ts` | Org management |
-| POST | `/api/auth/*` | `auth.ts` | Authentication |
+| Method | Path | Usage |
+|---|---|---|
+| CRUD | `/api/reference-tables/*` | Manage lookup tables |
+| CRUD | `/api/pipelines/*` | Build automation pipelines |
+| GET | `/api/audit-log` | View change history |
+| CRUD | `/api/organizations/*` | Org management |
+| POST | `/api/auth/*` | Authentication |
 
 ### New Routes for MapForge
 
@@ -340,15 +337,15 @@ DELETE /api/credentials/:id                -- delete credential
 
 ## Security Considerations
 
-| Concern | Approach | DataForge Reference |
-|---|---|---|
-| BigQuery credentials | Encrypted at rest using AES-256; stored in `stored_credentials` table; never sent to client | Follows DataForge's API key storage pattern (`server/src/routes/apiKeys.ts`) |
-| Authentication | Google OAuth 2.0 for SSO; fallback to email/password | Extends existing auth routes |
-| Authorization | Role-based: admin (full access) vs. user (exercise-scoped) | New exercise-level assignment |
-| Data in transit | HTTPS everywhere; Cloud SQL requires SSL | Same as DataForge's RDS SSL requirement |
-| SQL injection | Drizzle ORM parameterized queries; never interpolate user input | Existing pattern |
-| XSS | React's built-in escaping; no dangerouslySetInnerHTML | Existing pattern |
-| Audit compliance | Every data change logged with user + timestamp | Enhanced from DataForge's audit log |
+| Concern | Approach |
+|---|---|
+| BigQuery credentials | Encrypted at rest using AES-256; stored in `stored_credentials` table; never sent to client |
+| Authentication | Google OAuth 2.0 for SSO; fallback to email/password |
+| Authorization | Role-based: admin (full access) vs. user (exercise-scoped via assignments) |
+| Data in transit | HTTPS everywhere; Cloud SQL requires SSL |
+| SQL injection | Drizzle ORM parameterized queries; never interpolate user input |
+| XSS | React's built-in escaping; no dangerouslySetInnerHTML |
+| Audit compliance | Every data change logged with user + timestamp |
 
 ---
 
@@ -364,18 +361,20 @@ DELETE /api/credentials/:id                -- delete credential
 
 ---
 
-## Migration Path from DataForge
+## Implementation Approach
 
-The recommended approach is to **fork DataForge** rather than modify it in place, since the two products serve different markets:
+MapForge will be built as a greenfield application using the architecture described above. The implementation follows a modular approach:
 
-1. Fork the DataForge repository
-2. Rename to MapForge throughout
-3. Remove features not needed: file upload wizard, AI mapping engine, CSV agent, document extraction
-4. Keep: templates (-> exercises), reference tables, pipelines, validation engine, audit log, AG Grid, design system, all common components
-5. Add: BigQuery integration layer, enrichment mode UI, user assignment, dependent dropdowns
-6. Retarget deployment from AWS to GCP
+1. Scaffold the monorepo with `client/` (React + Vite) and `server/` (Node.js + Express) directories
+2. Establish the PostgreSQL schema with Drizzle ORM migrations for core tables (organizations, users, reference tables)
+3. Build the enrichment exercise engine: exercise CRUD, column configuration, source record management
+4. Integrate BigQuery as the primary data source and export destination
+5. Implement the AG Grid-based classification UI with inline editing, dependent dropdowns, and bulk operations
+6. Add the pipeline builder (React Flow) for automation workflows
+7. Deploy to GCP using Cloud Run, Cloud SQL, and Memorystore
+8. Layer in Google OAuth SSO, role-based access control, and audit logging
 
-This preserves all 18 shared UI components, the design system, the pipeline builder, and the server architecture while allowing MapForge to evolve independently.
+This modular approach allows incremental delivery with a working prototype available early in the development cycle.
 
 ---
 

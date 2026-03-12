@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
 import { usePipelineStore } from '@/stores/pipelineStore';
-import { fetchMyExercises } from '@/api/exercises';
-import type { ExerciseNodeConfig, ExerciseListItem } from '@mapforge/shared';
+import { useMyExercises } from '@/hooks/useExercises';
+import type { ExerciseNodeConfig } from '@mapforge/shared';
 
 interface Props {
   nodeId: string;
@@ -10,11 +9,7 @@ interface Props {
 
 export function EnrichmentExerciseForm({ nodeId, config }: Props) {
   const updateNodeConfig = usePipelineStore(s => s.updateNodeConfig);
-  const [exercises, setExercises] = useState<ExerciseListItem[]>([]);
-
-  useEffect(() => {
-    fetchMyExercises().then(setExercises).catch(console.error);
-  }, []);
+  const { data: exercises = [] } = useMyExercises();
 
   const update = (partial: Partial<ExerciseNodeConfig>) => {
     updateNodeConfig(nodeId, { ...config, ...partial });

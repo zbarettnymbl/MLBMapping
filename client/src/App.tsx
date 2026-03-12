@@ -2,14 +2,20 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
 import { LoginPage } from '@/pages/LoginPage';
 import { BusinessDashboardPage } from '@/pages/BusinessDashboardPage';
 import { EnrichmentSpreadsheetPage } from '@/pages/EnrichmentSpreadsheetPage';
 import { AdminDashboardPage } from '@/pages/AdminDashboardPage';
+import { ExercisesPage } from '@/pages/ExercisesPage';
 import { ExerciseWizardPage } from '@/pages/ExerciseWizardPage';
+import { PipelinesPage } from '@/pages/PipelinesPage';
 import { PipelineBuilderPage } from '@/pages/PipelineBuilderPage';
 import { PipelineRunsPage } from '@/pages/PipelineRunsPage';
+import { ReferenceTablesPage } from '@/pages/ReferenceTablesPage';
+import { CredentialsPage } from '@/pages/CredentialsPage';
+import { BigQueryExplorerPage } from '@/pages/BigQueryExplorerPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,10 +37,22 @@ export function App() {
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <AuthProvider>
-          <Toaster position="top-right" />
+          <ThemeProvider>
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                background: 'var(--forge-900)',
+                color: 'var(--forge-100)',
+                border: '1px solid var(--forge-700)',
+              },
+            }}
+          />
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<RootRedirect />} />
+
+            {/* User routes */}
             <Route
               path="/dashboard"
               element={
@@ -46,16 +64,26 @@ export function App() {
             <Route
               path="/exercises/:exerciseId"
               element={
-                <ProtectedRoute allowedRoles={['user']}>
+                <ProtectedRoute allowedRoles={['user', 'admin']}>
                   <EnrichmentSpreadsheetPage />
                 </ProtectedRoute>
               }
             />
+
+            {/* Admin routes */}
             <Route
               path="/admin"
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <AdminDashboardPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/exercises"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <ExercisesPage />
                 </ProtectedRoute>
               }
             />
@@ -71,7 +99,7 @@ export function App() {
               path="/pipelines"
               element={
                 <ProtectedRoute allowedRoles={['admin']}>
-                  <PipelineRunsPage />
+                  <PipelinesPage />
                 </ProtectedRoute>
               }
             />
@@ -99,7 +127,32 @@ export function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/reference-tables"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <ReferenceTablesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/credentials"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <CredentialsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/bigquery-explorer"
+              element={
+                <ProtectedRoute allowedRoles={['admin']}>
+                  <BigQueryExplorerPage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

@@ -20,10 +20,10 @@ router.get('/', async (req: Request, res: Response) => {
 
 // POST /api/v1/reference-tables
 router.post('/', requireRole('admin'), async (req: Request, res: Response) => {
-  const { name, description, columns, primaryKeyColumn, displayColumn } = req.body;
+  const { name, description, columns, primaryKeyColumn, displayColumn, refreshSource, refreshConfig } = req.body;
   const [table] = await db.insert(referenceTables).values({
     orgId: req.user!.orgId, name, description, columns, primaryKeyColumn, displayColumn,
-    rowCount: 0, refreshSource: 'manual',
+    rowCount: 0, refreshSource: refreshSource ?? 'manual', refreshConfig: refreshConfig ?? null,
   }).returning();
   res.status(201).json(table);
 });

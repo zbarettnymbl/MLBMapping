@@ -20,3 +20,17 @@ export async function exportToBigQuery(exerciseId: string): Promise<BigQueryWrit
   const response = await apiClient.post<BigQueryWriteResult>(`/bigquery/export/${exerciseId}`);
   return response.data;
 }
+
+export async function fetchBigQueryDatasets(credentialId: string): Promise<{ gcpProject: string; datasets: string[] }> {
+  const response = await apiClient.get<{ gcpProject: string; datasets: string[] }>('/bigquery/datasets', {
+    params: { credentialId },
+  });
+  return response.data;
+}
+
+export async function fetchBigQueryTables(credentialId: string, dataset: string): Promise<string[]> {
+  const response = await apiClient.get<{ tables: string[] }>('/bigquery/tables', {
+    params: { credentialId, dataset },
+  });
+  return response.data.tables;
+}

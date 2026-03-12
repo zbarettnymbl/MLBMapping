@@ -29,7 +29,7 @@ export function ExerciseWizardPage() {
   const StepComponent = STEP_COMPONENTS[currentStep];
 
   return (
-    <AppLayout>
+    <AppLayout title="Create Exercise">
       <div className="flex flex-col h-full">
         <WizardStepper />
         <div className="flex-1 overflow-y-auto p-6">

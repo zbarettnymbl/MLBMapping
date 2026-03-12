@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mapforge-postgres
+    restart: unless-stopped
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: mapforge
+      POSTGRES_USER: mapforge
+      POSTGRES_PASSWORD: mapforge_dev
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mapforge -d mapforge"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: mapforge-server
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://mapforge:mapforge_dev@postgres:5432/mapforge
+      REDIS_URL: ""
+      SESSION_SECRET: mapforge-dev-session-secret-change-in-production
+      CORS_ORIGIN: http://localhost:5173
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./server/src:/app/src
+      - ./shared:/app/../shared
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: mapforge-client
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:3001
+    depends_on:
+      - server
+    volumes:
+      - ./client/src:/app/src
+      - ./shared:/app/../shared
+
+volumes:
+  pgdata:
+    driver: local
