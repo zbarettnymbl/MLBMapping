@@ -36,6 +36,18 @@ router.put('/:id', async (req: Request, res: Response) => {
   res.json(updated);
 });
 
+router.patch('/:id/status', async (req: Request, res: Response) => {
+  const { status } = req.body;
+  const validStatuses = ['draft', 'active', 'paused'];
+  if (!validStatuses.includes(status)) {
+    res.status(400).json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` });
+    return;
+  }
+  const [updated] = await db.update(pipelines).set({ status, updatedAt: new Date() }).where(eq(pipelines.id, req.params.id)).returning();
+  if (!updated) { res.status(404).json({ error: 'Pipeline not found' }); return; }
+  res.json(updated);
+});
+
 router.delete('/:id', async (req: Request, res: Response) => {
   const runs = await db.select({ id: pipelineRuns.id }).from(pipelineRuns).where(eq(pipelineRuns.pipelineId, req.params.id));
   for (const run of runs) { await db.delete(pipelineNodeRuns).where(eq(pipelineNodeRuns.runId, run.id)); }
