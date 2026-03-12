@@ -9,7 +9,7 @@ import { Step6ReferenceTables } from '@/components/wizard/Step6ReferenceTables';
 import { Step7UserAssignment } from '@/components/wizard/Step7UserAssignment';
 import { Step8Pipeline } from '@/components/wizard/Step8Pipeline';
 import { Step9Publish } from '@/components/wizard/Step9Publish';
-import { Button } from '@/components/common';
+import { Button } from '@/components/ui/button';
 import { AppLayout } from '@/components/layout';
 
 const STEP_COMPONENTS = {
@@ -35,12 +35,12 @@ export function ExerciseWizardPage() {
         <div className="flex-1 overflow-y-auto p-6">
           <StepComponent />
         </div>
-        <div className="flex items-center justify-between px-6 py-4 border-t border-forge-700 bg-forge-900">
+        <div className="flex items-center justify-between px-6 py-4 border-t border-border bg-background">
           <Button variant="secondary" onClick={prevStep} disabled={currentStep === 1}>
             Back
           </Button>
           {currentStep < 9 && (
-            <Button variant="primary" onClick={nextStep}>
+            <Button onClick={nextStep}>
               Next
             </Button>
           )}

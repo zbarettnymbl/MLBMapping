@@ -1,6 +1,9 @@
 import { useState, useRef } from 'react';
 import { GripVertical } from 'lucide-react';
 import { useExerciseWizardStore } from '@/stores/exerciseWizardStore';
+import { cn } from '@/lib/utils';
+import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import type { WizardSourceColumn } from '@mapforge/shared';
 
 export function Step3SourceColumns() {
@@ -49,8 +52,8 @@ export function Step3SourceColumns() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
-      <h2 className="text-xl font-semibold text-forge-100">Source Columns</h2>
-      <p className="text-sm text-forge-400">
+      <h2 className="text-xl font-semibold text-foreground">Source Columns</h2>
+      <p className="text-sm text-muted-foreground">
         Configure how source columns appear to business users. Drag to reorder.
       </p>
       <div className="space-y-2">
@@ -63,27 +66,30 @@ export function Step3SourceColumns() {
             onDragOver={(e) => handleDragOver(e, index)}
             onDrop={(e) => handleDrop(e, index)}
             onDragEnd={handleDragEnd}
-            className={`flex items-center gap-3 p-3 bg-forge-800 border rounded-md transition-colors ${
+            className={cn(
+              'flex items-center gap-3 p-3 bg-muted border rounded-md transition-colors',
               dragIndex === index
-                ? 'opacity-50 border-forge-600'
+                ? 'opacity-50 border-border'
                 : overIndex === index && dragIndex !== null
-                  ? 'border-amber-500'
-                  : 'border-forge-700'
-            }`}
+                  ? 'border-primary'
+                  : 'border-border'
+            )}
           >
-            <div className="cursor-grab active:cursor-grabbing text-forge-500 hover:text-forge-300">
+            <div className="cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground">
               <GripVertical size={16} />
             </div>
-            <span className="text-sm text-forge-500 font-mono w-32 truncate">
+            <span className="text-sm text-muted-foreground font-mono w-32 truncate">
               {col.key}
             </span>
-            <input
+            <Input
               type="text"
               value={col.label}
               onChange={(e) => updateColumn(index, { label: e.target.value })}
-              className="flex-1 px-2 py-1 bg-forge-700 border border-forge-600 rounded text-sm text-forge-100"
+              className="flex-1 h-8"
             />
-            <span className="text-xs text-forge-500">{col.originalType}</span>
+            <Badge variant="outline" className="text-xs">
+              {col.originalType}
+            </Badge>
             <label className="flex items-center gap-1.5 cursor-pointer">
               <input
                 type="checkbox"
@@ -91,15 +97,15 @@ export function Step3SourceColumns() {
                 onChange={(e) =>
                   updateColumn(index, { visible: e.target.checked })
                 }
-                className="text-amber-500"
+                className="accent-primary"
               />
-              <span className="text-sm text-forge-300">Visible</span>
+              <span className="text-sm text-muted-foreground">Visible</span>
             </label>
           </div>
         ))}
       </div>
       {sourceColumns.length === 0 && (
-        <p className="text-forge-500 text-center py-8">
+        <p className="text-muted-foreground text-center py-8">
           No source columns detected. Go back to Step 2 to connect a data
           source.
         </p>

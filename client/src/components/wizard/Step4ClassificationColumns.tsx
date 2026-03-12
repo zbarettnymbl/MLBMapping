@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useExerciseWizardStore } from '@/stores/exerciseWizardStore';
 import { ColumnConfigPanel } from './ColumnConfigPanel';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import type { WizardClassificationColumn } from '@mapforge/shared';
 
 export function Step4ClassificationColumns() {
@@ -43,55 +45,57 @@ export function Step4ClassificationColumns() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-forge-100">
+        <h2 className="text-xl font-semibold text-foreground">
           Classification Columns
         </h2>
-        <button
-          onClick={handleAdd}
-          className="px-3 py-1.5 bg-amber-500 text-forge-900 rounded-md text-sm font-medium hover:bg-amber-400"
-        >
+        <Button size="sm" onClick={handleAdd}>
           + Add Column
-        </button>
+        </Button>
       </div>
       <div className="space-y-2">
         {classificationColumns.map((col) => (
           <div
             key={col.key}
-            className="flex items-center justify-between p-3 bg-forge-800 border border-forge-700 rounded-md"
+            className="flex items-center justify-between p-3 bg-muted border border-border rounded-md"
           >
-            <div>
-              <span className="text-forge-100 font-medium">
+            <div className="flex items-center gap-2">
+              <span className="text-foreground font-medium">
                 {col.label || col.key}
               </span>
-              <span className="ml-2 text-xs text-forge-500">
+              <Badge variant="outline" className="text-xs">
                 {col.dataType}
-              </span>
+              </Badge>
               {col.required && (
-                <span className="ml-2 text-xs text-amber-400">Required</span>
+                <Badge variant="default" className="text-xs">
+                  Required
+                </Badge>
               )}
             </div>
             <div className="flex items-center gap-2">
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => {
                   setIsAdding(false);
                   setEditingColumn(col);
                 }}
-                className="text-sm text-forge-400 hover:text-forge-200"
               >
                 Edit
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-destructive hover:text-destructive"
                 onClick={() => removeClassificationColumn(col.key)}
-                className="text-sm text-red-400 hover:text-red-300"
               >
                 Remove
-              </button>
+              </Button>
             </div>
           </div>
         ))}
       </div>
       {classificationColumns.length === 0 && (
-        <p className="text-forge-500 text-center py-8">
+        <p className="text-muted-foreground text-center py-8">
           No classification columns yet. Click "Add Column" to create one.
         </p>
       )}

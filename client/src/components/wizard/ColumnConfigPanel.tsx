@@ -1,4 +1,15 @@
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import type { WizardClassificationColumn } from '@mapforge/shared';
 
 interface ColumnConfigPanelProps {
@@ -50,116 +61,96 @@ export function ColumnConfigPanel({
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-md bg-forge-900 border-l border-forge-700 p-6 overflow-y-auto">
-        <h3 className="text-lg font-semibold text-forge-100 mb-4">
+      <div className="relative w-full max-w-md bg-background border-l border-border p-6 overflow-y-auto">
+        <h3 className="text-lg font-semibold text-foreground mb-4">
           {isNew ? 'Add' : 'Edit'} Classification Column
         </h3>
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-forge-300 mb-1">
-              Label *
-            </label>
-            <input
-              type="text"
+          <div className="space-y-2">
+            <Label>Label *</Label>
+            <Input
               value={form.label}
               onChange={(e) => setForm({ ...form, label: e.target.value })}
-              className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
             />
           </div>
           {isNew && (
-            <div>
-              <label className="block text-sm font-medium text-forge-300 mb-1">
-                Key
-              </label>
-              <input
-                type="text"
+            <div className="space-y-2">
+              <Label>Key</Label>
+              <Input
                 value={form.key}
                 onChange={(e) => setForm({ ...form, key: e.target.value })}
                 placeholder="Auto-generated from label"
-                className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
               />
             </div>
           )}
-          <div>
-            <label className="block text-sm font-medium text-forge-300 mb-1">
-              Description
-            </label>
-            <textarea
+          <div className="space-y-2">
+            <Label>Description</Label>
+            <Textarea
               value={form.description}
               onChange={(e) =>
                 setForm({ ...form, description: e.target.value })
               }
-              className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100 h-20 resize-none"
+              className="h-20 resize-none"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-forge-300 mb-1">
-              Data Type
-            </label>
-            <select
+          <div className="space-y-2">
+            <Label>Data Type</Label>
+            <Select
               value={form.dataType}
-              onChange={(e) => setForm({ ...form, dataType: e.target.value })}
-              className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
+              onValueChange={(val) => setForm({ ...form, dataType: val })}
             >
-              {DATA_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {t.replace('_', ' ')}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {DATA_TYPES.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t.replace('_', ' ')}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
               checked={form.required}
               onChange={(e) => setForm({ ...form, required: e.target.checked })}
-              className="text-amber-500"
+              className="accent-primary"
             />
-            <span className="text-sm text-forge-200">Required</span>
+            <span className="text-sm text-foreground">Required</span>
           </label>
-          <div>
-            <label className="block text-sm font-medium text-forge-300 mb-1">
-              Default Value
-            </label>
-            <input
-              type="text"
+          <div className="space-y-2">
+            <Label>Default Value</Label>
+            <Input
               value={form.defaultValue || ''}
               onChange={(e) =>
                 setForm({ ...form, defaultValue: e.target.value || null })
               }
-              className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100"
             />
           </div>
           {(form.dataType === 'picklist' ||
             form.dataType === 'multi_select') && (
-            <div>
-              <label className="block text-sm font-medium text-forge-300 mb-1">
-                Picklist Values (one per line)
-              </label>
-              <textarea
+            <div className="space-y-2">
+              <Label>Picklist Values (one per line)</Label>
+              <Textarea
                 value={picklistValues}
                 onChange={(e) => setPicklistValues(e.target.value)}
-                className="w-full px-3 py-2 bg-forge-800 border border-forge-600 rounded-md text-forge-100 h-32 resize-none font-mono text-sm"
+                className="h-32 resize-none font-mono text-sm"
                 placeholder="Value 1\nValue 2\nValue 3"
               />
-              <p className="text-xs text-forge-500 mt-1">
+              <p className="text-xs text-muted-foreground">
                 Or link to a reference table in Step 6.
               </p>
             </div>
           )}
           <div className="flex gap-3 pt-4">
-            <button
-              onClick={handleSubmit}
-              className="flex-1 px-4 py-2 bg-amber-500 text-forge-900 rounded-md font-medium hover:bg-amber-400"
-            >
+            <Button className="flex-1" onClick={handleSubmit}>
               {isNew ? 'Add Column' : 'Save Changes'}
-            </button>
-            <button
-              onClick={onClose}
-              className="px-4 py-2 bg-forge-700 text-forge-300 rounded-md hover:bg-forge-600"
-            >
+            </Button>
+            <Button variant="secondary" onClick={onClose}>
               Cancel
-            </button>
+            </Button>
           </div>
         </div>
       </div>

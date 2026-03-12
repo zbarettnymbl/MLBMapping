@@ -1,4 +1,5 @@
 import { useExerciseWizardStore } from '@/stores/exerciseWizardStore';
+import { cn } from '@/lib/utils';
 import type { WizardStep } from '@mapforge/shared';
 
 const STEP_LABELS: Record<WizardStep, string> = {
@@ -17,7 +18,7 @@ export function WizardStepper() {
   const { currentStep, setStep } = useExerciseWizardStore();
 
   return (
-    <nav className="flex items-center justify-between px-4 py-3 bg-forge-900 border-b border-forge-700">
+    <nav className="flex items-center justify-between px-4 py-3 bg-background border-b border-border">
       {([1, 2, 3, 4, 5, 6, 7, 8, 9] as WizardStep[]).map((step) => {
         const isCompleted = step < currentStep;
         const isCurrent = step === currentStep;
@@ -28,18 +29,20 @@ export function WizardStepper() {
             key={step}
             onClick={() => isCompleted && setStep(step)}
             disabled={isFuture}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors
-              ${isCurrent ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40' : ''}
-              ${isCompleted ? 'text-emerald-400 hover:bg-forge-800 cursor-pointer' : ''}
-              ${isFuture ? 'text-forge-500 cursor-not-allowed' : ''}
-            `}
+            className={cn(
+              'flex items-center gap-2 px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+              isCurrent && 'bg-primary/20 text-primary border border-primary/40',
+              isCompleted && 'text-emerald-400 hover:bg-muted cursor-pointer',
+              isFuture && 'text-muted-foreground cursor-not-allowed'
+            )}
           >
             <span
-              className={`flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold
-              ${isCurrent ? 'bg-amber-500 text-forge-900' : ''}
-              ${isCompleted ? 'bg-emerald-500 text-white' : ''}
-              ${isFuture ? 'bg-forge-700 text-forge-500' : ''}
-            `}
+              className={cn(
+                'flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold',
+                isCurrent && 'bg-primary text-primary-foreground',
+                isCompleted && 'bg-emerald-500 text-white',
+                isFuture && 'bg-muted text-muted-foreground'
+              )}
             >
               {isCompleted ? '\u2713' : step}
             </span>
