@@ -24,7 +24,7 @@ export function NotificationForm({ nodeId, config }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs text-forge-400 mb-2">Channels</label>
+        <label className="block text-xs text-muted-foreground mb-2">Channels</label>
         <div className="space-y-1">
           {(['email', 'in_app'] as const).map(channel => (
             <label key={channel} className="flex items-center gap-2 cursor-pointer">
@@ -32,9 +32,9 @@ export function NotificationForm({ nodeId, config }: Props) {
                 type="checkbox"
                 checked={(config.channels || []).includes(channel)}
                 onChange={() => toggleChannel(channel)}
-                className="rounded border-forge-600 bg-forge-800 text-yellow-500 focus:ring-yellow-500"
+                className="rounded border-border bg-muted text-yellow-500 focus:ring-yellow-500"
               />
-              <span className="text-sm text-forge-200">
+              <span className="text-sm text-foreground">
                 {channel === 'email' ? 'Email' : 'In-App'}
               </span>
             </label>
@@ -42,11 +42,11 @@ export function NotificationForm({ nodeId, config }: Props) {
         </div>
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Recipient Type</label>
+        <label className="block text-xs text-muted-foreground mb-1">Recipient Type</label>
         <select
           value={config.recipientType || 'admin'}
           onChange={(e) => update({ recipientType: e.target.value as NotificationNodeConfig['recipientType'] })}
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="admin">Admin</option>
           <option value="assigned_users">Assigned Users</option>
@@ -55,25 +55,25 @@ export function NotificationForm({ nodeId, config }: Props) {
       </div>
       {config.recipientType === 'specific_users' && (
         <div>
-          <label className="block text-xs text-forge-400 mb-1">User IDs</label>
+          <label className="block text-xs text-muted-foreground mb-1">User IDs</label>
           <input
             type="text"
             value={(config.specificUserIds || []).join(', ')}
             onChange={(e) => update({ specificUserIds: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
             placeholder="user-id-1, user-id-2"
-            className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+            className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
           />
-          <p className="text-[10px] text-forge-500 mt-0.5">Comma-separated user IDs</p>
+          <p className="text-[10px] text-muted-foreground/70 mt-0.5">Comma-separated user IDs</p>
         </div>
       )}
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Message Template</label>
+        <label className="block text-xs text-muted-foreground mb-1">Message Template</label>
         <textarea
           value={config.messageTemplate || ''}
           onChange={(e) => update({ messageTemplate: e.target.value })}
           placeholder="Pipeline {{pipelineName}} completed with {{rowCount}} rows processed."
           rows={3}
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100 resize-none"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground resize-none"
         />
       </div>
     </div>

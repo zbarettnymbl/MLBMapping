@@ -38,10 +38,10 @@ export const AdminStatsBar = forwardRef<HTMLDivElement, AdminStatsBarProps>(
     const { total, active, atRisk, totalClassified } = computeStats(exercises);
 
     const stats = [
-      { label: 'Total Exercises', value: total },
-      { label: 'Active', value: active },
-      { label: 'At Risk', value: atRisk, highlight: atRisk > 0 },
-      { label: 'Records Classified', value: totalClassified.toLocaleString() },
+      { label: 'Total Exercises', value: total, accent: 'border-l-4 border-l-primary' },
+      { label: 'Active', value: active, accent: 'border-l-4 border-l-accent' },
+      { label: 'At Risk', value: atRisk, highlight: atRisk > 0, accent: 'border-l-4 border-l-warning' },
+      { label: 'Records Classified', value: totalClassified.toLocaleString(), accent: 'border-l-4 border-l-success' },
     ];
 
     return (
@@ -51,7 +51,8 @@ export const AdminStatsBar = forwardRef<HTMLDivElement, AdminStatsBarProps>(
             key={stat.label}
             className={cn(
               'p-4',
-              stat.highlight && 'border-amber-500/30'
+              stat.accent,
+              stat.highlight && 'border-amber-500/30 border-l-warning'
             )}
           >
             <div className="text-xs text-muted-foreground uppercase tracking-wide">

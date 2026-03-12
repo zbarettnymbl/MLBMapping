@@ -89,7 +89,7 @@ export function ExercisesPage() {
                     <div
                       key={exercise.id}
                       onClick={() => navigate(`/exercises/${exercise.id}`)}
-                      className="flex items-center justify-between p-4 bg-muted/50 border border-border rounded-lg hover:bg-muted hover:border-border/80 cursor-pointer transition-all"
+                      className="flex items-center justify-between p-4 bg-card border border-border rounded-lg hover:bg-accent/50 hover:border-border/80 hover:shadow-md cursor-pointer transition-all"
                     >
                       <div className="min-w-0 flex-1">
                         <h3 className="text-sm font-medium text-foreground truncate">{exercise.name}</h3>

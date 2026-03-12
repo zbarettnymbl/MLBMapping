@@ -18,11 +18,11 @@ export function EnrichmentExerciseForm({ nodeId, config }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Exercise</label>
+        <label className="block text-xs text-muted-foreground mb-1">Exercise</label>
         <select
           value={config.exerciseId || ''}
           onChange={(e) => update({ exerciseId: e.target.value })}
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="">Select exercise...</option>
           {exercises.map(ex => (
@@ -31,14 +31,14 @@ export function EnrichmentExerciseForm({ nodeId, config }: Props) {
         </select>
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Mode</label>
+        <label className="block text-xs text-muted-foreground mb-1">Mode</label>
         <div className="flex gap-2">
           <button
             onClick={() => update({ mode: 'pass_through', completionThreshold: undefined })}
             className={`flex-1 px-2 py-1.5 rounded text-sm border ${
               config.mode === 'pass_through' || !config.mode
                 ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
-                : 'bg-forge-800 border-forge-600 text-forge-400'
+                : 'bg-muted border-border text-muted-foreground'
             }`}
           >
             Pass Through
@@ -48,7 +48,7 @@ export function EnrichmentExerciseForm({ nodeId, config }: Props) {
             className={`flex-1 px-2 py-1.5 rounded text-sm border ${
               config.mode === 'wait_for_completion'
                 ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
-                : 'bg-forge-800 border-forge-600 text-forge-400'
+                : 'bg-muted border-border text-muted-foreground'
             }`}
           >
             Wait for Completion
@@ -57,7 +57,7 @@ export function EnrichmentExerciseForm({ nodeId, config }: Props) {
       </div>
       {config.mode === 'wait_for_completion' && (
         <div>
-          <label className="block text-xs text-forge-400 mb-1">
+          <label className="block text-xs text-muted-foreground mb-1">
             Completion Threshold: {config.completionThreshold ?? 100}%
           </label>
           <input

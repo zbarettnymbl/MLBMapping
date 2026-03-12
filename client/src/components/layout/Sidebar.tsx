@@ -117,10 +117,10 @@ export function Sidebar() {
                   <NavLink
                     key={item.to}
                     to={item.to}
-                    className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-md text-[13px] font-medium transition-all duration-150 ${
+                    className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-md text-[13px] transition-all duration-150 ${
                       active
-                        ? 'bg-primary/10 text-primary shadow-[inset_2px_0_0_0] shadow-primary'
-                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                        ? 'bg-primary/15 text-primary font-semibold shadow-[inset_3px_0_0_0] shadow-primary'
+                        : 'text-muted-foreground font-medium hover:bg-muted hover:text-foreground'
                     }`}
                   >
                     <span className={active ? 'text-primary' : 'text-muted-foreground'}>

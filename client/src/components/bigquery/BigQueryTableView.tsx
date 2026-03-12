@@ -90,7 +90,7 @@ export function BigQueryTableView() {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-forge-500 text-sm">Select a table from the sidebar to preview its data</p>
+          <p className="text-muted-foreground text-sm">Select a table from the sidebar to preview its data</p>
         </div>
       </div>
     );
@@ -99,13 +99,13 @@ export function BigQueryTableView() {
   return (
     <div className="flex-1 flex flex-col min-h-0">
       {/* Header bar */}
-      <div className="px-4 py-3 border-b border-forge-700 flex items-center justify-between gap-4">
+      <div className="px-4 py-3 border-b border-border flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
-          <h2 className="text-sm font-semibold text-forge-100 truncate">
+          <h2 className="text-sm font-semibold text-foreground truncate">
             {selectedDataset}.{selectedTable}
           </h2>
           {previewQuery.data && (
-            <span className="shrink-0 px-2 py-0.5 text-[10px] font-medium bg-forge-800 text-forge-400 rounded-full">
+            <span className="shrink-0 px-2 py-0.5 text-[10px] font-medium bg-muted text-muted-foreground rounded-full">
               {previewQuery.data.totalRows.toLocaleString()} rows
             </span>
           )}
@@ -116,7 +116,7 @@ export function BigQueryTableView() {
           <select
             value={previewLimit}
             onChange={(e) => setPreviewLimit(Number(e.target.value))}
-            className="bg-forge-800 border border-forge-700 rounded px-2 py-1 text-xs text-forge-300 focus:outline-none focus:border-amber-500/50"
+            className="bg-muted border border-border rounded px-2 py-1 text-xs text-muted-foreground focus:outline-none focus:border-primary/50"
           >
             <option value={50}>50 rows</option>
             <option value={100}>100 rows</option>
@@ -126,7 +126,7 @@ export function BigQueryTableView() {
           <button
             onClick={handleExportCsv}
             disabled={!previewQuery.data}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-forge-300 bg-forge-800 border border-forge-700 rounded hover:bg-forge-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded hover:bg-accent transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Download className="w-3.5 h-3.5" />
             Export CSV
@@ -134,7 +134,7 @@ export function BigQueryTableView() {
 
           <button
             onClick={handleCreateExercise}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-forge-900 bg-amber-500 rounded hover:bg-amber-400 transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-foreground bg-primary rounded hover:bg-primary/90 transition-colors"
           >
             <Plus className="w-3.5 h-3.5" />
             Create Exercise
@@ -152,7 +152,7 @@ export function BigQueryTableView() {
       <div className="flex-1 min-h-0">
         {previewQuery.isLoading ? (
           <div className="flex items-center justify-center h-full">
-            <div className="flex items-center gap-2 text-forge-500">
+            <div className="flex items-center gap-2 text-muted-foreground">
               <Loader2 className="w-5 h-5 animate-spin" />
               <span className="text-sm">Loading preview data...</span>
             </div>
@@ -171,7 +171,7 @@ export function BigQueryTableView() {
           </div>
         ) : previewQuery.data && previewQuery.data.rows.length === 0 ? (
           <div className="flex items-center justify-center h-full">
-            <p className="text-forge-500 text-sm">This table has no data</p>
+            <p className="text-muted-foreground text-sm">This table has no data</p>
           </div>
         ) : (
           <div className="h-full w-full">

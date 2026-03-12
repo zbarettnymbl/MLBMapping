@@ -18,11 +18,11 @@ export function BigQuerySourceForm({ nodeId, config }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Credential</label>
+        <label className="block text-xs text-muted-foreground mb-1">Credential</label>
         <select
           value={config.credentialId || ''}
           onChange={(e) => update({ credentialId: e.target.value })}
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="">Select credential...</option>
           {credentials.map(c => (
@@ -31,34 +31,34 @@ export function BigQuerySourceForm({ nodeId, config }: Props) {
         </select>
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">GCP Project</label>
+        <label className="block text-xs text-muted-foreground mb-1">GCP Project</label>
         <input
           type="text"
           value={config.gcpProject || ''}
           onChange={(e) => update({ gcpProject: e.target.value })}
           placeholder="my-gcp-project"
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         />
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Dataset</label>
+        <label className="block text-xs text-muted-foreground mb-1">Dataset</label>
         <input
           type="text"
           value={config.dataset || ''}
           onChange={(e) => update({ dataset: e.target.value })}
           placeholder="my_dataset"
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         />
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Query Type</label>
+        <label className="block text-xs text-muted-foreground mb-1">Query Type</label>
         <div className="flex gap-2">
           <button
             onClick={() => update({ queryType: 'table' })}
             className={`flex-1 px-2 py-1.5 rounded text-sm border ${
               config.queryType === 'table' || !config.queryType
                 ? 'bg-blue-500/20 border-blue-500/50 text-blue-300'
-                : 'bg-forge-800 border-forge-600 text-forge-400'
+                : 'bg-muted border-border text-muted-foreground'
             }`}
           >
             Table
@@ -68,7 +68,7 @@ export function BigQuerySourceForm({ nodeId, config }: Props) {
             className={`flex-1 px-2 py-1.5 rounded text-sm border ${
               config.queryType === 'query'
                 ? 'bg-blue-500/20 border-blue-500/50 text-blue-300'
-                : 'bg-forge-800 border-forge-600 text-forge-400'
+                : 'bg-muted border-border text-muted-foreground'
             }`}
           >
             Custom SQL
@@ -76,7 +76,7 @@ export function BigQuerySourceForm({ nodeId, config }: Props) {
         </div>
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">
+        <label className="block text-xs text-muted-foreground mb-1">
           {config.queryType === 'query' ? 'SQL Query' : 'Table Name'}
         </label>
         {config.queryType === 'query' ? (
@@ -85,7 +85,7 @@ export function BigQuerySourceForm({ nodeId, config }: Props) {
             onChange={(e) => update({ tableOrQuery: e.target.value })}
             placeholder="SELECT * FROM ..."
             rows={4}
-            className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100 font-mono resize-none"
+            className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground font-mono resize-none"
           />
         ) : (
           <input
@@ -93,7 +93,7 @@ export function BigQuerySourceForm({ nodeId, config }: Props) {
             value={config.tableOrQuery || ''}
             onChange={(e) => update({ tableOrQuery: e.target.value })}
             placeholder="my_table"
-            className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+            className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
           />
         )}
       </div>

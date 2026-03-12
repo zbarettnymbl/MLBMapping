@@ -18,11 +18,11 @@ export function BigQueryDestinationForm({ nodeId, config }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Credential</label>
+        <label className="block text-xs text-muted-foreground mb-1">Credential</label>
         <select
           value={config.credentialId || ''}
           onChange={(e) => update({ credentialId: e.target.value })}
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="">Select credential...</option>
           {credentials.map(c => (
@@ -31,37 +31,37 @@ export function BigQueryDestinationForm({ nodeId, config }: Props) {
         </select>
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">GCP Project</label>
+        <label className="block text-xs text-muted-foreground mb-1">GCP Project</label>
         <input
           type="text"
           value={config.gcpProject || ''}
           onChange={(e) => update({ gcpProject: e.target.value })}
           placeholder="my-gcp-project"
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         />
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Dataset</label>
+        <label className="block text-xs text-muted-foreground mb-1">Dataset</label>
         <input
           type="text"
           value={config.dataset || ''}
           onChange={(e) => update({ dataset: e.target.value })}
           placeholder="my_dataset"
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         />
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Table Name</label>
+        <label className="block text-xs text-muted-foreground mb-1">Table Name</label>
         <input
           type="text"
           value={config.tableName || ''}
           onChange={(e) => update({ tableName: e.target.value })}
           placeholder="destination_table"
-          className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         />
       </div>
       <div>
-        <label className="block text-xs text-forge-400 mb-1">Write Mode</label>
+        <label className="block text-xs text-muted-foreground mb-1">Write Mode</label>
         <div className="flex gap-1">
           {(['merge', 'append', 'overwrite'] as const).map(mode => (
             <button
@@ -70,7 +70,7 @@ export function BigQueryDestinationForm({ nodeId, config }: Props) {
               className={`flex-1 px-2 py-1.5 rounded text-xs border ${
                 config.writeMode === mode
                   ? 'bg-purple-500/20 border-purple-500/50 text-purple-300'
-                  : 'bg-forge-800 border-forge-600 text-forge-400'
+                  : 'bg-muted border-border text-muted-foreground'
               }`}
             >
               {mode.charAt(0).toUpperCase() + mode.slice(1)}
@@ -80,15 +80,15 @@ export function BigQueryDestinationForm({ nodeId, config }: Props) {
       </div>
       {config.writeMode === 'merge' && (
         <div>
-          <label className="block text-xs text-forge-400 mb-1">Merge Key Columns</label>
+          <label className="block text-xs text-muted-foreground mb-1">Merge Key Columns</label>
           <input
             type="text"
             value={(config.mergeKeyColumns || []).join(', ')}
             onChange={(e) => update({ mergeKeyColumns: e.target.value.split(',').map(s => s.trim()).filter(Boolean) })}
             placeholder="col1, col2"
-            className="w-full px-2 py-1.5 bg-forge-800 border border-forge-600 rounded text-sm text-forge-100"
+            className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
           />
-          <p className="text-[10px] text-forge-500 mt-0.5">Comma-separated column names used as merge keys</p>
+          <p className="text-[10px] text-muted-foreground/70 mt-0.5">Comma-separated column names used as merge keys</p>
         </div>
       )}
     </div>

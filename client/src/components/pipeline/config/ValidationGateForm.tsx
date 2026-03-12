@@ -41,7 +41,7 @@ export function ValidationGateForm({ nodeId, config }: Props) {
   return (
     <div className="space-y-3">
       <div>
-        <label className="block text-xs text-forge-400 mb-2">Validation Rules</label>
+        <label className="block text-xs text-muted-foreground mb-2">Validation Rules</label>
         <div className="space-y-2">
           {RULE_TYPES.map(({ type, label }) => (
             <label key={type} className="flex items-center gap-2 cursor-pointer">
@@ -49,16 +49,16 @@ export function ValidationGateForm({ nodeId, config }: Props) {
                 type="checkbox"
                 checked={hasRule(type)}
                 onChange={() => toggleRule(type)}
-                className="rounded border-forge-600 bg-forge-800 text-emerald-500 focus:ring-emerald-500"
+                className="rounded border-border bg-muted text-emerald-500 focus:ring-emerald-500"
               />
-              <span className="text-sm text-forge-200">{label}</span>
+              <span className="text-sm text-foreground">{label}</span>
             </label>
           ))}
         </div>
       </div>
       {hasRule('min_completion') && (
         <div>
-          <label className="block text-xs text-forge-400 mb-1">
+          <label className="block text-xs text-muted-foreground mb-1">
             Min Completion: {getThreshold()}%
           </label>
           <input
@@ -72,14 +72,14 @@ export function ValidationGateForm({ nodeId, config }: Props) {
         </div>
       )}
       <div>
-        <label className="block text-xs text-forge-400 mb-1">On Failure</label>
+        <label className="block text-xs text-muted-foreground mb-1">On Failure</label>
         <div className="flex gap-2">
           <button
             onClick={() => updateNodeConfig(nodeId, { ...config, failAction: 'stop' })}
             className={`flex-1 px-2 py-1.5 rounded text-sm border ${
               config.failAction === 'stop' || !config.failAction
                 ? 'bg-red-500/20 border-red-500/50 text-red-300'
-                : 'bg-forge-800 border-forge-600 text-forge-400'
+                : 'bg-muted border-border text-muted-foreground'
             }`}
           >
             Stop Pipeline
@@ -89,7 +89,7 @@ export function ValidationGateForm({ nodeId, config }: Props) {
             className={`flex-1 px-2 py-1.5 rounded text-xs border ${
               config.failAction === 'warn_and_continue'
                 ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-300'
-                : 'bg-forge-800 border-forge-600 text-forge-400'
+                : 'bg-muted border-border text-muted-foreground'
             }`}
           >
             Warn & Continue
