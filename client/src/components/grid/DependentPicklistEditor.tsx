@@ -197,7 +197,7 @@ export const DependentPicklistEditor = forwardRef<unknown, DependentPicklistEdit
             <button
               onClick={() => selectOption(null)}
               className={[
-                'w-full px-2 py-1 text-xs text-muted-foreground rounded',
+                'w-full px-2 py-1 text-xs text-muted-foreground rounded cursor-pointer',
                 'hover:bg-muted hover:text-foreground',
               ].join(' ')}
             >

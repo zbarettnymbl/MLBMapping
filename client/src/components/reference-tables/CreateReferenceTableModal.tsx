@@ -150,7 +150,7 @@ export function CreateReferenceTableModal({ open, onClose }: CreateReferenceTabl
                   <button
                     key={opt.key}
                     onClick={() => setSource(opt.key)}
-                    className={`p-4 rounded-lg border text-left transition-all ${
+                    className={`p-4 rounded-lg border text-left transition-all cursor-pointer ${
                       source === opt.key
                         ? 'border-primary bg-primary/10 ring-1 ring-primary/40'
                         : 'border-border bg-muted/50 hover:border-border/80'

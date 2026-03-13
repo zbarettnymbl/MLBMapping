@@ -4,6 +4,7 @@ import { PanelLeftClose, PanelLeft, AlertCircle } from 'lucide-react';
 import { fetchCredentials } from '@/api/credentials';
 import { fetchBigQueryDatasets, fetchBigQueryTables } from '@/api/bigquery';
 import { useBigQueryExplorerStore } from '@/stores/bigqueryExplorerStore';
+import { NativeSelect } from '@/components/ui/native-select';
 import { BigQueryDatasetTree } from './BigQueryDatasetTree';
 import { useState, useMemo } from 'react';
 
@@ -91,7 +92,7 @@ export function BigQuerySidebar() {
       <div className="w-10 bg-background border-r border-border flex flex-col items-center pt-3">
         <button
           onClick={toggleSidebar}
-          className="p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+          className="p-1.5 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           title="Expand sidebar"
           aria-label="Expand sidebar"
         >
@@ -108,7 +109,7 @@ export function BigQuerySidebar() {
         <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Browser</span>
         <button
           onClick={toggleSidebar}
-          className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+          className="p-1 text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
           title="Collapse sidebar"
           aria-label="Collapse sidebar"
         >
@@ -129,10 +130,10 @@ export function BigQuerySidebar() {
             Failed to load credentials
           </div>
         ) : (
-          <select
+          <NativeSelect
             value={selectedCredentialId ?? ''}
             onChange={(e) => handleCredentialChange(e.target.value)}
-            className="w-full bg-muted border border-border rounded px-2 py-1.5 text-xs text-foreground focus:outline-none focus:border-primary/50"
+            className="text-xs"
           >
             <option value="">Select a credential...</option>
             {credentialsQuery.data?.map((cred) => (
@@ -140,7 +141,7 @@ export function BigQuerySidebar() {
                 {cred.name}
               </option>
             ))}
-          </select>
+          </NativeSelect>
         )}
       </div>
 
@@ -164,7 +165,7 @@ export function BigQuerySidebar() {
             </div>
             <button
               onClick={() => datasetsQuery.refetch()}
-              className="text-primary hover:text-primary/80 underline"
+              className="text-primary hover:text-primary/80 underline cursor-pointer"
             >
               Retry
             </button>

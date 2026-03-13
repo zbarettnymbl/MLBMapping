@@ -149,7 +149,7 @@ export function CsvUploadStep({ onParsed }: CsvUploadStepProps) {
       </div>
       <button
         onClick={() => { setParsed(null); }}
-        className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+        className="text-xs text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
       >
         Choose a different file
       </button>

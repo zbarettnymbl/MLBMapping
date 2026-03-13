@@ -26,6 +26,11 @@
     --input: 214 32% 91%;
     --ring: 207 100% 31%;
     --radius: 0.5rem;
+    --sidebar: 215 50% 14%;
+    --sidebar-foreground: 210 40% 80%;
+    --sidebar-accent: 207 100% 31%;
+    --sidebar-muted: 215 40% 20%;
+    --sidebar-border: 215 30% 22%;
     --chart-1: 215 94% 14%;
     --chart-2: 207 100% 31%;
     --chart-3: 142 76% 36%;
@@ -57,6 +62,11 @@
     --border: 217 33% 25%;
     --input: 217 33% 25%;
     --ring: 217 91% 68%;
+    --sidebar: 222 47% 8%;
+    --sidebar-foreground: 210 40% 80%;
+    --sidebar-accent: 217 91% 68%;
+    --sidebar-muted: 222 30% 15%;
+    --sidebar-border: 222 30% 18%;
   }
 }
 
@@ -84,6 +94,11 @@
   --color-border: hsl(var(--border));
   --color-input: hsl(var(--input));
   --color-ring: hsl(var(--ring));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-muted: hsl(var(--sidebar-muted));
+  --color-sidebar-border: hsl(var(--sidebar-border));
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

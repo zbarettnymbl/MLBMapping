@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Loader2, KeyRound } from 'lucide-react';
+import { Loader2, KeyRound, Trash2 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -184,12 +184,8 @@ export function CredentialsPage() {
                       </p>
                     </div>
                   </div>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(cred.id, cred.name)}
-                  >
-                    Remove
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => handleDelete(cred.id, cred.name)}>
+                    <Trash2 size={14} />
                   </Button>
                 </CardContent>
               </Card>

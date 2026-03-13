@@ -91,13 +91,13 @@ export function Sidebar() {
   const sections = NAV_SECTIONS.filter((s) => s.roles.includes(role as 'admin' | 'user'));
 
   return (
-    <aside className="w-52 bg-card border-r border-border flex flex-col shrink-0">
+    <aside className="w-52 bg-sidebar border-r border-sidebar-border flex flex-col shrink-0">
       {/* Brand */}
-      <div className="h-14 flex items-center px-5 border-b border-border gap-2.5">
-        <div className="w-7 h-7 rounded bg-primary/15 flex items-center justify-center">
-          <Flame className="w-4 h-4 text-primary" />
+      <div className="h-14 flex items-center px-5 border-b border-sidebar-border gap-2.5">
+        <div className="w-7 h-7 rounded bg-white/10 flex items-center justify-center">
+          <Flame className="w-4 h-4 text-white" />
         </div>
-        <span className="text-base font-semibold text-foreground tracking-tight">MapForge</span>
+        <span className="text-base font-semibold text-white tracking-tight">MapForge</span>
       </div>
 
       {/* Navigation */}
@@ -105,7 +105,7 @@ export function Sidebar() {
         {sections.map((section, si) => (
           <div key={si}>
             {section.label && (
-              <div className="px-2.5 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <div className="px-2.5 mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-sidebar-foreground/50">
                 {section.label}
               </div>
             )}
@@ -119,11 +119,11 @@ export function Sidebar() {
                     to={item.to}
                     className={`flex items-center gap-2.5 px-2.5 py-[7px] rounded-md text-[13px] transition-all duration-150 ${
                       active
-                        ? 'bg-primary/15 text-primary font-semibold shadow-[inset_3px_0_0_0] shadow-primary'
-                        : 'text-muted-foreground font-medium hover:bg-muted hover:text-foreground'
+                        ? 'bg-white/10 text-white font-semibold shadow-[inset_3px_0_0_0] shadow-sidebar-accent'
+                        : 'text-sidebar-foreground font-medium hover:bg-sidebar-muted hover:text-white'
                     }`}
                   >
-                    <span className={active ? 'text-primary' : 'text-muted-foreground'}>
+                    <span className={active ? 'text-sidebar-accent' : 'text-sidebar-foreground/70'}>
                       <Icon className="w-[18px] h-[18px]" />
                     </span>
                     {item.label}
@@ -137,18 +137,18 @@ export function Sidebar() {
 
       {/* User footer */}
       {user && (
-        <div className="border-t border-border px-3 py-3">
+        <div className="border-t border-sidebar-border px-3 py-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center text-[11px] font-semibold text-muted-foreground uppercase">
+            <div className="w-7 h-7 rounded-full bg-sidebar-muted flex items-center justify-center text-[11px] font-semibold text-sidebar-foreground/70 uppercase">
               {user.name?.charAt(0) || '?'}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-medium text-foreground truncate">{user.name}</p>
-              <p className="text-[10px] text-muted-foreground truncate">{user.role}</p>
+              <p className="text-[12px] font-medium text-white truncate">{user.name}</p>
+              <p className="text-[10px] text-sidebar-foreground/60 truncate">{user.role}</p>
             </div>
             <button
               onClick={logout}
-              className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+              className="p-1 text-sidebar-foreground/60 hover:text-white transition-colors"
               title="Sign out"
             >
               <LogOut className="w-4 h-4" />

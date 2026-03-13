@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Plus, ChevronDown, Loader2 } from 'lucide-react';
+import { Plus, ChevronDown, Loader2, Trash2 } from 'lucide-react';
 import { AppLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -91,15 +91,8 @@ export function ReferenceTablesPage() {
                   </div>
                   <div className="flex items-center gap-2 ml-4">
                     {isAdmin && (
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDeleteTarget({ id: table.id, name: table.name });
-                        }}
-                      >
-                        Delete
+                      <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={(e) => { e.stopPropagation(); setDeleteTarget({ id: table.id, name: table.name }); }}>
+                        <Trash2 size={14} />
                       </Button>
                     )}
                     <ChevronDown

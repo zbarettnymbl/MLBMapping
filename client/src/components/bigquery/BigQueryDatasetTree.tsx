@@ -42,7 +42,7 @@ export function BigQueryDatasetTree({
           <div key={dataset}>
             <button
               onClick={() => onToggleDataset(dataset)}
-              className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted/50 rounded transition-colors"
+              className="w-full flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted/50 rounded transition-colors cursor-pointer"
             >
               {isExpanded ? (
                 <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
@@ -66,7 +66,7 @@ export function BigQueryDatasetTree({
                     {error}
                     <button
                       onClick={() => onRetryDataset(dataset)}
-                      className="ml-2 text-primary hover:text-primary/80 underline"
+                      className="ml-2 text-primary hover:text-primary/80 underline cursor-pointer"
                     >
                       Retry
                     </button>
@@ -81,7 +81,7 @@ export function BigQueryDatasetTree({
                     <button
                       key={table}
                       onClick={() => onSelectTable(dataset, table)}
-                      className={`w-full flex items-center gap-1.5 px-3 py-1 text-xs rounded transition-colors ${
+                      className={`w-full flex items-center gap-1.5 px-3 py-1 text-xs rounded transition-colors cursor-pointer ${
                         isActive
                           ? 'bg-primary/10 text-primary'
                           : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'

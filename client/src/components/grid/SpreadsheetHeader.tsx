@@ -1,5 +1,6 @@
 // client/src/components/grid/SpreadsheetHeader.tsx
 import { Search, Pencil, Download } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { QuickFilterBar } from './QuickFilterBar';
 import type { QuickFilter } from '../../stores/spreadsheetStore';
 import type { ExerciseDetail, ExerciseStats } from '@mapforge/shared/types';
@@ -97,31 +98,27 @@ export function SpreadsheetHeader({
           </div>
 
           {/* Bulk Edit */}
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={onBulkEdit}
             disabled={selectedCount === 0}
-            className={[
-              'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded border',
-              selectedCount === 0
-                ? 'bg-muted text-muted-foreground border-border cursor-not-allowed'
-                : 'bg-card text-foreground border-border hover:bg-muted',
-            ].join(' ')}
+            icon={<Pencil size={12} />}
+            className="text-xs"
           >
-            <Pencil size={12} />
             Bulk Edit ({selectedCount})
-          </button>
+          </Button>
 
           {/* Export CSV */}
-          <button
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={onExportCsv}
-            className={[
-              'flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded',
-              'text-muted-foreground hover:text-foreground hover:bg-muted',
-            ].join(' ')}
+            icon={<Download size={12} />}
+            className="text-xs"
           >
-            <Download size={12} />
             Export CSV
-          </button>
+          </Button>
         </div>
       </div>
     </div>

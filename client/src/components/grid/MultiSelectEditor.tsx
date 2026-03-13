@@ -88,13 +88,13 @@ export const MultiSelectEditor = forwardRef<unknown, MultiSelectEditorProps>(
         <div className="flex gap-2 px-3 py-1.5 border-b border-border">
           <button
             onClick={() => setSelected(new Set(options))}
-            className="text-xs text-accent hover:text-accent/80"
+            className="text-xs text-accent hover:text-accent/80 cursor-pointer"
           >
             Select All
           </button>
           <button
             onClick={() => setSelected(new Set())}
-            className="text-xs text-muted-foreground hover:text-foreground"
+            className="text-xs text-muted-foreground hover:text-foreground cursor-pointer"
           >
             Clear All
           </button>
@@ -127,7 +127,7 @@ export const MultiSelectEditor = forwardRef<unknown, MultiSelectEditorProps>(
           <button
             onClick={() => stopEditing()}
             className={[
-              'w-full px-2 py-1 text-xs font-medium rounded',
+              'w-full px-2 py-1 text-xs font-medium rounded cursor-pointer',
               'bg-accent/10 text-accent hover:bg-accent/20',
             ].join(' ')}
           >

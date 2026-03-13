@@ -1,5 +1,7 @@
 import { usePipelineStore } from '@/stores/pipelineStore';
 import { useCredentials } from '@/hooks/useCredentials';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import type { BigQuerySourceNodeConfig } from '@mapforge/shared';
 
 interface Props {
@@ -44,67 +46,60 @@ export function BigQuerySourceForm({ nodeId, config }: Props) {
     <div className="space-y-3">
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Credential</label>
-        <select
+        <NativeSelect
           value={config.credentialId || ''}
           onChange={(e) => update({ credentialId: e.target.value })}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="">Select credential...</option>
           {credentials.map(c => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">GCP Project</label>
-        <select
+        <NativeSelect
           value={config.gcpProject || ''}
           onChange={(e) => update({ gcpProject: e.target.value, dataset: '', tableOrQuery: '' })}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="">Select project...</option>
           {DEMO_PROJECTS.map(p => (
             <option key={p} value={p}>{p}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Dataset</label>
-        <select
+        <NativeSelect
           value={config.dataset || ''}
           onChange={(e) => update({ dataset: e.target.value, tableOrQuery: '' })}
           disabled={!config.gcpProject}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground disabled:opacity-50"
         >
           <option value="">Select dataset...</option>
           {datasets.map(d => (
             <option key={d} value={d}>{d}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Query Type</label>
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={() => update({ queryType: 'table' })}
-            className={`flex-1 px-2 py-1.5 rounded text-sm border ${
-              config.queryType === 'table' || !config.queryType
-                ? 'bg-blue-50 border-blue-400 text-blue-700'
-                : 'bg-muted border-border text-muted-foreground'
-            }`}
+            variant={config.queryType === 'table' || !config.queryType ? 'default' : 'outline'}
+            size="sm"
+            className="flex-1"
           >
             Table
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => update({ queryType: 'query' })}
-            className={`flex-1 px-2 py-1.5 rounded text-sm border ${
-              config.queryType === 'query'
-                ? 'bg-blue-50 border-blue-400 text-blue-700'
-                : 'bg-muted border-border text-muted-foreground'
-            }`}
+            variant={config.queryType === 'query' ? 'default' : 'outline'}
+            size="sm"
+            className="flex-1"
           >
             Custom SQL
-          </button>
+          </Button>
         </div>
       </div>
       <div>
@@ -120,17 +115,16 @@ export function BigQuerySourceForm({ nodeId, config }: Props) {
             className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground font-mono resize-none"
           />
         ) : (
-          <select
+          <NativeSelect
             value={config.tableOrQuery || ''}
             onChange={(e) => update({ tableOrQuery: e.target.value })}
             disabled={!config.dataset}
-            className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground disabled:opacity-50"
           >
             <option value="">Select table...</option>
             {tables.map(t => (
               <option key={t} value={t}>{t}</option>
             ))}
-          </select>
+          </NativeSelect>
         )}
       </div>
     </div>

@@ -1,5 +1,7 @@
 import { usePipelineStore } from '@/stores/pipelineStore';
 import { useMyExercises } from '@/hooks/useExercises';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import type { ExerciseNodeConfig } from '@mapforge/shared';
 
 interface Props {
@@ -19,40 +21,35 @@ export function EnrichmentExerciseForm({ nodeId, config }: Props) {
     <div className="space-y-3">
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Exercise</label>
-        <select
+        <NativeSelect
           value={config.exerciseId || ''}
           onChange={(e) => update({ exerciseId: e.target.value })}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="">Select exercise...</option>
           {exercises.map(ex => (
             <option key={ex.id} value={ex.id}>{ex.name}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Mode</label>
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={() => update({ mode: 'pass_through', completionThreshold: undefined })}
-            className={`flex-1 px-2 py-1.5 rounded text-sm border ${
-              config.mode === 'pass_through' || !config.mode
-                ? 'bg-amber-50 border-amber-400 text-amber-700'
-                : 'bg-muted border-border text-muted-foreground'
-            }`}
+            variant={config.mode === 'pass_through' || !config.mode ? 'default' : 'outline'}
+            size="sm"
+            className="flex-1"
           >
             Pass Through
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => update({ mode: 'wait_for_completion', completionThreshold: config.completionThreshold ?? 100 })}
-            className={`flex-1 px-2 py-1.5 rounded text-sm border ${
-              config.mode === 'wait_for_completion'
-                ? 'bg-amber-50 border-amber-400 text-amber-700'
-                : 'bg-muted border-border text-muted-foreground'
-            }`}
+            variant={config.mode === 'wait_for_completion' ? 'default' : 'outline'}
+            size="sm"
+            className="flex-1"
           >
             Wait for Completion
-          </button>
+          </Button>
         </div>
         <p className="text-[11px] text-muted-foreground mt-1.5">
           {config.mode === 'wait_for_completion'

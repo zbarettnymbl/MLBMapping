@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { fetchCredentials } from '@/api/credentials';
 import { fetchBigQueryDatasets, fetchBigQueryTables, previewBigQueryData } from '@/api/bigquery';
 import { Button } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/native-select';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import type { ReferenceTableColumn, BigQueryColumnInfo } from '@mapforge/shared';
@@ -93,54 +94,52 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
       {/* Credential selector */}
       <div>
         <Label className="mb-1">Credential</Label>
-        <select
+        <NativeSelect
           value={credentialId}
           onChange={(e) => { setCredentialId(e.target.value); setDataset(''); setTableOrQuery(''); setPreviewData(null); onConfigured(null); }}
-          className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md text-foreground focus:ring-1 focus:ring-ring"
         >
           <option value="">Select a credential...</option>
           {credentials?.map((c) => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
 
       {/* Dataset selector */}
       {credentialId && datasetsData && (
         <div>
           <Label className="mb-1">Dataset</Label>
-          <select
+          <NativeSelect
             value={dataset}
             onChange={(e) => { setDataset(e.target.value); setTableOrQuery(''); setPreviewData(null); onConfigured(null); }}
-            className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md text-foreground focus:ring-1 focus:ring-ring"
           >
             <option value="">Select a dataset...</option>
             {datasetsData.datasets.map((d: string) => (
               <option key={d} value={d}>{d}</option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
       )}
 
       {/* Query type toggle */}
       {credentialId && dataset && (
         <div className="flex gap-2">
-          <button
+          <Button
+            variant={queryType === 'table' ? 'default' : 'secondary'}
+            size="sm"
             onClick={() => { setQueryType('table'); setTableOrQuery(''); setPreviewData(null); onConfigured(null); }}
-            className={`px-3 py-1.5 text-xs rounded transition-colors ${
-              queryType === 'table' ? 'bg-primary text-primary-foreground font-semibold' : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
+            className="text-xs"
           >
             Table
-          </button>
-          <button
+          </Button>
+          <Button
+            variant={queryType === 'query' ? 'default' : 'secondary'}
+            size="sm"
             onClick={() => { setQueryType('query'); setTableOrQuery(''); setPreviewData(null); onConfigured(null); }}
-            className={`px-3 py-1.5 text-xs rounded transition-colors ${
-              queryType === 'query' ? 'bg-primary text-primary-foreground font-semibold' : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
+            className="text-xs"
           >
             Custom Query
-          </button>
+          </Button>
         </div>
       )}
 
@@ -148,16 +147,15 @@ export function BigQuerySourceStep({ onConfigured }: BigQuerySourceStepProps) {
       {credentialId && dataset && queryType === 'table' && tablesList && (
         <div>
           <Label className="mb-1">Table</Label>
-          <select
+          <NativeSelect
             value={tableOrQuery}
             onChange={(e) => { setTableOrQuery(e.target.value); setPreviewData(null); onConfigured(null); }}
-            className="w-full px-3 py-2 text-sm bg-background border border-input rounded-md text-foreground focus:ring-1 focus:ring-ring"
           >
             <option value="">Select a table...</option>
             {tablesList.map((t) => (
               <option key={t} value={t}>{t}</option>
             ))}
-          </select>
+          </NativeSelect>
         </div>
       )}
 

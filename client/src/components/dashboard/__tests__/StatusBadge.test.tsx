@@ -68,7 +68,7 @@ describe('StatusBadge', () => {
     const exercise = createExercise({ classifiedRecords: 100, totalRecords: 100, errorCount: 0 });
     render(<StatusBadge exercise={exercise} />);
     const badge = screen.getByText('Complete');
-    expect(badge.className).toContain('bg-green-');
+    expect(badge.className).toContain('text-success');
   });
 
   it('maps Overdue to destructive variant', () => {
@@ -76,6 +76,6 @@ describe('StatusBadge', () => {
     const exercise = createExercise({ classifiedRecords: 50, totalRecords: 100, deadline: pastDeadline });
     render(<StatusBadge exercise={exercise} />);
     const badge = screen.getByText('Overdue');
-    expect(badge.className).toContain('bg-destructive');
+    expect(badge.className).toContain('text-destructive');
   });
 });

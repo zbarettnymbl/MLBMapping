@@ -1,4 +1,5 @@
 import { usePipelineStore } from '@/stores/pipelineStore';
+import { NativeSelect } from '@/components/ui/native-select';
 import type { NotificationNodeConfig } from '@mapforge/shared';
 
 interface Props {
@@ -43,15 +44,14 @@ export function NotificationForm({ nodeId, config }: Props) {
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Recipient Type</label>
-        <select
+        <NativeSelect
           value={config.recipientType || 'admin'}
           onChange={(e) => update({ recipientType: e.target.value as NotificationNodeConfig['recipientType'] })}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="admin">Admin</option>
           <option value="assigned_users">Assigned Users</option>
           <option value="specific_users">Specific Users</option>
-        </select>
+        </NativeSelect>
       </div>
       {config.recipientType === 'specific_users' && (
         <div>

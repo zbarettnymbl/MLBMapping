@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { AgGridReact } from 'ag-grid-react';
 import { Download, Plus, Loader2 } from 'lucide-react';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import type { ColDef } from 'ag-grid-community';
 import { themeQuartz, colorSchemeDarkBlue } from 'ag-grid-community';
 import { previewBigQueryData, fetchBigQuerySchema } from '@/api/bigquery';
@@ -117,32 +119,35 @@ export function BigQueryTableView() {
 
         <div className="flex items-center gap-2 shrink-0">
           {/* Limit selector */}
-          <select
+          <NativeSelect
             value={previewLimit}
             onChange={(e) => setPreviewLimit(Number(e.target.value))}
-            className="bg-muted border border-border rounded px-2 py-1 text-xs text-muted-foreground focus:outline-none focus:border-primary/50"
+            className="w-auto text-xs"
           >
             <option value={50}>50 rows</option>
             <option value={100}>100 rows</option>
             <option value={500}>500 rows</option>
-          </select>
+          </NativeSelect>
 
-          <button
+          <Button
+            variant="outline"
+            size="sm"
             onClick={handleExportCsv}
             disabled={!previewQuery.data}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground bg-muted border border-border rounded hover:bg-accent transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            icon={<Download className="w-3.5 h-3.5" />}
+            className="text-xs"
           >
-            <Download className="w-3.5 h-3.5" />
             Export CSV
-          </button>
+          </Button>
 
-          <button
+          <Button
+            size="sm"
             onClick={handleCreateExercise}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-foreground bg-primary rounded hover:bg-primary/90 transition-colors"
+            icon={<Plus className="w-3.5 h-3.5" />}
+            className="text-xs"
           >
-            <Plus className="w-3.5 h-3.5" />
             Create Exercise
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -164,13 +169,15 @@ export function BigQueryTableView() {
         ) : previewQuery.isError ? (
           <div className="flex items-center justify-center h-full">
             <div className="text-center">
-              <p className="text-red-400 text-sm mb-2">Failed to load preview data</p>
-              <button
+              <p className="text-destructive text-sm mb-2">Failed to load preview data</p>
+              <Button
+                variant="link"
+                size="sm"
                 onClick={() => previewQuery.refetch()}
-                className="text-amber-400 hover:text-amber-300 text-xs underline"
+                className="text-xs"
               >
                 Retry
-              </button>
+              </Button>
             </div>
           </div>
         ) : previewQuery.data && previewQuery.data.rows.length === 0 ? (

@@ -1,4 +1,5 @@
 import { usePipelineStore } from '@/stores/pipelineStore';
+import { Button } from '@/components/ui/button';
 import type { TransformNodeConfig } from '@mapforge/shared';
 
 interface Props {
@@ -16,7 +17,7 @@ export function TransformForm({ nodeId, config }: Props) {
   if (UNSUPPORTED_TYPES.includes(config.transformType)) {
     return (
       <div className="space-y-3">
-        <div className="px-2 py-1.5 bg-yellow-500/10 border border-yellow-500/30 rounded text-xs text-yellow-300">
+        <div className="px-2 py-1.5 bg-warning/10 border border-warning/30 rounded text-xs text-warning">
           Transform type "{config.transformType}" is not yet supported for visual editing.
         </div>
         <pre className="text-xs text-muted-foreground bg-muted p-2 rounded overflow-auto max-h-48 font-mono">
@@ -39,17 +40,15 @@ export function TransformForm({ nodeId, config }: Props) {
         <label className="block text-xs text-muted-foreground mb-1">Transform Type</label>
         <div className="flex gap-2">
           {SUPPORTED_TYPES.map(type => (
-            <button
+            <Button
               key={type}
               onClick={() => update({ transformType: type, config: {} })}
-              className={`flex-1 px-2 py-1.5 rounded text-sm border ${
-                config.transformType === type
-                  ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-300'
-                  : 'bg-muted border-border text-muted-foreground'
-              }`}
+              variant={config.transformType === type ? 'default' : 'outline'}
+              size="sm"
+              className="flex-1"
             >
               {type.charAt(0).toUpperCase() + type.slice(1)}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -90,27 +89,31 @@ export function TransformForm({ nodeId, config }: Props) {
                 }}
                 className="flex-1 px-2 py-1 bg-muted border border-border rounded text-xs text-foreground font-mono"
               />
-              <button
+              <Button
                 onClick={() => {
                   const newCols = { ...mapColumns };
                   delete newCols[from];
                   update({ config: { columns: newCols } });
                 }}
-                className="text-red-400 hover:text-red-300 text-xs px-1"
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6 text-xs"
               >
                 x
-              </button>
+              </Button>
             </div>
           ))}
-          <button
+          <Button
             onClick={() => {
               const key = `column_${Object.keys(mapColumns).length + 1}`;
               update({ config: { columns: { ...mapColumns, [key]: key } } });
             }}
-            className="text-xs text-cyan-400 hover:text-cyan-300 mt-1"
+            variant="ghost"
+            size="sm"
+            className="text-xs mt-1"
           >
             + Add column mapping
-          </button>
+          </Button>
         </div>
       )}
     </div>

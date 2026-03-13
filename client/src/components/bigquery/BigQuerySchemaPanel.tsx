@@ -35,7 +35,7 @@ export function BigQuerySchemaPanel({ columns, isLoading }: BigQuerySchemaPanelP
     <div className="border-b border-border">
       <button
         onClick={toggleSchema}
-        className="w-full flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+        className="w-full flex items-center gap-2 px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
       >
         {schemaCollapsed ? (
           <ChevronRight className="w-3.5 h-3.5" />

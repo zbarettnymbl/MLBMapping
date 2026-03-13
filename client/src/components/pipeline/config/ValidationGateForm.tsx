@@ -1,4 +1,5 @@
 import { usePipelineStore } from '@/stores/pipelineStore';
+import { Button } from '@/components/ui/button';
 import type { ValidationGateNodeConfig } from '@mapforge/shared';
 
 interface Props {
@@ -74,26 +75,22 @@ export function ValidationGateForm({ nodeId, config }: Props) {
       <div>
         <label className="block text-xs text-muted-foreground mb-1">On Failure</label>
         <div className="flex gap-2">
-          <button
+          <Button
             onClick={() => updateNodeConfig(nodeId, { ...config, failAction: 'stop' })}
-            className={`flex-1 px-2 py-1.5 rounded text-sm border ${
-              config.failAction === 'stop' || !config.failAction
-                ? 'bg-red-50 border-red-400 text-red-700'
-                : 'bg-muted border-border text-muted-foreground'
-            }`}
+            variant={config.failAction === 'stop' || !config.failAction ? 'default' : 'outline'}
+            size="sm"
+            className="flex-1"
           >
             Stop Pipeline
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => updateNodeConfig(nodeId, { ...config, failAction: 'warn_and_continue' })}
-            className={`flex-1 px-2 py-1.5 rounded text-xs border ${
-              config.failAction === 'warn_and_continue'
-                ? 'bg-yellow-50 border-yellow-400 text-yellow-700'
-                : 'bg-muted border-border text-muted-foreground'
-            }`}
+            variant={config.failAction === 'warn_and_continue' ? 'default' : 'outline'}
+            size="sm"
+            className="flex-1"
           >
             Warn & Continue
-          </button>
+          </Button>
         </div>
       </div>
     </div>

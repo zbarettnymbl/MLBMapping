@@ -1,6 +1,8 @@
 // client/src/components/grid/BulkEditPanel.tsx
 import { useState, useCallback } from 'react';
 import { X } from 'lucide-react';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import type {
   ExerciseDetail,
   EnrichmentRecord,
@@ -76,39 +78,31 @@ export function BulkEditPanel({
       case 'picklist': {
         const options = col.config.picklistValues ?? [];
         return (
-          <select
+          <NativeSelect
             value={field.value ?? ''}
             onChange={(e) => updateField(col.key, { value: e.target.value || null })}
             disabled={!field.apply}
-            className={[
-              'w-full px-2 py-1.5 text-sm rounded',
-              'bg-card border border-border text-foreground',
-              !field.apply ? 'opacity-40' : '',
-            ].join(' ')}
+            className={!field.apply ? 'opacity-40' : ''}
           >
             <option value="">-- Select --</option>
             {options.map((opt) => (
               <option key={opt} value={opt}>{opt}</option>
             ))}
-          </select>
+          </NativeSelect>
         );
       }
       case 'boolean':
         return (
-          <select
+          <NativeSelect
             value={field.value ?? ''}
             onChange={(e) => updateField(col.key, { value: e.target.value || null })}
             disabled={!field.apply}
-            className={[
-              'w-full px-2 py-1.5 text-sm rounded',
-              'bg-card border border-border text-foreground',
-              !field.apply ? 'opacity-40' : '',
-            ].join(' ')}
+            className={!field.apply ? 'opacity-40' : ''}
           >
             <option value="">-- Select --</option>
             <option value="true">Yes</option>
             <option value="false">No</option>
-          </select>
+          </NativeSelect>
         );
       case 'number':
         return (
@@ -179,7 +173,7 @@ export function BulkEditPanel({
           <h2 className="text-lg font-semibold text-foreground">
             Apply to {count} selected record{count !== 1 ? 's' : ''}
           </h2>
-          <button onClick={onClose} className="text-muted-foreground hover:text-foreground">
+          <button onClick={onClose} className="text-muted-foreground hover:text-foreground cursor-pointer">
             <X size={18} />
           </button>
         </div>
@@ -211,31 +205,24 @@ export function BulkEditPanel({
             Only checked fields will be updated
           </span>
           <div className="flex gap-2">
-            <button
-              onClick={onClose}
-              className={[
-                'px-3 py-1.5 text-sm rounded',
-                'text-muted-foreground hover:text-foreground hover:bg-muted',
-              ].join(' ')}
-            >
+            <Button variant="ghost" size="sm" onClick={onClose}>
               Cancel
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={handleApply}
               disabled={appliedCount === 0}
-              className={[
-                'px-3 py-1.5 text-sm font-medium rounded',
-                appliedCount === 0
-                  ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                  : confirming
-                    ? 'bg-status-error text-white'
-                    : 'bg-amber-600 text-white hover:bg-amber-500',
-              ].join(' ')}
+              size="sm"
+              variant={confirming ? 'destructive' : 'default'}
+              className={
+                !confirming && appliedCount > 0
+                  ? 'bg-amber-600 text-white hover:bg-amber-500'
+                  : ''
+              }
             >
               {confirming
                 ? `Confirm: Apply to ${count} Records`
                 : `Apply to ${count} Record${count !== 1 ? 's' : ''}`}
-            </button>
+            </Button>
           </div>
         </div>
       </div>

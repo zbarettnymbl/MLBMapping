@@ -57,7 +57,7 @@ export const DateCellEditor = forwardRef<unknown, DateCellEditorProps>(
               setValue('');
               setTimeout(() => stopEditing(), 0);
             }}
-            className="mt-1 text-xs text-muted-foreground hover:text-foreground"
+            className="mt-1 text-xs text-muted-foreground hover:text-foreground cursor-pointer"
           >
             Clear
           </button>

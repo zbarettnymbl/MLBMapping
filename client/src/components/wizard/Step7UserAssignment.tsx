@@ -72,7 +72,7 @@ export function Step7UserAssignment() {
               <button
                 key={user.id}
                 onClick={() => addUser(user)}
-                className="w-full flex items-center justify-between px-3 py-2 bg-muted hover:bg-accent text-left border-b border-border last:border-0"
+                className="w-full flex items-center justify-between px-3 py-2 bg-muted hover:bg-accent text-left border-b border-border last:border-0 cursor-pointer"
               >
                 <span className="text-foreground">{user.name}</span>
                 <span className="text-muted-foreground text-sm">{user.email}</span>

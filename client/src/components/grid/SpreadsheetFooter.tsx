@@ -37,7 +37,7 @@ export function SpreadsheetFooter({
             'flex items-center gap-1 px-2 py-1 rounded',
             page <= 1
               ? 'text-muted-foreground cursor-not-allowed'
-              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer',
           ].join(' ')}
         >
           <ChevronLeft size={14} />
@@ -55,7 +55,7 @@ export function SpreadsheetFooter({
             'flex items-center gap-1 px-2 py-1 rounded',
             page >= totalPages
               ? 'text-muted-foreground cursor-not-allowed'
-              : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+              : 'text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer',
           ].join(' ')}
         >
           Next

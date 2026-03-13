@@ -1,5 +1,6 @@
 import { Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/native-select';
 import { Input } from '@/components/ui/input';
 import type { ReferenceTableColumn } from '@mapforge/shared';
 
@@ -47,21 +48,23 @@ export function ManualColumnEditor({ columns, onChange }: ManualColumnEditorProp
             placeholder="Column Label"
             className="h-8 text-sm"
           />
-          <select
+          <NativeSelect
             value={col.type}
             onChange={(e) => updateColumn(i, 'type', e.target.value)}
-            className="px-2 py-1.5 text-sm bg-background border border-input rounded-md text-foreground focus:ring-1 focus:ring-ring"
+            className="h-8 text-sm"
           >
             <option value="text">Text</option>
             <option value="number">Number</option>
             <option value="boolean">Boolean</option>
-          </select>
-          <button
+          </NativeSelect>
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={() => removeColumn(i)}
-            className="p-1.5 text-muted-foreground hover:text-destructive transition-colors"
+            className="h-8 w-8 text-muted-foreground hover:text-destructive"
           >
             <Trash2 size={14} />
-          </button>
+          </Button>
         </div>
       ))}
       <Button variant="ghost" size="sm" icon={<Plus size={14} />} onClick={addColumn}>

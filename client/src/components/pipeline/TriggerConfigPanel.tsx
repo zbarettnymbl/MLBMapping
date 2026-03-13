@@ -1,6 +1,7 @@
 import { usePipelineStore } from '@/stores/pipelineStore';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { NativeSelect } from '@/components/ui/native-select';
 import cronstrue from 'cronstrue';
 
 const CRON_PRESETS = [
@@ -27,34 +28,34 @@ export function TriggerConfigPanel() {
 
   return (
     <div className="flex items-center gap-2">
-      <select
+      <NativeSelect
         value={triggerType}
         onChange={(e) => {
           setTriggerType(e.target.value);
           if (e.target.value === 'manual') setTriggerConfig({});
         }}
-        className="flex h-8 rounded-md border border-input bg-background px-2 py-1.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="h-8 w-auto"
       >
         <option value="manual">Manual</option>
         <option value="cron">Scheduled</option>
         <option value="api">API</option>
-      </select>
+      </NativeSelect>
 
       {triggerType === 'cron' && (
         <div className="flex items-center gap-2">
-          <select
+          <NativeSelect
             value={isPreset ? cronExpression : 'custom'}
             onChange={(e) => {
               if (e.target.value !== 'custom') {
                 setTriggerConfig({ cronExpression: e.target.value });
               }
             }}
-            className="flex h-8 rounded-md border border-input bg-background px-2 py-1.5 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="h-8 w-auto"
           >
             {CRON_PRESETS.map(p => (
               <option key={p.value} value={p.value}>{p.label}</option>
             ))}
-          </select>
+          </NativeSelect>
           {(!isPreset || cronExpression === '') && (
             <Input
               type="text"

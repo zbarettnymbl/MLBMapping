@@ -1,5 +1,7 @@
 import { usePipelineStore } from '@/stores/pipelineStore';
 import { useCredentials } from '@/hooks/useCredentials';
+import { NativeSelect } from '@/components/ui/native-select';
+import { Button } from '@/components/ui/button';
 import type { BigQueryDestNodeConfig } from '@mapforge/shared';
 
 interface Props {
@@ -44,73 +46,67 @@ export function BigQueryDestinationForm({ nodeId, config }: Props) {
     <div className="space-y-3">
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Credential</label>
-        <select
+        <NativeSelect
           value={config.credentialId || ''}
           onChange={(e) => update({ credentialId: e.target.value })}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="">Select credential...</option>
           {credentials.map(c => (
             <option key={c.id} value={c.id}>{c.name}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">GCP Project</label>
-        <select
+        <NativeSelect
           value={config.gcpProject || ''}
           onChange={(e) => update({ gcpProject: e.target.value, dataset: '', tableName: '' })}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground"
         >
           <option value="">Select project...</option>
           {DEMO_PROJECTS.map(p => (
             <option key={p} value={p}>{p}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Dataset</label>
-        <select
+        <NativeSelect
           value={config.dataset || ''}
           onChange={(e) => update({ dataset: e.target.value, tableName: '' })}
           disabled={!config.gcpProject}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground disabled:opacity-50"
         >
           <option value="">Select dataset...</option>
           {datasets.map(d => (
             <option key={d} value={d}>{d}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Table Name</label>
-        <select
+        <NativeSelect
           value={config.tableName || ''}
           onChange={(e) => update({ tableName: e.target.value })}
           disabled={!config.dataset}
-          className="w-full px-2 py-1.5 bg-muted border border-border rounded text-sm text-foreground disabled:opacity-50"
         >
           <option value="">Select table...</option>
           {tables.map(t => (
             <option key={t} value={t}>{t}</option>
           ))}
-        </select>
+        </NativeSelect>
       </div>
       <div>
         <label className="block text-xs text-muted-foreground mb-1">Write Mode</label>
         <div className="flex gap-1">
           {(['merge', 'append', 'overwrite'] as const).map(mode => (
-            <button
+            <Button
               key={mode}
               onClick={() => update({ writeMode: mode })}
-              className={`flex-1 px-2 py-1.5 rounded text-xs border ${
-                config.writeMode === mode
-                  ? 'bg-purple-50 border-purple-400 text-purple-700'
-                  : 'bg-muted border-border text-muted-foreground'
-              }`}
+              variant={config.writeMode === mode ? 'default' : 'outline'}
+              size="sm"
+              className="flex-1 text-xs"
             >
               {mode.charAt(0).toUpperCase() + mode.slice(1)}
-            </button>
+            </Button>
           ))}
         </div>
       </div>

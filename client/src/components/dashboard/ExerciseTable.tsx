@@ -143,7 +143,7 @@ export const ExerciseTable = forwardRef<HTMLDivElement, ExerciseTableProps>(
 
     const SortableHeader = ({ column, children }: { column: SortColumn; children: React.ReactNode }) => (
       <button
-        className="flex items-center gap-1 hover:text-foreground"
+        className="flex items-center gap-1 hover:text-foreground cursor-pointer"
         onClick={() => handleSort(column)}
       >
         {children}

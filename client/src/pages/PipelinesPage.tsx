@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Trash2 } from 'lucide-react';
 import { AppLayout } from '@/components/layout';
 import { Button } from '@/components/ui/button';
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
@@ -82,7 +82,7 @@ export function PipelinesPage() {
             {pipelines.map((pipeline) => (
               <div
                 key={pipeline.id}
-                className="flex items-center justify-between p-4 bg-muted/50 border border-border rounded-lg hover:bg-muted hover:border-border transition-all group"
+                className="flex items-center justify-between p-4 bg-card border border-border rounded-lg hover:bg-accent/50 hover:border-border/80 hover:shadow-sm transition-all group"
               >
                 <div
                   className="min-w-0 flex-1 cursor-pointer"
@@ -117,13 +117,8 @@ export function PipelinesPage() {
                   >
                     Runs
                   </Button>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDelete(pipeline.id, pipeline.name)}
-                    className="h-7 px-2.5 text-xs"
-                  >
-                    Delete
+                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-destructive" onClick={() => handleDelete(pipeline.id, pipeline.name)}>
+                    <Trash2 size={14} />
                   </Button>
                 </div>
               </div>

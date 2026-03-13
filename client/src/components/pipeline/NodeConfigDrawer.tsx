@@ -30,7 +30,7 @@ function NodeConfigForm({ nodeId, nodeType, config }: { nodeId: string; nodeType
     default:
       return (
         <div className="space-y-2">
-          <div className="px-2 py-1.5 bg-yellow-500/10 border border-yellow-500/30 rounded text-xs text-yellow-300">
+          <div className="px-2 py-1.5 bg-warning/10 border border-warning/30 rounded text-xs text-warning">
             No visual editor for node type "{nodeType}".
           </div>
           <pre className="text-xs text-muted-foreground bg-muted p-2 rounded overflow-auto max-h-48 font-mono">
@@ -98,7 +98,7 @@ export function NodeConfigDrawer() {
         <button
           onClick={() => setActiveTab('config')}
           className={cn(
-            'flex-1 px-3 py-2 text-xs font-medium transition-colors',
+            'flex-1 px-3 py-2 text-xs font-medium transition-colors cursor-pointer',
             activeTab === 'config'
               ? 'text-primary border-b-2 border-primary'
               : 'text-muted-foreground hover:text-foreground'
@@ -109,7 +109,7 @@ export function NodeConfigDrawer() {
         <button
           onClick={() => setActiveTab('run')}
           className={cn(
-            'flex-1 px-3 py-2 text-xs font-medium transition-colors',
+            'flex-1 px-3 py-2 text-xs font-medium transition-colors cursor-pointer',
             activeTab === 'run'
               ? 'text-primary border-b-2 border-primary'
               : 'text-muted-foreground hover:text-foreground'
@@ -132,12 +132,7 @@ export function NodeConfigDrawer() {
               </div>
             )}
             <NodeConfigForm nodeId={selectedNode.id} nodeType={selectedNode.type} config={selectedNode.config} />
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={() => removeNode(selectedNode.id)}
-              className="w-full"
-            >
+            <Button variant="ghost" size="sm" className="w-full text-muted-foreground hover:text-destructive hover:bg-destructive/5" onClick={() => removeNode(selectedNode.id)}>
               Delete Node
             </Button>
           </div>
