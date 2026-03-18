@@ -293,10 +293,10 @@ export function ColumnConfigPanel({ exerciseId, exercise, column, onClose }: Col
                 {otherPicklistColumns.length > 0 && (
                   <div className="space-y-1.5">
                     <Label className="text-xs">Parent Column (for dependent picklist, optional)</Label>
-                    <Select value={parentColumnKey} onValueChange={setParentColumnKey}>
+                    <Select value={parentColumnKey || '__none__'} onValueChange={(v) => setParentColumnKey(v === '__none__' ? '' : v)}>
                       <SelectTrigger><SelectValue placeholder="None (independent)" /></SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="__none__">None</SelectItem>
                         {otherPicklistColumns.map(c => (
                           <SelectItem key={c.key} value={c.key}>{c.label}</SelectItem>
                         ))}
